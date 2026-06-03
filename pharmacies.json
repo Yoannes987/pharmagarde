@@ -1,0 +1,434 @@
+{
+    "Lomé Centre (Be, Tokoin, Assivito, Nyékonakpoè)": [
+        {
+            "nom": "PHARMACIES CENTRE",
+            "telephone": "+22822218330",
+            "whatsapp": "22822218330",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "ASSIVITO face WATT"
+        },
+        {
+            "nom": "PHARMACIES AKOFA",
+            "telephone": "+22822210097",
+            "whatsapp": "22822210097",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Av. Maman N'Danida Amoutivé"
+        },
+        {
+            "nom": "PHARMACIES BON SAMARITAIN",
+            "telephone": "+22822214530",
+            "whatsapp": "22822214530",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "BE PA de SOUZA / Hôpital de BE"
+        },
+        {
+            "nom": "PHARMACIES OLIVIERS",
+            "telephone": "+22822270434",
+            "whatsapp": "22822270434",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "01 , Rue du Rotary club international angle Bd Felix Houphet-Boigny"
+        },
+        {
+            "nom": "PHARMACIES ESPERANCE",
+            "telephone": "+22822210128",
+            "whatsapp": "22822210128",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Av F.J. STRAUSS, Face Ecole Française Nyékonakpoè"
+        },
+        {
+            "nom": "PHARMACIES AVE MARIA",
+            "telephone": "+22822223301",
+            "whatsapp": "22822223301",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Face ENSF près du CHU Tokoin"
+        },
+        {
+            "nom": "PHARMACIES AGBEGNIGAN",
+            "telephone": "+22870200000",
+            "whatsapp": "22870200000",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Tokoin Ramco - Gbadago, Av. de la Libération"
+        },
+        {
+            "nom": "PHARMACIES BON SECOURS",
+            "telephone": "+22870457674",
+            "whatsapp": "22870457674",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Rue du Grand Collège du Plateau - Cassablanca"
+        },
+        {
+            "nom": "PHARMACIES KLOKPE",
+            "telephone": "+22896801003",
+            "whatsapp": "22896801003",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Derrière la Foire Togo 2000"
+        },
+        {
+            "nom": "PHARMACIES PROVIDENCE",
+            "telephone": "+22891148888",
+            "whatsapp": "22891148888",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Bd. Jean Paul 11"
+        },
+        {
+            "nom": "PHARMACIES UNIVERS-SANTE",
+            "telephone": "+22822618143",
+            "whatsapp": "22822618143",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Bd GNASSINGBE Eyadéma, Cité OUA face CHU-CAMPUS"
+        },
+        {
+            "nom": "PHARMACIES BETHEL",
+            "telephone": "+22822252370",
+            "whatsapp": "22822252370",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "ADIDOGOME Soviépé, bd du 30 Août"
+        },
+        {
+            "nom": "PHARMACIES EL-SHADAI",
+            "telephone": "+22822514425",
+            "whatsapp": "22822514425",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Face Ecole Théologie ESTAO"
+        }
+    ],
+    "Agoè, Adidogomé, Légbassito, Kégué": [
+        {
+            "nom": "PHARMACIES AEROPORT",
+            "telephone": "+22822262122",
+            "whatsapp": "22822262122",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Rte de l'Aéroport SITO"
+        },
+        {
+            "nom": "PHARMACIES INTERNATIONALE",
+            "telephone": "+22822268994",
+            "whatsapp": "22822268994",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Marché de Hédzranawoé Assiyéyé, Boulevard du Haho"
+        },
+        {
+            "nom": "PHARMACIES DES LILAS",
+            "telephone": "+22896165589",
+            "whatsapp": "22896165589",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "123HDN, 07 Route de Kégué Boulevard Jean Paul II prolongé"
+        },
+        {
+            "nom": "PHARMACIES O GRAIN D'OR",
+            "telephone": "+22871901166",
+            "whatsapp": "22871901166",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Ahadji - Kpota, Rue Carrefour Zorrobar, Grand Contournement"
+        },
+        {
+            "nom": "PHARMACIES DES ECOLES",
+            "telephone": "+22822517575",
+            "whatsapp": "22822517575",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Face Lycée Technique Adidogomé, Route de Kpalimé"
+        },
+        {
+            "nom": "PHARMACIES EL-NISSI",
+            "telephone": "+22899733932",
+            "whatsapp": "22899733932",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Rte Lomé-Kpalimé, carrefour Apédokoè-Gbomamé"
+        },
+        {
+            "nom": "PHARMACIES HOSANNA",
+            "telephone": "+22897776959",
+            "whatsapp": "22897776959",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Carrefour Sagbado-Sémékonawo, face station SANOL"
+        },
+        {
+            "nom": "PHARMACIES MAGNIFICAT",
+            "telephone": "+22870445159",
+            "whatsapp": "22870445159",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Adidogomé yokoè Agblégan, rue de la pampa"
+        },
+        {
+            "nom": "PHARMACIES GREENRX",
+            "telephone": "+22892961919",
+            "whatsapp": "22892961919",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Segbe, immeuble Mabiz Plaza, non loin Rond point Douane"
+        },
+        {
+            "nom": "PHARMACIES MATHILDA",
+            "telephone": "+22893025212",
+            "whatsapp": "22893025212",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Route PATASSE - Lomégan - ODEF"
+        },
+        {
+            "nom": "PHARMACIES ENOULI",
+            "telephone": "+22822259068",
+            "whatsapp": "22822259068",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Station d'Agbalépédogan"
+        },
+        {
+            "nom": "PHARMACIES LE GALIEN",
+            "telephone": "+22822517171",
+            "whatsapp": "22822517171",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Rue Pavée d'Adidoadin"
+        },
+        {
+            "nom": "PHARMACIES DES ROSES",
+            "telephone": "+22870423772",
+            "whatsapp": "22870423772",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE - Vakpossito, près de l'entreprise de l'Union"
+        },
+        {
+            "nom": "PHARMACIES BETANIA",
+            "telephone": "+22896801011",
+            "whatsapp": "22896801011",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Rue Sito, Totsi-Glenkomé"
+        },
+        {
+            "nom": "PHARMACIES VOLONTAS DEI",
+            "telephone": "+22870422360",
+            "whatsapp": "22870422360",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Avédji, Carrefour SUN CITY"
+        },
+        {
+            "nom": "PHARMACIES EL-SHAMMAH",
+            "telephone": "+22870432585",
+            "whatsapp": "22870432585",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Amadahomé à côté de la Maison des Jeunes"
+        },
+        {
+            "nom": "PHARMACIES NOTRE DAME DE LOURDES",
+            "telephone": "+22870440101",
+            "whatsapp": "22870440101",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Carrefour Maison Blanche en allant à Deux Lions face STAM"
+        },
+        {
+            "nom": "PHARMACIES LA GRÂCE",
+            "telephone": "+22822259165",
+            "whatsapp": "22822259165",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Près de l'Auberge Sahara avant Station SUN AGIP Agoè"
+        },
+        {
+            "nom": "PHARMACIES ST ESPRIT",
+            "telephone": "+22870402906",
+            "whatsapp": "22870402906",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Bretelle Agoè-Nyivé Kégué Face au CEG Agoè-Est"
+        },
+        {
+            "nom": "PHARMACIES ZONGO",
+            "telephone": "+22870499655",
+            "whatsapp": "22870499655",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Toblékopé carrefour Hermann entre Orabank et Sanol Togblékopé"
+        },
+        {
+            "nom": "PHARMACIES LIDDY",
+            "telephone": "+22870901960",
+            "whatsapp": "22870901960",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE-DIKAME, Bernard Copé après station CAP face Cam de tir"
+        },
+        {
+            "nom": "PHARMACIES ZILIDJI",
+            "telephone": "+22892616608",
+            "whatsapp": "22892616608",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Derrière le marché d'agoè zongo"
+        },
+        {
+            "nom": "PHARMACIES EXCELLENCE",
+            "telephone": "+22822502447",
+            "whatsapp": "22822502447",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE Démakpoé Voie CEDEAO"
+        },
+        {
+            "nom": "PHARMACIES VITAS",
+            "telephone": "+22822256343",
+            "whatsapp": "22822256343",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Agoè Assiyéyé côté ouest"
+        },
+        {
+            "nom": "PHARMACIES AUREOLE",
+            "telephone": "+22870709898",
+            "whatsapp": "22870709898",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Agoè Trokpossimé au carrefour cam GP"
+        },
+        {
+            "nom": "PHARMACIES ESPACE VIE",
+            "telephone": "+22899858907",
+            "whatsapp": "22899858907",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE Logopé non loin de la place de Loisir BKS 2"
+        },
+        {
+            "nom": "PHARMACIES SANGUERA",
+            "telephone": "+22870428080",
+            "whatsapp": "22870428080",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Près du lycée Sanguéra"
+        },
+        {
+            "nom": "PHARMACIES SAG'BIBA",
+            "telephone": "+22891838783",
+            "whatsapp": "22891838783",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE-Nanegbé à côté de la station T-Oil"
+        },
+        {
+            "nom": "PHARMACIES LA SHEKINAH",
+            "telephone": "+22893339205",
+            "whatsapp": "22893339205",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "AGOE-NYIVE t Atiomé carrefour Amadenta"
+        },
+        {
+            "nom": "PHARMACIES NELLY'S",
+            "telephone": "+22892011100",
+            "whatsapp": "22892011100",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Klémé Agokpanou, non loin du château d'eau, voie Sébé à Sanguéra"
+        },
+        {
+            "nom": "PHARMACIES A DIEU LA GLOIRE",
+            "telephone": "+22893263600",
+            "whatsapp": "22893263600",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Marché de Légbassito, à côté de la Poste, grand contournement"
+        },
+        {
+            "nom": "PHARMACIES OBSERVANCE",
+            "telephone": "+22822504860",
+            "whatsapp": "22822504860",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "SOGBOSSITO, face station Total Energies à côté Cam BIR"
+        },
+        {
+            "nom": "PHARMACIES REGINA PACIS",
+            "telephone": "+22870459858",
+            "whatsapp": "22870459858",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "ADETIKOPE, Rte National NO I près du bar Sous l'Antenne"
+        }
+    ],
+    "Baguida, Akodésséwa, Kpogan, Djagblé": [
+        {
+            "nom": "PHARMACIES HYGEA",
+            "telephone": "+22899273636",
+            "whatsapp": "22899273636",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Face Lycée Public de Baguida sur la rte d'Afanoukopé"
+        },
+        {
+            "nom": "PHARMACIES VERSEAU",
+            "telephone": "+22890019029",
+            "whatsapp": "22890019029",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Près de la maison Bateau Baguida"
+        },
+        {
+            "nom": "PHARMACIES LA FLAMME D'AMOUR",
+            "telephone": "+22870457014",
+            "whatsapp": "22870457014",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "Qt. Bobole kope Kpogan Non Loin du cimetière Zogbedjimonou de Kpogan"
+        },
+        {
+            "nom": "PHARMACIES SAINTE MARIE",
+            "telephone": "+22892859794",
+            "whatsapp": "22892859794",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "DJAGBLE, Non loin du marché d'Avéta Ada Adoté-kopé"
+        }
+    ],
+    "Grand contournement sud (Adakpamé, Davié, Klobatèmé)": [
+        {
+            "nom": "PHARMACIES SEPOPO",
+            "telephone": "+22870346565",
+            "whatsapp": "22870346565",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "ADAKPAME grand contournement, rond point Sawleto non loin station Somayaf"
+        },
+        {
+            "nom": "PHARMACIES KOBOYO",
+            "telephone": "+22893704812",
+            "whatsapp": "22893704812",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "DAVIE, rte de la Nationale No I avant péage de Davié face Station Sanol"
+        },
+        {
+            "nom": "PHARMACIES SAINT PIO",
+            "telephone": "+22893404040",
+            "whatsapp": "22893404040",
+            "maps": "",
+            "rupture": false,
+            "emplacement": "KLOBATEME, non loin du CMS Klobatèmé près du complexe scolaire Le Bon Samaritain"
+        }
+    ]
+}

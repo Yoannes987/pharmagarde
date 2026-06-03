@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaGarde Togo | Pharmacies de garde à Lomé</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>💊 PharmaGarde Togo</h1>
+        <p>Trouvez la pharmacie de garde près de chez vous à Lomé</p>
+    </header>
+
+    <main>
+        <div class="quartiers">
+            <h2>📍 Choisissez votre quartier</h2>
+            <div id="quartier-buttons" class="buttons-group"></div>
+        </div>
+
+        <div id="resultats" class="resultats hidden">
+            <h2>🏪 Pharmacies de garde</h2>
+            <div id="liste-pharmacies"></div>
+            <button id="retour" class="btn-retour">← Retour aux quartiers</button>
+        </div>
+
+        <div id="chargement" class="chargement hidden">⏳ Chargement...</div>
+    </main>
+
+    <footer>
+        <p>📞 Médicament non trouvé ? <a href="#" id="signaler">Signaler une rupture</a></p>
+        <p>© 2025 PharmaGarde Togo - Données ONPT/INAM</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

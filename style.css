@@ -1,0 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    background: #f0f7f5;
+    color: #1e2a3e;
+    padding: 20px;
+    line-height: 1.5;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #0f5c4b;
+    font-size: 1.8rem;
+}
+
+.quartiers, .resultats {
+    background: white;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    color: #0f5c4b;
+}
+
+.buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+button {
+    background: #0f5c4b;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 60px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.97);
+    background: #0a4236;
+}
+
+.btn-retour {
+    background: #6c757d;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.pharmacie {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 0;
+}
+
+.pharmacie:last-child {
+    border-bottom: none;
+}
+
+.nom {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0f5c4b;
+    margin-bottom: 8px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 12px 0 8px;
+}
+
+.actions a {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.whatsapp {
+    background: #25D366;
+    color: white;
+}
+
+.appel {
+    background: #3b82f6;
+    color: white;
+}
+
+.maps {
+    background: #ea4335;
+    color: white;
+}
+
+.rupture {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
+
+.chargement {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 28px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.75rem;
+    color: #5b6e8c;
+}
+
+@media (min-width: 768px) {
+    body {
+        padding: 30px;
+    }
+    .quartiers, .resultats, .chargement {
+        max-width: 650px;
+    }
+}

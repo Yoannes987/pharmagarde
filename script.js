@@ -1,80 +1,111 @@
+// Données
 let pharmacies = [];
-let gardes = [];
 let zonesSet = new Set();
-let currentFilterZone = "all";
-let currentGardeOnly = false;
+let currentPage = 1;
+const itemsPerPage = 12;
+let filteredPharmacies = [];
 
-const zoneSelect = document.getElementById('zone-select');
-const gardeOnlyCheckbox = document.getElementById('garde-only');
-const pharmacyListDiv = document.getElementById('pharmacy-list');
-const pharmacyCountSpan = document.getElementById('pharmacy-count');
-const resetBtn = document.getElementById('reset-filters');
+// Éléments DOM
+const zoneSelect = document.getElementById('zoneSelect');
+const gardeToggle = document.getElementById('gardeToggle');
+const searchInput = document.getElementById('searchInput');
+const resetBtn = document.getElementById('resetFilters');
+const pharmacyGrid = document.getElementById('pharmacyGrid');
+const resultCountSpan = document.getElementById('resultCount');
+const paginationControls = document.getElementById('paginationControls');
+const paginationBottom = document.getElementById('paginationBottom');
 
+// Chargement des données
 Promise.all([
     fetch('pharmacies.json').then(r => r.json()),
     fetch('gardes.json').then(r => r.json()).catch(() => ({ gardes_noms: [] }))
 ]).then(([pharmaData, gardeData]) => {
     pharmacies = pharmaData;
     const gardesNoms = gardeData.gardes_noms || [];
-    
     pharmacies.forEach(p => {
         p.garde = gardesNoms.includes(p.nom.toLowerCase());
         if (p.zone) zonesSet.add(p.zone);
     });
-    
     populateZoneSelect();
     applyFilters();
-}).catch(err => console.error('Erreur chargement:', err));
+}).catch(err => console.error('Erreur', err));
 
 function populateZoneSelect() {
-    const sortedZones = Array.from(zonesSet).sort();
-    sortedZones.forEach(zone => {
-        const option = document.createElement('option');
-        option.value = zone;
-        option.textContent = zone;
-        zoneSelect.appendChild(option);
+    const sorted = Array.from(zonesSet).sort();
+    sorted.forEach(zone => {
+        const opt = document.createElement('option');
+        opt.value = zone;
+        opt.textContent = zone;
+        zoneSelect.appendChild(opt);
     });
 }
 
 function applyFilters() {
     let filtered = [...pharmacies];
-    if (currentFilterZone !== 'all') {
-        filtered = filtered.filter(p => p.zone === currentFilterZone);
+    const zone = zoneSelect.value;
+    const gardeOnly = gardeToggle.checked;
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    if (zone !== 'all') {
+        filtered = filtered.filter(p => p.zone === zone);
     }
-    if (currentGardeOnly) {
-        filtered = filtered.filter(p => p.garde === true);
+    if (gardeOnly) {
+        filtered = filtered.filter(p => p.garde);
     }
-    displayPharmacies(filtered);
-    pharmacyCountSpan.textContent = `${filtered.length} pharmacie(s) trouvée(s)`;
+    if (searchTerm) {
+        filtered = filtered.filter(p => p.nom.toLowerCase().includes(searchTerm) || (p.zone && p.zone.toLowerCase().includes(searchTerm)));
+    }
+    filteredPharmacies = filtered;
+    currentPage = 1;
+    render();
 }
 
-function displayPharmacies(list) {
-    if (list.length === 0) {
-        pharmacyListDiv.innerHTML = '<div class="pharmacy-card">Aucune pharmacie ne correspond aux critères.</div>';
-        return;
+function render() {
+    const total = filteredPharmacies.length;
+    const totalPages = Math.ceil(total / itemsPerPage);
+    const start = (currentPage - 1) * itemsPerPage;
+    const pageItems = filteredPharmacies.slice(start, start + itemsPerPage);
+
+    resultCountSpan.textContent = `${total} pharmacie(s) trouvée(s)`;
+
+    // Afficher les cartes
+    if (pageItems.length === 0) {
+        pharmacyGrid.innerHTML = '<div class="pharmacy-card">Aucune pharmacie ne correspond.</div>';
+    } else {
+        pharmacyGrid.innerHTML = pageItems.map(p => `
+            <div class="pharmacy-card">
+                <div class="pharmacy-name">${escapeHtml(p.nom)}</div>
+                <div class="pharmacy-zone">${escapeHtml(p.zone || 'Zone inconnue')}</div>
+                ${p.garde ? '<div class="garde-indicator">Garde cette semaine</div>' : ''}
+                <div class="actions">
+                    ${p.whatsapp ? `<a href="https://wa.me/${p.whatsapp}" class="btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>` : ''}
+                    ${p.telephone ? `<a href="tel:${p.telephone}" class="btn-call"><i class="fas fa-phone-alt"></i> Appeler</a>` : ''}
+                </div>
+            </div>
+        `).join('');
     }
-    pharmacyListDiv.innerHTML = list.map(p => `
-        <div class="pharmacy-card">
-            <div class="pharmacy-name">${escapeHtml(p.nom)}</div>
-            <div class="pharmacy-zone">${escapeHtml(p.zone || 'Zone non définie')}</div>
-            ${p.garde ? '<div class="garde-badge">Garde cette semaine</div>' : ''}
-            <div class="pharmacy-actions">
-                ${p.whatsapp ? `<a href="https://wa.me/${p.whatsapp}" class="btn-wa" target="_blank">WhatsApp</a>` : ''}
-                ${p.telephone ? `<a href="tel:${p.telephone}" class="btn-call">Appeler</a>` : ''}
-            </div>
-            <div class="stock-feedback">
-                <a href="#" data-pharm="${p.nom}" class="stock-link">✔ J’ai trouvé mon médicament ici</a> &nbsp;|&nbsp;
-                <a href="#" data-pharm="${p.nom}" class="rupture-link">✖ Rupture signalée</a>
-            </div>
-        </div>
-    `).join('');
-    
-    document.querySelectorAll('.stock-link, .rupture-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const nom = link.dataset.pharm;
-            const type = link.classList.contains('stock-link') ? 'trouve' : 'rupture';
-            alert(`Merci pour votre retour sur ${nom}. Cela aide la communauté.`);
+
+    // Pagination
+    const paginationHtml = generatePagination(totalPages);
+    paginationControls.innerHTML = paginationHtml;
+    paginationBottom.innerHTML = paginationHtml;
+    attachPaginationEvents();
+}
+
+function generatePagination(totalPages) {
+    if (totalPages <= 1) return '';
+    let html = '';
+    for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+    return html;
+}
+
+function attachPaginationEvents() {
+    document.querySelectorAll('.pagination button[data-page]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentPage = parseInt(btn.dataset.page);
+            render();
         });
     });
 }
@@ -89,55 +120,37 @@ function escapeHtml(str) {
     });
 }
 
-zoneSelect.addEventListener('change', (e) => {
-    currentFilterZone = e.target.value;
-    applyFilters();
-});
-gardeOnlyCheckbox.addEventListener('change', (e) => {
-    currentGardeOnly = e.target.checked;
-    applyFilters();
-});
+// Écouteurs
+zoneSelect.addEventListener('change', () => applyFilters());
+gardeToggle.addEventListener('change', () => applyFilters());
+searchInput.addEventListener('input', () => applyFilters());
 resetBtn.addEventListener('click', () => {
     zoneSelect.value = 'all';
-    gardeOnlyCheckbox.checked = false;
-    currentFilterZone = 'all';
-    currentGardeOnly = false;
+    gardeToggle.checked = false;
+    searchInput.value = '';
     applyFilters();
 });
 
 // Chatbot
-const chatMessages = document.getElementById('chat-messages');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('send-chat');
-const openChatBtn = document.getElementById('open-chat');
-const closeChatBtn = document.getElementById('close-chat');
-const chatbotDiv = document.getElementById('chatbot');
+const chatButton = document.getElementById('chatButton');
+const chatPanel = document.getElementById('chatPanel');
+const closeChat = document.getElementById('closeChat');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendChat = document.getElementById('sendChat');
 
-openChatBtn.addEventListener('click', () => {
-    chatbotDiv.classList.remove('hidden');
-    openChatBtn.style.display = 'none';
+chatButton.addEventListener('click', () => {
+    chatPanel.classList.toggle('hidden');
 });
-closeChatBtn.addEventListener('click', () => {
-    chatbotDiv.classList.add('hidden');
-    openChatBtn.style.display = 'flex';
+closeChat.addEventListener('click', () => {
+    chatPanel.classList.add('hidden');
 });
 
-function addBotMessage(text, showOptions = false, options = []) {
+function addBotMessage(text) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message bot';
     msgDiv.innerText = text;
     chatMessages.appendChild(msgDiv);
-    if (showOptions && options.length) {
-        const optionsDiv = document.createElement('div');
-        optionsDiv.className = 'chat-options';
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.innerText = opt.label;
-            btn.onclick = () => handleUserChoice(opt.value);
-            optionsDiv.appendChild(btn);
-        });
-        chatMessages.appendChild(optionsDiv);
-    }
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
@@ -149,77 +162,53 @@ function addUserMessage(text) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function handleUserChoice(choice) {
-    addUserMessage(choice);
-    if (choice === 'garde') {
-        addBotMessage("Voulez-vous voir toutes les gardes ou dans une zone précise ?", true, [
-            {label: "Toutes les gardes", value: "toutes_gardes"},
-            {label: "Par zone", value: "zone_garde"}
-        ]);
-    } else if (choice === 'toutes_gardes') {
-        const gardes = pharmacies.filter(p => p.garde);
+function processUserMessage(message) {
+    const lowerMsg = message.toLowerCase();
+    if (lowerMsg.includes('garde') || lowerMsg.includes('pharmacie de garde')) {
+        const gardes = pharmacies.filter(p => p.garde).slice(0, 5);
         if (gardes.length === 0) addBotMessage("Aucune pharmacie de garde cette semaine.");
-        else addBotMessage(`Il y a ${gardes.length} pharmacie(s) de garde. Utilisez le filtre sur le site pour les voir.`);
-        resetConversation();
-    } else if (choice === 'zone_garde') {
-        addBotMessage("Quel quartier ou zone ? (ex: Agoè, Lomé Centre)");
-        window.attenteZone = true;
-    } else if (choice === 'medicament') {
-        addBotMessage("Quel médicament cherchez-vous ?");
-        window.attenteMedicament = true;
-    } else if (choice === 'livraison') {
-        addBotMessage("Pour une livraison, contactez directement une pharmacie via WhatsApp. Voulez-vous voir les pharmacies de garde ?", true, [
-            {label: "Oui", value: "garde"},
-            {label: "Non", value: "retour"}
-        ]);
-    } else if (choice === 'retour') {
-        resetConversation();
-    } else {
-        if (window.attenteZone) {
-            window.attenteZone = false;
-            const zone = choice;
-            const gardes = pharmacies.filter(p => p.garde && p.zone && p.zone.toLowerCase().includes(zone.toLowerCase()));
-            if (gardes.length === 0) addBotMessage(`Aucune garde trouvée pour "${zone}".`);
-            else addBotMessage(`${gardes.length} pharmacie(s) de garde trouvée(s) à ${zone}. Utilisez le filtre sur le site.`);
-            resetConversation();
-        } else if (window.attenteMedicament) {
-            window.attenteMedicament = false;
-            addBotMessage(`Je ne peux pas vérifier le stock en temps réel. Contactez une pharmacie via WhatsApp pour "${choice}". Voulez-vous voir les gardes ?`, true, [
-                {label: "Voir les gardes", value: "garde"},
-                {label: "Non", value: "retour"}
-            ]);
-        } else {
-            addBotMessage("Je n'ai pas compris. Reprenons.", true, [
-                {label: "Pharmacies de garde", value: "garde"},
-                {label: "Médicament", value: "medicament"},
-                {label: "Livraison", value: "livraison"}
-            ]);
+        else {
+            let reply = "Voici quelques pharmacies de garde :\n";
+            gardes.forEach(p => reply += `- ${p.nom} (${p.zone})\n`);
+            addBotMessage(reply);
         }
+    } else if (lowerMsg.includes('zone') || lowerMsg.includes('quartier')) {
+        addBotMessage("Quel quartier vous intéresse ? (ex: Agoè, Lomé Centre)");
+        // On attend la réponse suivante
+        window.awaitingZone = true;
+    } else if (window.awaitingZone) {
+        window.awaitingZone = false;
+        const zone = message;
+        const found = pharmacies.filter(p => p.zone && p.zone.toLowerCase().includes(zone.toLowerCase()));
+        if (found.length === 0) addBotMessage(`Aucune pharmacie trouvée pour "${zone}".`);
+        else addBotMessage(`${found.length} pharmacie(s) trouvée(s) dans ${zone}. Utilisez la recherche sur le site.`);
+    } else if (lowerMsg.includes('médicament') || lowerMsg.includes('stock')) {
+        addBotMessage("Je ne peux pas vérifier le stock en temps réel, mais vous pouvez contacter une pharmacie directement via WhatsApp. Voulez-vous voir les pharmacies de garde ? (oui/non)");
+        window.awaitingMed = true;
+    } else if (window.awaitingMed) {
+        window.awaitingMed = false;
+        if (message.toLowerCase().includes('oui')) {
+            const gardes = pharmacies.filter(p => p.garde).slice(0, 5);
+            addBotMessage("Pharmacies de garde : " + gardes.map(p => p.nom).join(', '));
+        } else {
+            addBotMessage("D'accord. Puis-je vous aider avec autre chose ?");
+        }
+    } else {
+        addBotMessage("Je peux vous renseigner sur les pharmacies de garde, les zones, ou vous aider à contacter une pharmacie. Dites-moi ce dont vous avez besoin.");
     }
 }
 
-function resetConversation() {
-    window.attenteZone = false;
-    window.attenteMedicament = false;
-    addBotMessage("Que souhaitez-vous faire ?", true, [
-        {label: "Pharmacies de garde", value: "garde"},
-        {label: "Médicament", value: "medicament"},
-        {label: "Livraison", value: "livraison"}
-    ]);
-}
-
-sendBtn.addEventListener('click', () => {
-    const text = chatInput.value.trim();
-    if (!text) return;
-    addUserMessage(text);
+sendChat.addEventListener('click', () => {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    addUserMessage(msg);
     chatInput.value = '';
-    handleUserChoice(text);
+    processUserMessage(msg);
 });
 
-setTimeout(() => {
-    addBotMessage("Bienvenue sur PharmaGarde Togo. Je suis votre assistant. Que recherchez-vous ?", true, [
-        {label: "Pharmacies de garde", value: "garde"},
-        {label: "Médicament", value: "medicament"},
-        {label: "Livraison", value: "livraison"}
-    ]);
-}, 300);
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendChat.click();
+});
+
+// Initial chat
+addBotMessage("Bienvenue sur PharmaGarde. Je suis votre assistant. Vous pouvez me poser des questions sur les pharmacies de garde, les zones, ou les médicaments.");

@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- En-tête -->
         <header>
             <div class="logo">
                 <span class="logo-icon">💊</span>
@@ -18,7 +17,6 @@
             <p class="tagline">Annuaire officiel des pharmacies du Togo • Lomé et régions</p>
         </header>
 
-        <!-- Barre de filtres -->
         <div class="filters">
             <div class="filter-group">
                 <label for="zone-select">Zone géographique</label>
@@ -35,28 +33,20 @@
             </div>
         </div>
 
-        <!-- Compteur et résultats -->
         <div class="results-info">
             <span id="pharmacy-count"></span>
             <button id="reset-filters" class="reset-btn">Réinitialiser</button>
         </div>
 
-        <!-- Liste des pharmacies -->
         <div id="pharmacy-list" class="pharmacy-grid"></div>
 
-        <!-- Chatbot flottant -->
-        <div id="chatbot" class="chatbot">
+        <div id="chatbot" class="chatbot hidden">
             <div class="chatbot-header">
                 <span>Assistant PharmaGarde</span>
                 <button id="close-chat">✕</button>
             </div>
             <div class="chatbot-messages" id="chat-messages">
-                <div class="message bot">Bonjour ! Je suis l'assistant PharmaGarde. Que recherchez-vous ?<br> Choisissez une option :</div>
-                <div class="chat-options" id="chat-options">
-                    <button data-intent="garde">Pharmacies de garde</button>
-                    <button data-intent="medicament">Un médicament</button>
-                    <button data-intent="livraison">Livraison à domicile</button>
-                </div>
+                <div class="message bot">Bonjour ! Je suis l'assistant PharmaGarde. Que recherchez-vous ?</div>
             </div>
             <div class="chatbot-input">
                 <input type="text" id="chat-input" placeholder="Tapez votre réponse...">

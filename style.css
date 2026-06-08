@@ -5,147 +5,386 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
-    background: #f0f7f5;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fb;
     color: #1e2a3e;
-    padding: 20px;
     line-height: 1.5;
 }
 
+.app-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* En-tête */
 header {
+    margin-bottom: 2rem;
     text-align: center;
-    margin-bottom: 30px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.logo-icon {
+    font-size: 2rem;
 }
 
 h1 {
-    color: #0f5c4b;
     font-size: 1.8rem;
-}
-
-.quartiers, .resultats {
-    background: white;
-    border-radius: 28px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-h2 {
-    font-size: 1.3rem;
-    margin-bottom: 16px;
+    font-weight: 600;
     color: #0f5c4b;
+    letter-spacing: -0.3px;
 }
 
-.buttons-group {
+.tagline {
+    color: #5b6e8c;
+    font-size: 0.9rem;
+}
+
+/* Filtres */
+.filters {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: flex-end;
 }
 
-button {
-    background: #0f5c4b;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 60px;
-    font-size: 1rem;
-    font-weight: bold;
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #5b6e8c;
+    margin-bottom: 0.5rem;
+}
+
+select {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    background: white;
     cursor: pointer;
+}
+
+/* Toggle garde */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.toggle-slider {
+    width: 2.5rem;
+    height: 1.3rem;
+    background: #cbd5e1;
+    border-radius: 1rem;
+    position: relative;
     transition: 0.2s;
 }
 
-button:active {
-    transform: scale(0.97);
-    background: #0a4236;
+.toggle-slider::before {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0.15rem;
+    left: 0.2rem;
+    transition: 0.2s;
 }
 
-.btn-retour {
-    background: #6c757d;
-    margin-top: 20px;
-    width: 100%;
+input[type="checkbox"]:checked + .toggle-slider {
+    background: #0f5c4b;
 }
 
-.pharmacie {
-    border-bottom: 1px solid #e2e8f0;
-    padding: 16px 0;
+input[type="checkbox"]:checked + .toggle-slider::before {
+    left: 1.3rem;
 }
 
-.pharmacie:last-child {
-    border-bottom: none;
-}
-
-.nom {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #0f5c4b;
-    margin-bottom: 8px;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 12px 0 8px;
-}
-
-.actions a {
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    display: inline-block;
-}
-
-.whatsapp {
-    background: #25D366;
-    color: white;
-}
-
-.appel {
-    background: #3b82f6;
-    color: white;
-}
-
-.maps {
-    background: #ea4335;
-    color: white;
-}
-
-.rupture {
-    background: #fee2e2;
-    color: #b91c1c;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    display: inline-block;
-}
-
-.hidden {
+input[type="checkbox"] {
     display: none;
 }
 
-.chargement {
-    text-align: center;
-    padding: 40px;
-    background: white;
-    border-radius: 28px;
-    max-width: 600px;
-    margin: 0 auto;
+.toggle-text {
+    font-size: 0.9rem;
+    color: #1e2a3e;
 }
 
-footer {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 0.75rem;
+/* Résultats info */
+.results-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
     color: #5b6e8c;
 }
 
-@media (min-width: 768px) {
-    body {
-        padding: 30px;
+.reset-btn {
+    background: none;
+    border: none;
+    color: #0f5c4b;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.reset-btn:hover {
+    text-decoration: underline;
+}
+
+/* Grille pharmacies */
+.pharmacy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+.pharmacy-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.2rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+    border: 1px solid #edf2f7;
+}
+
+.pharmacy-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.pharmacy-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #0f5c4b;
+}
+
+.pharmacy-zone {
+    font-size: 0.7rem;
+    color: #5b6e8c;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.75rem;
+}
+
+.garde-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+}
+
+.pharmacy-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-wa {
+    background: #25D366;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: 0.1s;
+}
+
+.btn-wa:hover {
+    background: #1da15a;
+}
+
+.btn-call {
+    background: #3b82f6;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.stock-feedback {
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    color: #5b6e8c;
+}
+
+.stock-feedback a {
+    color: #0f5c4b;
+    text-decoration: none;
+}
+
+/* Chatbot */
+.chatbot {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    width: 360px;
+    background: white;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+.chatbot.hidden {
+    display: none;
+}
+
+.chatbot-header {
+    background: #0f5c4b;
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+.chatbot-header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.chatbot-messages {
+    height: 320px;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #fafcff;
+}
+
+.message {
+    max-width: 85%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 1.2rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.bot {
+    background: #e6f0f5;
+    color: #1e2a3e;
+    align-self: flex-start;
+    border-bottom-left-radius: 0.2rem;
+}
+
+.user {
+    background: #0f5c4b;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 0.2rem;
+}
+
+.chat-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.chat-options button {
+    background: white;
+    border: 1px solid #cbd5e1;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.chat-options button:hover {
+    background: #f1f5f9;
+}
+
+.chatbot-input {
+    display: flex;
+    border-top: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    gap: 0.5rem;
+}
+
+.chatbot-input input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+}
+
+.chatbot-input button {
+    background: #0f5c4b;
+    border: none;
+    color: white;
+    border-radius: 2rem;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+
+.open-chat-btn {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: #0f5c4b;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 999;
+}
+
+@media (max-width: 640px) {
+    .app-container {
+        padding: 1rem;
     }
-    .quartiers, .resultats, .chargement {
-        max-width: 650px;
+    .chatbot {
+        width: calc(100% - 2rem);
+        right: 1rem;
+        bottom: 5rem;
+    }
+    .pharmacy-grid {
+        grid-template-columns: 1fr;
     }
 }

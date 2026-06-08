@@ -17,7 +17,6 @@ body {
     padding: 2rem 1.5rem;
 }
 
-/* En-tête */
 header {
     margin-bottom: 2rem;
     text-align: center;
@@ -47,7 +46,6 @@ h1 {
     font-size: 0.9rem;
 }
 
-/* Filtres */
 .filters {
     background: white;
     border-radius: 1rem;
@@ -86,7 +84,6 @@ select {
     cursor: pointer;
 }
 
-/* Toggle garde */
 .toggle-label {
     display: flex;
     align-items: center;
@@ -132,7 +129,6 @@ input[type="checkbox"] {
     color: #1e2a3e;
 }
 
-/* Résultats info */
 .results-info {
     display: flex;
     justify-content: space-between;
@@ -155,7 +151,6 @@ input[type="checkbox"] {
     text-decoration: underline;
 }
 
-/* Grille pharmacies */
 .pharmacy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -241,9 +236,9 @@ input[type="checkbox"] {
 .stock-feedback a {
     color: #0f5c4b;
     text-decoration: none;
+    cursor: pointer;
 }
 
-/* Chatbot */
 .chatbot {
     position: fixed;
     bottom: 5rem;
@@ -255,7 +250,6 @@ input[type="checkbox"] {
     display: flex;
     flex-direction: column;
     z-index: 1000;
-    transition: all 0.2s;
     border: 1px solid #e2e8f0;
 }
 
@@ -327,11 +321,6 @@ input[type="checkbox"] {
     border-radius: 2rem;
     font-size: 0.75rem;
     cursor: pointer;
-    transition: 0.1s;
-}
-
-.chat-options button:hover {
-    background: #f1f5f9;
 }
 
 .chatbot-input {

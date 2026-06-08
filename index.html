@@ -2,35 +2,69 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaGarde Togo | Pharmacies de garde à Lomé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PharmaGarde Togo | Pharmacies de garde et annuaire Lomé</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>💊 PharmaGarde Togo</h1>
-        <p>Trouvez la pharmacie de garde près de chez vous à Lomé</p>
-    </header>
+    <div class="app-container">
+        <!-- En-tête -->
+        <header>
+            <div class="logo">
+                <span class="logo-icon">💊</span>
+                <h1>PharmaGarde Togo</h1>
+            </div>
+            <p class="tagline">Annuaire officiel des pharmacies du Togo • Lomé et régions</p>
+        </header>
 
-    <main>
-        <div class="quartiers">
-            <h2>📍 Choisissez votre quartier</h2>
-            <div id="quartier-buttons" class="buttons-group"></div>
+        <!-- Barre de filtres -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="zone-select">Zone géographique</label>
+                <select id="zone-select">
+                    <option value="all">Toutes les zones</option>
+                </select>
+            </div>
+            <div class="filter-group toggle">
+                <label class="toggle-label">
+                    <input type="checkbox" id="garde-only">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text">Uniquement les pharmacies de garde cette semaine</span>
+                </label>
+            </div>
         </div>
 
-        <div id="resultats" class="resultats hidden">
-            <h2>🏪 Pharmacies de garde</h2>
-            <div id="liste-pharmacies"></div>
-            <button id="retour" class="btn-retour">← Retour aux quartiers</button>
+        <!-- Compteur et résultats -->
+        <div class="results-info">
+            <span id="pharmacy-count"></span>
+            <button id="reset-filters" class="reset-btn">Réinitialiser</button>
         </div>
 
-        <div id="chargement" class="chargement hidden">⏳ Chargement...</div>
-    </main>
+        <!-- Liste des pharmacies -->
+        <div id="pharmacy-list" class="pharmacy-grid"></div>
 
-    <footer>
-        <p>📞 Médicament non trouvé ? <a href="#" id="signaler">Signaler une rupture</a></p>
-        <p>© 2025 PharmaGarde Togo - Données ONPT/INAM</p>
-    </footer>
+        <!-- Chatbot flottant -->
+        <div id="chatbot" class="chatbot">
+            <div class="chatbot-header">
+                <span>Assistant PharmaGarde</span>
+                <button id="close-chat">✕</button>
+            </div>
+            <div class="chatbot-messages" id="chat-messages">
+                <div class="message bot">Bonjour ! Je suis l'assistant PharmaGarde. Que recherchez-vous ?<br> Choisissez une option :</div>
+                <div class="chat-options" id="chat-options">
+                    <button data-intent="garde">Pharmacies de garde</button>
+                    <button data-intent="medicament">Un médicament</button>
+                    <button data-intent="livraison">Livraison à domicile</button>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chat-input" placeholder="Tapez votre réponse...">
+                <button id="send-chat">Envoyer</button>
+            </div>
+        </div>
+        <button id="open-chat" class="open-chat-btn">💬</button>
+    </div>
 
     <script src="script.js"></script>
 </body>

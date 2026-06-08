@@ -1,36 +1,30 @@
-// État global
 let pharmacies = [];
+let gardes = [];
 let zonesSet = new Set();
 let currentFilterZone = "all";
 let currentGardeOnly = false;
 
-// Éléments DOM
 const zoneSelect = document.getElementById('zone-select');
 const gardeOnlyCheckbox = document.getElementById('garde-only');
 const pharmacyListDiv = document.getElementById('pharmacy-list');
 const pharmacyCountSpan = document.getElementById('pharmacy-count');
 const resetBtn = document.getElementById('reset-filters');
 
-// Chatbot state
-let currentIntent = null; // 'garde', 'medicament', 'livraison'
-let conversationStep = 0; // pour la gestion de la conversation
-
-// Charger les données JSON
-fetch('pharmacies.json')
-    .then(response => response.json())
-    .then(data => {
-        pharmacies = data;
-        buildZones();
-        populateZoneSelect();
-        applyFilters();
-    })
-    .catch(err => console.error('Erreur chargement pharmacies:', err));
-
-function buildZones() {
+Promise.all([
+    fetch('pharmacies.json').then(r => r.json()),
+    fetch('gardes.json').then(r => r.json()).catch(() => ({ gardes_noms: [] }))
+]).then(([pharmaData, gardeData]) => {
+    pharmacies = pharmaData;
+    const gardesNoms = gardeData.gardes_noms || [];
+    
     pharmacies.forEach(p => {
+        p.garde = gardesNoms.includes(p.nom.toLowerCase());
         if (p.zone) zonesSet.add(p.zone);
     });
-}
+    
+    populateZoneSelect();
+    applyFilters();
+}).catch(err => console.error('Erreur chargement:', err));
 
 function populateZoneSelect() {
     const sortedZones = Array.from(zonesSet).sort();
@@ -44,63 +38,45 @@ function populateZoneSelect() {
 
 function applyFilters() {
     let filtered = [...pharmacies];
-
     if (currentFilterZone !== 'all') {
         filtered = filtered.filter(p => p.zone === currentFilterZone);
     }
     if (currentGardeOnly) {
         filtered = filtered.filter(p => p.garde === true);
     }
-
     displayPharmacies(filtered);
     pharmacyCountSpan.textContent = `${filtered.length} pharmacie(s) trouvée(s)`;
 }
 
-function displayPharmacies(pharmaciesList) {
-    if (pharmaciesList.length === 0) {
+function displayPharmacies(list) {
+    if (list.length === 0) {
         pharmacyListDiv.innerHTML = '<div class="pharmacy-card">Aucune pharmacie ne correspond aux critères.</div>';
         return;
     }
-
-    const html = pharmaciesList.map(pharm => `
+    pharmacyListDiv.innerHTML = list.map(p => `
         <div class="pharmacy-card">
-            <div class="pharmacy-name">${escapeHtml(pharm.nom)}</div>
-            <div class="pharmacy-zone">${escapeHtml(pharm.zone || 'Zone non définie')}</div>
-            ${pharm.garde ? '<div class="garde-badge">Garde cette semaine</div>' : ''}
+            <div class="pharmacy-name">${escapeHtml(p.nom)}</div>
+            <div class="pharmacy-zone">${escapeHtml(p.zone || 'Zone non définie')}</div>
+            ${p.garde ? '<div class="garde-badge">Garde cette semaine</div>' : ''}
             <div class="pharmacy-actions">
-                ${pharm.whatsapp ? `<a href="https://wa.me/${pharm.whatsapp}" class="btn-wa" target="_blank">WhatsApp</a>` : ''}
-                ${pharm.telephone ? `<a href="tel:${pharm.telephone}" class="btn-call">Appeler</a>` : ''}
+                ${p.whatsapp ? `<a href="https://wa.me/${p.whatsapp}" class="btn-wa" target="_blank">WhatsApp</a>` : ''}
+                ${p.telephone ? `<a href="tel:${p.telephone}" class="btn-call">Appeler</a>` : ''}
             </div>
             <div class="stock-feedback">
-                <a href="#" data-pharm="${pharm.nom}" class="stock-link">✔️ J’ai trouvé mon médicament ici</a> &nbsp;|&nbsp;
-                <a href="#" data-pharm="${pharm.nom}" class="rupture-link">❌ Rupture signalée</a>
+                <a href="#" data-pharm="${p.nom}" class="stock-link">✔ J’ai trouvé mon médicament ici</a> &nbsp;|&nbsp;
+                <a href="#" data-pharm="${p.nom}" class="rupture-link">✖ Rupture signalée</a>
             </div>
         </div>
     `).join('');
-    pharmacyListDiv.innerHTML = html;
-
-    // Attacher événements feedback stock
-    document.querySelectorAll('.stock-link').forEach(link => {
+    
+    document.querySelectorAll('.stock-link, .rupture-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const nom = link.dataset.pharm;
-            handleStockFeedback(nom, 'trouve');
+            const type = link.classList.contains('stock-link') ? 'trouve' : 'rupture';
+            alert(`Merci pour votre retour sur ${nom}. Cela aide la communauté.`);
         });
     });
-    document.querySelectorAll('.rupture-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const nom = link.dataset.pharm;
-            handleStockFeedback(nom, 'rupture');
-        });
-    });
-}
-
-function handleStockFeedback(nom, status) {
-    // Simuler l'enregistrement (on pourrait stocker dans localStorage ou envoyer à un serveur)
-    console.log(`Feedback: ${nom} - ${status}`);
-    alert(`Merci pour votre retour sur ${nom}. Cela aide la communauté.`);
-    // Optionnel: incrémenter un compteur dans un objet local pour afficher "rupture fréquente"
 }
 
 function escapeHtml(str) {
@@ -113,7 +89,6 @@ function escapeHtml(str) {
     });
 }
 
-// Écouteurs filtres
 zoneSelect.addEventListener('change', (e) => {
     currentFilterZone = e.target.value;
     applyFilters();
@@ -130,7 +105,7 @@ resetBtn.addEventListener('click', () => {
     applyFilters();
 });
 
-// ==================== CHATBOT MAISON ====================
+// Chatbot
 const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-chat');
@@ -158,10 +133,7 @@ function addBotMessage(text, showOptions = false, options = []) {
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.innerText = opt.label;
-            btn.dataset.value = opt.value;
-            btn.addEventListener('click', () => {
-                handleUserChoice(opt.value);
-            });
+            btn.onclick = () => handleUserChoice(opt.value);
             optionsDiv.appendChild(btn);
         });
         chatMessages.appendChild(optionsDiv);
@@ -180,53 +152,44 @@ function addUserMessage(text) {
 function handleUserChoice(choice) {
     addUserMessage(choice);
     if (choice === 'garde') {
-        currentIntent = 'garde';
-        addBotMessage("Souhaitez-vous voir les pharmacies de garde dans une zone précise ? Donnez-moi un quartier (ex: Agoè, Lomé Centre, Baguida) ou tapez 'toutes'.");
-        conversationStep = 1;
+        addBotMessage("Voulez-vous voir toutes les gardes ou dans une zone précise ?", true, [
+            {label: "Toutes les gardes", value: "toutes_gardes"},
+            {label: "Par zone", value: "zone_garde"}
+        ]);
+    } else if (choice === 'toutes_gardes') {
+        const gardes = pharmacies.filter(p => p.garde);
+        if (gardes.length === 0) addBotMessage("Aucune pharmacie de garde cette semaine.");
+        else addBotMessage(`Il y a ${gardes.length} pharmacie(s) de garde. Utilisez le filtre sur le site pour les voir.`);
+        resetConversation();
+    } else if (choice === 'zone_garde') {
+        addBotMessage("Quel quartier ou zone ? (ex: Agoè, Lomé Centre)");
+        window.attenteZone = true;
     } else if (choice === 'medicament') {
-        currentIntent = 'medicament';
-        addBotMessage("Quel médicament recherchez-vous ? (tapez son nom)");
-        conversationStep = 1;
+        addBotMessage("Quel médicament cherchez-vous ?");
+        window.attenteMedicament = true;
     } else if (choice === 'livraison') {
-        currentIntent = 'livraison';
-        addBotMessage("Pour une livraison, veuillez contacter directement une pharmacie via WhatsApp. Je peux vous aider à trouver une pharmacie de garde près de chez vous. Quel est votre quartier ?");
-        conversationStep = 1;
+        addBotMessage("Pour une livraison, contactez directement une pharmacie via WhatsApp. Voulez-vous voir les pharmacies de garde ?", true, [
+            {label: "Oui", value: "garde"},
+            {label: "Non", value: "retour"}
+        ]);
     } else if (choice === 'retour') {
         resetConversation();
     } else {
-        // Gestion des réponses libres
-        if (currentIntent === 'garde' && conversationStep === 1) {
+        if (window.attenteZone) {
+            window.attenteZone = false;
             const zone = choice;
-            if (zone.toLowerCase() === 'toutes') {
-                addBotMessage("Voici toutes les pharmacies de garde actuelles :");
-                displayGardePharmacies();
-            } else {
-                addBotMessage(`Voici les pharmacies de garde dans ${zone} :`);
-                displayGardeByZone(zone);
-            }
-            addBotMessage("Souhaitez-vous autre chose ?", true, [
-                {label: "Autre recherche", value: "retour"},
-                {label: "Fermer", value: "close"}
+            const gardes = pharmacies.filter(p => p.garde && p.zone && p.zone.toLowerCase().includes(zone.toLowerCase()));
+            if (gardes.length === 0) addBotMessage(`Aucune garde trouvée pour "${zone}".`);
+            else addBotMessage(`${gardes.length} pharmacie(s) de garde trouvée(s) à ${zone}. Utilisez le filtre sur le site.`);
+            resetConversation();
+        } else if (window.attenteMedicament) {
+            window.attenteMedicament = false;
+            addBotMessage(`Je ne peux pas vérifier le stock en temps réel. Contactez une pharmacie via WhatsApp pour "${choice}". Voulez-vous voir les gardes ?`, true, [
+                {label: "Voir les gardes", value: "garde"},
+                {label: "Non", value: "retour"}
             ]);
-        } 
-        else if (currentIntent === 'medicament' && conversationStep === 1) {
-            const medicament = choice;
-            addBotMessage(`Je ne peux pas vérifier le stock en temps réel. Mais vous pouvez contacter une pharmacie via WhatsApp pour demander "${medicament}". Voulez-vous voir la liste des pharmacies de garde ?`, true, [
-                {label: "Oui, voir les gardes", value: "garde"},
-                {label: "Non, merci", value: "close"}
-            ]);
-        }
-        else if (currentIntent === 'livraison' && conversationStep === 1) {
-            const quartier = choice;
-            addBotMessage(`Je recherche des pharmacies de garde à ${quartier}...`);
-            displayGardeByZone(quartier);
-            addBotMessage("Contactez-les directement pour la livraison. Besoin d'autre chose ?", true, [
-                {label: "Autre", value: "retour"},
-                {label: "Fermer", value: "close"}
-            ]);
-        }
-        else {
-            addBotMessage("Je n'ai pas compris. Reprenons depuis le début.", true, [
+        } else {
+            addBotMessage("Je n'ai pas compris. Reprenons.", true, [
                 {label: "Pharmacies de garde", value: "garde"},
                 {label: "Médicament", value: "medicament"},
                 {label: "Livraison", value: "livraison"}
@@ -235,40 +198,12 @@ function handleUserChoice(choice) {
     }
 }
 
-function displayGardePharmacies() {
-    const gardes = pharmacies.filter(p => p.garde === true);
-    if (gardes.length === 0) {
-        addBotMessage("Aucune pharmacie de garde trouvée cette semaine.");
-        return;
-    }
-    let message = "Pharmacies de garde :\n";
-    gardes.slice(0, 5).forEach(p => {
-        message += `- ${p.nom} (${p.zone || 'Zone inconnue'})\n`;
-    });
-    if (gardes.length > 5) message += `... et ${gardes.length - 5} autres. Utilisez le filtre sur le site pour tout voir.`;
-    addBotMessage(message);
-}
-
-function displayGardeByZone(zone) {
-    const filtered = pharmacies.filter(p => p.garde === true && p.zone && p.zone.toLowerCase().includes(zone.toLowerCase()));
-    if (filtered.length === 0) {
-        addBotMessage(`Aucune pharmacie de garde trouvée pour "${zone}". Essayez une autre zone.`);
-    } else {
-        let message = `Pharmacies de garde à ${zone} :\n`;
-        filtered.slice(0, 5).forEach(p => {
-            message += `- ${p.nom}\n`;
-        });
-        if (filtered.length > 5) message += `... et ${filtered.length - 5} autres.`;
-        addBotMessage(message);
-    }
-}
-
 function resetConversation() {
-    currentIntent = null;
-    conversationStep = 0;
+    window.attenteZone = false;
+    window.attenteMedicament = false;
     addBotMessage("Que souhaitez-vous faire ?", true, [
         {label: "Pharmacies de garde", value: "garde"},
-        {label: "Un médicament", value: "medicament"},
+        {label: "Médicament", value: "medicament"},
         {label: "Livraison", value: "livraison"}
     ]);
 }
@@ -281,11 +216,10 @@ sendBtn.addEventListener('click', () => {
     handleUserChoice(text);
 });
 
-// Initialiser la conversation
 setTimeout(() => {
     addBotMessage("Bienvenue sur PharmaGarde Togo. Je suis votre assistant. Que recherchez-vous ?", true, [
         {label: "Pharmacies de garde", value: "garde"},
-        {label: "Un médicament", value: "medicament"},
+        {label: "Médicament", value: "medicament"},
         {label: "Livraison", value: "livraison"}
     ]);
-}, 500);
+}, 300);

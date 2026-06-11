@@ -224,5 +224,12 @@
   {"nom": "pharmacie populaire", "zone": "zone A1: CENTRE VILLE ET BE", "telephone": "", "whatsapp": ""},
   {"nom": "pharmacie sante", "zone": "zone A1: CENTRE VILLE ET BE", "telephone": "+22870449137", "whatsapp": "22870449137"},
   {"nom": "pharmacie st raphael", "zone": "zone A1: CENTRE VILLE ET BE", "telephone": "", "whatsapp": ""},
-  {"nom": "pharmacie vitalis", "zone": "zone A1: CENTRE VILLE ET BE", "telephone": "", "whatsapp": ""}
+  {"nom": "pharmacie vitalis", "zone": "zone A1: CENTRE VILLE ET BE", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie sotoboua", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie al hayat", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie benedicta aurora", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie des verts pâturages", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie elkanah", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie nerlem", "zone": "Zone à déterminer", "telephone": "", "whatsapp": ""},
+  {"nom": "pharmacie kekeli (déjà présente dans KPALIME, c'est un doublon?)", "zone": "KPALIME", "telephone": "+22899992249", "whatsapp": "22899992249"}
 ]

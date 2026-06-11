@@ -122,7 +122,7 @@ select {
     cursor: pointer;
 }
 
-/* Résultats et pagination */
+/* Results & pagination */
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -153,7 +153,7 @@ select {
     border-color: #0f5c4b;
 }
 
-/* Grille */
+/* Pharmacy grid */
 .pharmacy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

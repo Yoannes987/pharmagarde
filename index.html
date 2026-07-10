@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>ANN_PHARMA_TG - Annuaire des Pharmacies du Togo</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <h1>💊 ANN_PHARMA_TG</h1>
+        <p class="sous-titre">Annuaire officiel des pharmacies du Togo</p>
+    </header>
+
+    <!-- BARRE DE RECHERCHE + FILTRES -->
+    <section class="filtres">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher une pharmacie..." />
+        
+        <div class="filtres-group">
+            <select id="zoneFilter">
+                <option value="all">📍 Toutes les zones</option>
+            </select>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">🛡️ Garde</span>
+                <label class="switch">
+                    <input type="checkbox" id="gardeToggle" />
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats">276 pharmacies</div>
+    </section>
+
+    <!-- LISTE DES PHARMACIES (paginée) -->
+    <main id="pharmacyList"></main>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="pagination"></div>
+
+    <!-- CHATBOT FLOATING -->
+    <div id="chatbotContainer">
+        <button id="chatToggle" class="chat-toggle">💬</button>
+        <div id="chatWindow" class="chat-window hidden">
+            <div class="chat-header">
+                <span>🤖 Assistant Pharma</span>
+                <button id="chatClose" class="chat-close">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">Bonjour ! Je suis votre assistant. Posez-moi une question sur les pharmacies ou les gardes.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ex: garde Lomé, pharmacie Kara..." />
+                <button id="chatSend">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

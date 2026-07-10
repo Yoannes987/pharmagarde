@@ -1,227 +1,262 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>ANN_PHARMA_TG</title>
     <style>
-        /* ========== STYLE ========== */
+        /* ===== RESET & VARIABLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f2f7f2;
-            color: #1a2e1f;
-            padding: 16px 12px 100px 12px;
-            min-height: 100vh;
+        :root {
+            --primary: #0a7e3c;
+            --primary-light: #e8f5ee;
+            --primary-dark: #06542a;
+            --gray-50: #f8faf8;
+            --gray-100: #f0f2f0;
+            --gray-200: #e2e6e2;
+            --gray-300: #c8cec8;
+            --gray-600: #5a6a5a;
+            --gray-800: #1e2a1e;
+            --shadow: 0 4px 20px rgba(0, 20, 0, 0.06);
+            --radius: 16px;
+            --radius-sm: 10px;
         }
-        header {
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            padding: 20px 16px 120px 16px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
             text-align: center;
+            padding: 12px 0 20px 0;
+            border-bottom: 1px solid var(--gray-200);
             margin-bottom: 20px;
         }
-        header h1 {
-            font-size: 28px;
+        .app-header h1 {
+            font-size: 24px;
             font-weight: 700;
-            color: #0d4f2b;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
+            color: var(--primary-dark);
         }
-        header .sous-titre {
+        .app-header h1 span {
+            font-weight: 300;
+            color: var(--gray-600);
+        }
+        .app-header p {
             font-size: 14px;
-            color: #4a6b4f;
+            color: var(--gray-600);
             margin-top: 2px;
         }
 
-        /* Filtres */
-        .filtres {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 2px 12px rgba(0, 20, 0, 0.06);
+        /* ===== FILTRES ===== */
+        .filters {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            box-shadow: var(--shadow);
             margin-bottom: 20px;
+        }
+        .filters-row {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-        #searchInput {
+        .filters-row input,
+        .filters-row select {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #dce8dc;
-            border-radius: 30px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
             font-size: 15px;
+            background: var(--gray-50);
+            color: var(--gray-800);
             outline: none;
-            transition: 0.2s;
-            background: #fafffa;
+            transition: border 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
         }
-        #searchInput:focus {
-            border-color: #1f8b4c;
-            box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.15);
+        .filters-row input:focus,
+        .filters-row select:focus {
+            border-color: var(--primary);
+            background: #fff;
         }
-        .filtres-group {
+        .filters-row input::placeholder {
+            color: var(--gray-300);
+        }
+        .filters-actions {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 12px;
             justify-content: space-between;
+            padding-top: 4px;
         }
-        #zoneFilter {
-            flex: 1;
-            min-width: 140px;
-            padding: 10px 14px;
-            border-radius: 30px;
-            border: 2px solid #dce8dc;
-            background: #fafffa;
-            font-size: 14px;
-            color: #1a2e1f;
-            outline: none;
-        }
-        .toggle-container {
+        .filter-toggle {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 14px;
             font-weight: 500;
-            color: #2d4a33;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
+            color: var(--gray-600);
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #ccc;
-            border-radius: 24px;
-            transition: 0.3s;
+            user-select: none;
         }
-        .slider::before {
+        .filter-toggle input[type="checkbox"] {
+            width: 40px;
+            height: 22px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--gray-300);
+            border-radius: 30px;
+            position: relative;
+            outline: none;
+            transition: background 0.25s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .filter-toggle input[type="checkbox"]::after {
             content: "";
             position: absolute;
-            height: 18px;
+            top: 2px;
+            left: 2px;
             width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
+            height: 18px;
+            background: #fff;
             border-radius: 50%;
-            transition: 0.3s;
+            transition: transform 0.25s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         }
-        .switch input:checked+.slider {
-            background: #1f8b4c;
+        .filter-toggle input[type="checkbox"]:checked {
+            background: var(--primary);
         }
-        .switch input:checked+.slider::before {
-            transform: translateX(20px);
-        }
-        .stats {
-            font-size: 13px;
-            color: #4a6b4f;
-            text-align: center;
-            padding-top: 4px;
-            border-top: 1px solid #eaf0ea;
+        .filter-toggle input[type="checkbox"]:checked::after {
+            transform: translateX(18px);
         }
 
-        /* Liste */
+        .stats {
+            font-size: 13px;
+            color: var(--gray-600);
+            text-align: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 4px;
+        }
+
+        /* ===== LISTE ===== */
         #pharmacyList {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
-        .pharmacy-card {
-            background: white;
-            border-radius: 14px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border-left: 5px solid #1f8b4c;
-            transition: 0.2s;
+
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.15s;
         }
-        .pharmacy-card.garde {
-            border-left-color: #e6a020;
-            background: #fffcf0;
+        .card.garde {
+            border-left-color: #c07a2a;
+            background: #fefbf5;
         }
-        .pharmacy-card .nom {
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .card-name {
             font-size: 17px;
             font-weight: 600;
-            color: #0d3d1f;
+            color: var(--gray-800);
+            line-height: 1.3;
         }
-        .pharmacy-card .zone {
+        .card-badge {
+            font-size: 11px;
+            font-weight: 600;
+            background: #c07a2a;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .card-zone {
             font-size: 13px;
-            color: #4a6b4f;
-            margin: 2px 0 4px 0;
+            color: var(--gray-600);
+            margin: 3px 0 6px 0;
+            font-weight: 500;
         }
-        .pharmacy-card .localisation {
+        .card-location {
             font-size: 13px;
-            color: #5a6b5a;
-            margin-bottom: 8px;
+            color: #5a6e5a;
+            line-height: 1.4;
+            margin-bottom: 12px;
         }
-        .pharmacy-card .actions {
+        .card-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 4px;
+            margin-top: 2px;
         }
-        .pharmacy-card .btn {
-            padding: 6px 14px;
+        .card-actions a {
+            padding: 7px 16px;
             border-radius: 30px;
-            border: none;
             font-size: 13px;
             font-weight: 500;
-            background: #eaf4ea;
-            color: #1a4a2a;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            transition: background 0.15s;
+            border: none;
             cursor: pointer;
-            transition: 0.15s;
         }
-        .pharmacy-card .btn:hover {
-            background: #d0e6d0;
+        .btn-call {
+            background: var(--primary);
+            color: #fff;
         }
-        .pharmacy-card .btn-appel {
-            background: #1f8b4c;
-            color: white;
+        .btn-call:hover {
+            background: var(--primary-dark);
         }
-        .pharmacy-card .btn-appel:hover {
-            background: #16703e;
+        .btn-map {
+            background: var(--gray-100);
+            color: var(--gray-800);
         }
-        .badge-garde {
-            background: #e6a020;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 6px;
+        .btn-map:hover {
+            background: var(--gray-200);
         }
 
-        /* Pagination */
+        /* ===== PAGINATION ===== */
         .pagination {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px;
+            margin: 6px 0 10px 0;
         }
         .pagination button {
-            padding: 8px 14px;
-            border-radius: 30px;
-            border: 2px solid #dce8dc;
-            background: white;
-            color: #1a2e1f;
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--gray-200);
+            background: #fff;
+            color: var(--gray-800);
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -229,698 +264,784 @@
             min-width: 40px;
         }
         .pagination button.active {
-            background: #1f8b4c;
-            border-color: #1f8b4c;
-            color: white;
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
         }
-        .pagination button:hover:not(.active) {
-            background: #eaf4ea;
+        .pagination button:hover:not(.active):not(:disabled) {
+            background: var(--gray-100);
         }
         .pagination button:disabled {
-            opacity: 0.4;
+            opacity: 0.35;
             cursor: default;
         }
+        .pagination-ellipsis {
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            color: var(--gray-300);
+        }
 
-        /* Chat */
-        .chat-toggle {
+        /* ===== CHATBOT ===== */
+        .chat-fab {
             position: fixed;
             bottom: 24px;
             right: 20px;
-            width: 58px;
-            height: 58px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: #1f8b4c;
-            color: white;
+            background: var(--primary);
+            color: #fff;
             border: none;
-            font-size: 28px;
-            box-shadow: 0 4px 16px rgba(31, 139, 76, 0.35);
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(10, 126, 60, 0.35);
             cursor: pointer;
             z-index: 1000;
-            transition: 0.2s;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .chat-toggle:hover {
+        .chat-fab:hover {
             transform: scale(1.05);
-            background: #16703e;
         }
+
         .chat-window {
             position: fixed;
             bottom: 92px;
             right: 16px;
-            width: 340px;
+            width: 360px;
             max-width: 92vw;
-            height: 420px;
-            max-height: 65vh;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+            height: 480px;
+            max-height: 70vh;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.18);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             z-index: 999;
-            transition: 0.25s ease;
+            transition: opacity 0.25s, transform 0.25s;
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+            pointer-events: none;
+        }
+        .chat-window.open {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
         }
         .chat-window.hidden {
             display: none;
         }
+
         .chat-header {
-            background: #1f8b4c;
-            color: white;
-            padding: 12px 16px;
+            background: var(--primary);
+            color: #fff;
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
+            font-size: 15px;
+            flex-shrink: 0;
         }
-        .chat-close {
+        .chat-header button {
             background: none;
             border: none;
-            color: white;
+            color: #fff;
             font-size: 20px;
             cursor: pointer;
+            opacity: 0.8;
+            padding: 0 4px;
         }
+        .chat-header button:hover {
+            opacity: 1;
+        }
+
         .chat-messages {
             flex: 1;
-            padding: 12px 14px;
+            padding: 14px 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: #f8fbf8;
+            gap: 6px;
+            background: #f7faf7;
         }
-        .chat-messages .message {
-            max-width: 85%;
+        .chat-messages .msg {
+            max-width: 88%;
             padding: 10px 14px;
-            border-radius: 16px;
+            border-radius: 14px;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
             white-space: pre-wrap;
+            word-break: break-word;
         }
-        .chat-messages .bot {
-            background: #eaf4ea;
-            color: #1a2e1f;
+        .chat-messages .msg-bot {
+            background: #e8f5ee;
+            color: var(--gray-800);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
-        .chat-messages .user {
-            background: #1f8b4c;
-            color: white;
+        .chat-messages .msg-user {
+            background: var(--primary);
+            color: #fff;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
+        .chat-messages .msg-suggestion {
+            background: #fff;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            align-self: flex-start;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            transition: background 0.15s;
+        }
+        .chat-messages .msg-suggestion:hover {
+            background: var(--primary-light);
+        }
+
         .chat-input-area {
             display: flex;
-            border-top: 1px solid #eaf0ea;
-            padding: 8px 10px;
-            background: white;
-            gap: 6px;
+            border-top: 1px solid var(--gray-200);
+            padding: 10px 14px;
+            background: #fff;
+            gap: 8px;
+            flex-shrink: 0;
         }
         .chat-input-area input {
             flex: 1;
-            border: none;
-            padding: 10px 12px;
+            border: 1.5px solid var(--gray-200);
+            padding: 10px 14px;
             border-radius: 30px;
-            background: #f0f5f0;
             font-size: 14px;
             outline: none;
+            background: var(--gray-50);
+            transition: border 0.2s;
+        }
+        .chat-input-area input:focus {
+            border-color: var(--primary);
         }
         .chat-input-area button {
-            background: #1f8b4c;
+            background: var(--primary);
             border: none;
-            color: white;
-            width: 42px;
+            color: #fff;
+            width: 44px;
             border-radius: 50%;
             font-size: 18px;
             cursor: pointer;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .chat-input-area button:hover {
+            background: var(--primary-dark);
         }
 
+        /* ===== SUGGESTIONS CHAT ===== */
+        .suggestions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .suggestions-container .msg-suggestion {
+            flex: 0 0 auto;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (min-width: 600px) {
             body {
-                padding: 24px 40px 100px 40px;
-                max-width: 720px;
+                padding: 28px 40px 120px 40px;
+                max-width: 740px;
                 margin: 0 auto;
             }
             .chat-window {
                 width: 400px;
-                height: 480px;
+                height: 500px;
                 right: 24px;
                 bottom: 100px;
             }
+            .filters-row {
+                flex-direction: row;
+                gap: 12px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .filters-row input {
+                flex: 2;
+                min-width: 180px;
+            }
+            .filters-row select {
+                flex: 1;
+                min-width: 140px;
+            }
+            .filters-actions {
+                flex: 0 0 auto;
+            }
         }
-        @media (max-width: 400px) {
-            .filtres-group {
+        @media (max-width: 420px) {
+            .filters-actions {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 8px;
             }
-            #zoneFilter {
-                min-width: unset;
-            }
-            .toggle-container {
+            .filter-toggle {
                 justify-content: center;
             }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <h1>💊 ANN_PHARMA_TG</h1>
-        <p class="sous-titre">Annuaire officiel des pharmacies du Togo</p>
-    </header>
+<!-- HEADER -->
+<header class="app-header">
+    <h1>ANN<span>_PHARMA</span></h1>
+    <p>Annuaire des pharmacies du Togo</p>
+</header>
 
-    <!-- FILTRES -->
-    <section class="filtres">
-        <input type="text" id="searchInput" placeholder="🔍 Rechercher une pharmacie..." />
-
-        <div class="filtres-group">
-            <select id="zoneFilter">
-                <option value="all">📍 Toutes les zones</option>
-            </select>
-
-            <div class="toggle-container">
-                <span class="toggle-label">🛡️ Garde</span>
-                <label class="switch">
-                    <input type="checkbox" id="gardeToggle" />
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="stats" id="stats">Chargement...</div>
-    </section>
-
-    <!-- LISTE -->
-    <main id="pharmacyList"></main>
-
-    <!-- PAGINATION -->
-    <div class="pagination" id="pagination"></div>
-
-    <!-- CHATBOT -->
-    <div id="chatbotContainer">
-        <button id="chatToggle" class="chat-toggle">💬</button>
-        <div id="chatWindow" class="chat-window hidden">
-            <div class="chat-header">
-                <span>🤖 Assistant Pharma</span>
-                <button id="chatClose" class="chat-close">✕</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">Bonjour ! Posez-moi une question (ex: "garde", "Lomé", "Kara")</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Écrivez votre question..." />
-                <button id="chatSend">➤</button>
-            </div>
+<!-- FILTRES -->
+<section class="filters">
+    <div class="filters-row">
+        <input type="text" id="searchInput" placeholder="Rechercher une pharmacie...">
+        <select id="zoneFilter">
+            <option value="all">Toutes les zones</option>
+        </select>
+        <div class="filters-actions">
+            <label class="filter-toggle">
+                <input type="checkbox" id="gardeToggle">
+                <span>Garde</span>
+            </label>
         </div>
     </div>
+    <div class="stats" id="stats">Chargement...</div>
+</section>
 
-    <!-- ========== DONNÉES + JAVASCRIPT ========== -->
-    <script>
-        // ============================================================
-        // 1. LES DONNÉES (intégrées directement)
-        // ============================================================
-        const pharmacieData = [
-            {"id":1,"nom":"Pharmacie AEROPORT","telephone":"22262122","localisation":"Rte de l'Aéroport SITO","zone":"Lomé (Aéroport)","ville":"Lomé","est_de_garde":false},
-            {"id":2,"nom":"Pharmacie AMITIE","telephone":"22254774","localisation":"72 Av des Hydrocarbures SOTED","zone":"Lomé (Zone Portuaire)","ville":"Lomé","est_de_garde":false},
-            {"id":3,"nom":"Pharmacie BE KPEHENOU","telephone":"22352503","localisation":"Boulevard Félix HOUPHOUET - BOIGNY à Bè Kpéhénou","zone":"Lomé (Bè)","ville":"Lomé","est_de_garde":false},
-            {"id":4,"nom":"Pharmacie BIEN-ETRE","telephone":"70342660","localisation":"100 Bd du Haho Hédzranawoe a cote de la station d'essence Total","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":5,"nom":"Pharmacie CONFIANCE","telephone":"91013338","localisation":"Face GTA","zone":"Lomé (Cacaveli / GTA)","ville":"Lomé","est_de_garde":false},
-            {"id":6,"nom":"Pharmacie DE L'UNION","telephone":"71419969","localisation":"Bd Malfakassa face a la crèmerie BAMUDAS-BE KPOTA","zone":"Bè-Kpota, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":7,"nom":"Pharmacie DE LA VICTOIRE","telephone":"70457492","localisation":"Avédji Wessomé, sur le Bd Faure Gnassingbé","zone":"Bd Faure Gnassingbe, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":8,"nom":"Pharmacie DU GROUPE C","telephone":"99982087","localisation":"Agbalépédogan face Clinique la Victoire","zone":"Lomé (Agbalépédogan)","ville":"Lomé","est_de_garde":false},
-            {"id":9,"nom":"Pharmacie LA COLOMBE","telephone":"71888484","localisation":"Kpégolonou,en face du collège Protestant","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":10,"nom":"Pharmacie LAVOISIER JESPA","telephone":"98513890","localisation":"Rond Point de Kpalimè","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":11,"nom":"Pharmacie NOVA","telephone":"90014182","localisation":"Carrefour Y. face mission catholique","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":12,"nom":"Pharmacie SEGBE","telephone":"92594935","localisation":"Ségbé qt Zanvi près del'EPP et du CEG Ségbé","zone":"Rte vers Segbe","ville":"Ségbé","est_de_garde":false},
-            {"id":13,"nom":"Pharmacie SOTOUBOUA","telephone":"92666606","localisation":"N1,Sotouboua","zone":"Sotouboua","ville":"Sotouboua","est_de_garde":false},
-            {"id":14,"nom":"Pharmacie 2000","telephone":"91647338","localisation":"BE KPOTA pres du Marché Dzifa","zone":"Lomé (Bè Kpota)","ville":"Lomé","est_de_garde":false},
-            {"id":15,"nom":"Pharmacie 3E ARRONDISSEMENT","telephone":"22215227","localisation":"Bd du 13 janvier, près de l'Immeuble FIATA","zone":"Lomé (Centre Ville)","ville":"Lomé","est_de_garde":false},
-            {"id":16,"nom":"Pharmacie A DIEU LA GLOIRE","telephone":"93263600","localisation":"Marché de Légbassito, à côté de la Poste","zone":"Lomé (Légbassito)","ville":"Lomé","est_de_garde":false},
-            {"id":17,"nom":"Pharmacie ABRAHAM","telephone":"92259983","localisation":"AGOE Logopé Kossigan","zone":"Lomé (Agoè Logopé)","ville":"Lomé","est_de_garde":false},
-            {"id":18,"nom":"Pharmacie ACTUELLE","telephone":"99852490","localisation":"Route de Ségbé , Quartier Sagbado - Adidogome","zone":"Lomé (Sagbado)","ville":"Lomé","est_de_garde":false},
-            {"id":19,"nom":"Pharmacie ADIDOGOME","telephone":"22511891","localisation":"Face au Camp du 2eme RI d'Adidogomé","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":20,"nom":"Pharmacie ADJOLOLO","telephone":"22210513","localisation":"1319, Rue de la Charité proche du CMS de Nyekonakpoe","zone":"Lomé (Nyékonakpoé)","ville":"Lomé","est_de_garde":false},
-            {"id":21,"nom":"Pharmacie ADONAI","telephone":"22500405","localisation":"Face Hotel La Plantation a Agoe Nyivé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":22,"nom":"Pharmacie ADOUNI","telephone":"70393939","localisation":"Vakpossito Logogome près du carrefour AISED","zone":"Lomé (Agoè Vakpossito)","ville":"Lomé","est_de_garde":false},
-            {"id":23,"nom":"Pharmacie AGBEGNIGAN","telephone":"70200000","localisation":"Tokoin Ramco- Gbadago Av de la Libération","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":24,"nom":"Pharmacie AGBONOU","telephone":"70707036","localisation":"Agbonou,Atakpamé","zone":"Atakpamé","ville":"Atakpamé","est_de_garde":false},
-            {"id":25,"nom":"Pharmacie AGOENVIVE","telephone":"91610262","localisation":"A côté de l'Eglise Catholique d'Agoè-Nyivé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":26,"nom":"Pharmacie AGOU","telephone":"99716060","localisation":"AGOU GADZEPE YOVO KOME Immeuble CIB INTA","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":27,"nom":"Pharmacie AJP-ABOLAVE","telephone":"90413402","localisation":"Djablé,sur la route d'abolavé à 50m du siège de la CEET Djagblé","zone":"Dé Kopé","ville":"Dé Kopé","est_de_garde":false},
-            {"id":28,"nom":"Pharmacie AKODESSEWA","telephone":"96800866","localisation":"Boulevard Mobutu sese seko","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":29,"nom":"Pharmacie AKOFA","telephone":"70499628","localisation":"Av Maman N'Danida Amoutivé","zone":"Lomé (Amoutivé)","ville":"Lomé","est_de_garde":false},
-            {"id":30,"nom":"Pharmacie AL HAYAT","telephone":"70084646","localisation":"Route Nationale N1 Pharmacie Al Hayat","zone":"Anié","ville":"Anié","est_de_garde":false},
-            {"id":31,"nom":"Pharmacie ALTA","telephone":"70084646","localisation":"AGOE Anonkui Route Mission Tové","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":32,"nom":"Pharmacie AMEN","telephone":"90885588","localisation":"Marché d'Adéticopé près de l'Eglise Catholique Christ Roi","zone":"Adétikopé","ville":"Adétikopé","est_de_garde":false},
-            {"id":33,"nom":"Pharmacie AMESSIAME-BE","telephone":"96329760","localisation":"Marché de BE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":34,"nom":"Pharmacie ANFOIN","telephone":"90519475","localisation":"ANFOIN-KPOTA 65M EPP ANFOIN","zone":"Anfoin","ville":"Anfoin","est_de_garde":false},
-            {"id":35,"nom":"Pharmacie APOLLON","telephone":"93504254","localisation":"Avédji Face complexe scolaire Makafui","zone":"Lomé (Avédji)","ville":"Lomé","est_de_garde":false},
-            {"id":36,"nom":"Pharmacie APOTHEKA","telephone":"70443333","localisation":"Face siège Fédération Togolaise de Football","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":37,"nom":"Pharmacie APOU ANTOINE","telephone":"22191215","localisation":"Boulevard du Lycée Agoè-Nyivé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":38,"nom":"Pharmacie ARC-EN-CIEL","telephone":"70425000","localisation":"Agoè-Téléssou, à 50m du Carrefour Margot","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":39,"nom":"Pharmacie ASSURANCE","telephone":"93087676","localisation":"Adétikopé, National N1","zone":"Adétikopé","ville":"Adétikopé","est_de_garde":false},
-            {"id":40,"nom":"Pharmacie ATLANTIQUE","telephone":"92654532","localisation":"Route Nationale 2 (N2) au niveau du carrefour Agbavi","zone":"N2","ville":"Aného","est_de_garde":false},
-            {"id":41,"nom":"Pharmacie AUREOLE","telephone":"96899696","localisation":"Agoe Trokpossimé au carrefour camp GP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":42,"nom":"Pharmacie AURORE","telephone":"71007575","localisation":"LANKOUVI, non-loin de l'école La divine providence","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":43,"nom":"Pharmacie AVE MARIA","telephone":"22223301","localisation":"Face ENSF près du CHU Tokoin","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":44,"nom":"Pharmacie AVEPOZO","telephone":"93017351","localisation":"Avépozo Be kome a coté de la place publique","zone":"N2, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":45,"nom":"Pharmacie AZUR","telephone":"90494456","localisation":"Apédokoè-Gbomamé, rte d'Atigangomé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":46,"nom":"Pharmacie BA-AYETA","telephone":"97726969","localisation":"KEGUE Zogbédji non loin de la station Ouando","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":47,"nom":"Pharmacie BAGUIDA","telephone":"70424777","localisation":"Face CMS de Baguida","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":48,"nom":"Pharmacie BAH","telephone":"90557959","localisation":"Bd Zio, Face EPP Hédzranawé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":49,"nom":"Pharmacie BAKOE","telephone":"90961608","localisation":"Apessito (Gbemu Kpodzi), en bordure de la route de la mission de Tové","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":50,"nom":"Pharmacie BEL AIR","telephone":"22210321","localisation":"Non loin de Ramco et de l'Hôtel Palm Beach","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":51,"nom":"Pharmacie BELIEVE","telephone":"96801023","localisation":"à côté de la Délégation de la Chambre de Commerce","zone":"Tsévié","ville":"Tsévié","est_de_garde":false},
-            {"id":52,"nom":"Pharmacie BENEDICTA AURORA","telephone":"96800958","localisation":"au cœur de la ville de Vogan","zone":"Vogan","ville":"Vogan","est_de_garde":false},
-            {"id":53,"nom":"Pharmacie BESDA","telephone":"70426825","localisation":"Route de Kpalimé Adidogomé Aménopé","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":54,"nom":"Pharmacie BETANIA","telephone":"96801011","localisation":"Rue Sito Totsi-Glenkome non loin de la salle des Témoins de Jéhovah","zone":"Bd Faure Gnassingbe, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":55,"nom":"Pharmacie BETHEL","telephone":"22252370","localisation":"ADIDOGOME Soviépé Bd du 30 Aout","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":56,"nom":"Pharmacie BIOVA","telephone":"70231923","localisation":"Bd Houphouet Boigny","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":57,"nom":"Pharmacie BON PASTEUR","telephone":"91434484","localisation":"44 Av de la libération, en face de Brother Home","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":58,"nom":"Pharmacie BON SAMARITAIN","telephone":"22214530","localisation":"BE PA de SOUZA Hôpital de BE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":59,"nom":"Pharmacie BON SECOURS","telephone":"70457674","localisation":"Rue du Grand College du Plateau- Cassablanca","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":60,"nom":"Pharmacie BONTE","telephone":"96800900","localisation":"Route de SEGBE, Wonyomé-Adidogomé en face de la station Sanol","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":61,"nom":"Pharmacie CAMPUS","telephone":"96800885","localisation":"ADEWI - Boulevard de la Kara a coté de l'UTB","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":62,"nom":"Pharmacie CHARITE","telephone":"22251260","localisation":"A coté du CEG d'AGOE- NYIVE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":63,"nom":"Pharmacie CHÂTEAU D'EAU","telephone":"90155017","localisation":"Pres du Chateau d'eau de BE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":64,"nom":"Pharmacie CHRIST ROI","telephone":"22274666","localisation":"KAGOME","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":65,"nom":"Pharmacie CITRUS","telephone":"96800903","localisation":"Attiégou Carrefour DVA, Grand Contournement","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":66,"nom":"Pharmacie CLEMENCE","telephone":"70193535","localisation":"Rte de la Cour d'Appel entre l'Agence CEET Agoe et l'Ecole privée La Source","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":67,"nom":"Pharmacie CONSEIL","telephone":"93109292","localisation":"Carrefour CEG Sagbado Logoté","zone":"Lomé (Sagbado)","ville":"Lomé","est_de_garde":false},
-            {"id":68,"nom":"Pharmacie CRISTAL","telephone":"22209091","localisation":"Boulevard Houphouët - Boigny","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":69,"nom":"Pharmacie DAFEANNE","telephone":"92624444","localisation":"Agoè sogbossito sur la route allant du contournement au camp GP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":70,"nom":"Pharmacie DAPAONG","telephone":"98244004","localisation":"NON LOIN DU CARREFOUR CARNAVAL","zone":"Dapaong","ville":"Dapaong","est_de_garde":false},
-            {"id":71,"nom":"Pharmacie de DAVIE","telephone":"71764444","localisation":"à 25 M du poste de police, Davie assomé","zone":"Tsévié","ville":"Tsévié","est_de_garde":false},
-            {"id":72,"nom":"Pharmacie de L' EDEN","telephone":"70421398","localisation":"Route d'Aneho face cité Baguida","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":73,"nom":"Pharmacie DE L'AVE","telephone":"92102222","localisation":"Rue zongo, Assahoun","zone":"Assahoun","ville":"Assahoun","est_de_garde":false},
-            {"id":74,"nom":"Pharmacie DE LA CITE","telephone":"22250125","localisation":"Boulevard du 30 Aout lomé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":75,"nom":"Pharmacie de LA GARE","telephone":"24410120","localisation":"En face du Grand Marché Plateaux - BP 290 Kpalimé","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":76,"nom":"Pharmacie DE LA MARINA","telephone":"22214846","localisation":"Sur RN2 BD du Mono en face du poste frontière d'Aflao Kodjoviakope","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":77,"nom":"Pharmacie DELALI","telephone":"93645372","localisation":"En face de l'Hopital de Cacaveli","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":78,"nom":"Pharmacie DENIS","telephone":"93084640","localisation":"AGOE Kové carrefour Kpokli","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":79,"nom":"Pharmacie DEO GRATIAS","telephone":"96285713","localisation":"Rue Notre Dame de la Miséricorde KEGUE DINGBLE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":80,"nom":"Pharmacie DES ETOILES","telephone":"22218847","localisation":"10 Av de la Nouvelle Marche","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":81,"nom":"Pharmacie des LACS","telephone":"24410154","localisation":"Route Nationale N°2 (RN2), Aného","zone":"Aného","ville":"Aného","est_de_garde":false},
-            {"id":82,"nom":"Pharmacie DES APOTRES","telephone":"70453805","localisation":"49, Bd Moboutou Sese Seko, Akodessewa","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":83,"nom":"Pharmacie DES ECOLES","telephone":"96800914","localisation":"Face Lycée Technique Adidogome et pres du CEG","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":84,"nom":"Pharmacie DES LILAS","telephone":"96165589","localisation":"123 HDN 07 Route de Kégué Boulevard Jean Paul II prolongé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":85,"nom":"Pharmacie DES OLIVIERS","telephone":"22210356","localisation":"01 Rue du Rotary Club international","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":86,"nom":"Pharmacie DES ORCHIDEES","telephone":"99010374","localisation":"AGOE-TELESSOU, LEO 2000","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":87,"nom":"Pharmacie DES ROSES","telephone":"96800962","localisation":"AGOE- Vakpossito pres de l'Entreprise de l'Union","zone":"Lomé (Agoè Vakpossito)","ville":"Lomé","est_de_garde":false},
-            {"id":88,"nom":"Pharmacie DES VERTS PATURAGES","telephone":"90342211","localisation":"Aflao Gakli, Rue de l'OCAM","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":89,"nom":"Pharmacie DIEUDONNE","telephone":"70448459","localisation":"AGOE- TELESSOU NON LOIN DE LA STATION CAP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":90,"nom":"Pharmacie DIFEZI","telephone":"25500244","localisation":"Quartier KOULOUMDE A 300m du stade municipal de Sokodé","zone":"Sokodé","ville":"Sokodé","est_de_garde":false},
-            {"id":91,"nom":"Pharmacie DIVINA GRACIA","telephone":"93839100","localisation":"Quartier Agoe Fiovi Carrefour Bafana Bafana","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":92,"nom":"Pharmacie DJIDJOLE","telephone":"22256512","localisation":"DJIDJOLE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":93,"nom":"Pharmacie DODJI","telephone":"70291677","localisation":"Ségbé Akato immeuble Akato plage","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":94,"nom":"Pharmacie DONGOYO","telephone":"71810119","localisation":"est située dans la ville de Kara dans le quartier Dongoyo","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":95,"nom":"Pharmacie DU BOULEVARD","telephone":"22216549","localisation":"Bd du 13 janvier Doulassamé","zone":"Lomé (Centre Ville)","ville":"Lomé","est_de_garde":false},
-            {"id":96,"nom":"Pharmacie DU CENTRE","telephone":"22218330","localisation":"ASSIVITO face WATT","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":97,"nom":"Pharmacie DU GRAND MARCHE","telephone":"22212636","localisation":"Avenue de la Libération","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":98,"nom":"Pharmacie DU GRAND PLATEAU","telephone":"98975913","localisation":"À 200m de la station T-oil, en face du marché des fruits","zone":"Atakpamé","ville":"Atakpamé","est_de_garde":false},
-            {"id":99,"nom":"Pharmacie du LAC","telephone":"93549870","localisation":"Carrefour Togamonou","zone":"Agbodrafo","ville":"Agbodrafo","est_de_garde":false},
-            {"id":100,"nom":"Pharmacie DU MILLENAIRE","telephone":"22516431","localisation":"Face réserve de la gendarmerie d'Agoe -Nyivé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":101,"nom":"Pharmacie DU PEUPLE","telephone":"22613729","localisation":"Rue Santiagou pres du Marché de NUKAFU","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":102,"nom":"Pharmacie DU POINT E","telephone":"22519171","localisation":"506 rue 129 Aflao Gakli kininiti gome a Djidjolé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":103,"nom":"Pharmacie ECLAIR","telephone":"97604627","localisation":"Rue Avénou BE Ahligo dans le prolongement du Marché de Ahligo","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":104,"nom":"Pharmacie EL NOUR","telephone":"97799374","localisation":"AGOE-ALINKA non loin du CMS Togblékopé","zone":"Lomé (Togblékopé)","ville":"Lomé","est_de_garde":false},
-            {"id":105,"nom":"Pharmacie EL SALI","telephone":"70124444","localisation":"Rte Lomé Kpalimé Aflao Apédokoe Gbomame","zone":"Sanguéra","ville":"Sanguéra","est_de_garde":false},
-            {"id":106,"nom":"Pharmacie EL SHADAI","telephone":"22514425","localisation":"Face Ecole de Théologie ESTAO","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":107,"nom":"Pharmacie EL-NISSI","telephone":"92012727","localisation":"Rte Lomé-Kpalime carrefour Apédokoe Gbomame","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":108,"nom":"Pharmacie EL-SHAMMAH","telephone":"22469350","localisation":"Sise a Amadahomé a coté de la maison des Jeunes","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":109,"nom":"Pharmacie ELEMAWUSSI","telephone":"92012424","localisation":"Adétikopé, Médina, Nationale N°1","zone":"Adétikopé","ville":"Adétikopé","est_de_garde":false},
-            {"id":110,"nom":"Pharmacie ELI-BERACA","telephone":"92012222","localisation":"Route d'Adidogomé, Immeuble SIKOVIC face bureau de poste","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":111,"nom":"Pharmacie ELKANAH","telephone":"91362165","localisation":"Située au bord de la Route Nationale N°1 à Tsévié","zone":"Tsévié","ville":"Tsévié","est_de_garde":false},
-            {"id":112,"nom":"Pharmacie ELSAM","telephone":"71560000","localisation":"En face de LYATA carrefour Y, Immeuble CIB-INTA","zone":"Atakpamé","ville":"Atakpamé","est_de_garde":false},
-            {"id":113,"nom":"Pharmacie EMMANUEL","telephone":"22213098","localisation":"637 Av Duisbourg Face MIVIP Kodjoviakopé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":114,"nom":"Pharmacie EMMAÜS","telephone":"22402504","localisation":"Sur la route de Mission Tové a coté du bar Solidarité","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":115,"nom":"Pharmacie ENOULI","telephone":"22259068","localisation":"Station d'Agbalépédogan","zone":"Lomé (Agbalépédogan)","ville":"Lomé","est_de_garde":false},
-            {"id":116,"nom":"Pharmacie EPIPHANIA","telephone":"70401052","localisation":"Rue de La Pampa Carrefour AGBEMADON ADIDOGOME","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":117,"nom":"Pharmacie ESPACE-VIE","telephone":"99858907","localisation":"AGOE Logopé non loin de place de Loisir BKS 2","zone":"Lomé (Agoè Logopé)","ville":"Lomé","est_de_garde":false},
-            {"id":118,"nom":"Pharmacie ESPERANCE","telephone":"22210128","localisation":"Av F J STRAUSS Face Ecole Française Nyékonakpoe","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":119,"nom":"Pharmacie ESPOIR","telephone":"26601415","localisation":"Derriére la mairie de KOZAH","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":120,"nom":"Pharmacie EVA","telephone":"90544545","localisation":"SANGUERA Klikame non loin du T-OIL","zone":"Sanguéra","ville":"Sanguéra","est_de_garde":false},
-            {"id":121,"nom":"Pharmacie EXCELLENCE","telephone":"22517787","localisation":"AGOE Démakpoé Voie CEDEAO","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":122,"nom":"Pharmacie FIDELIA","telephone":"22719595","localisation":"Bè-Kpota, Route d'Attiégou, près de l'hôtel 'LE REFERENTIEL'","zone":"Lomé (Bè)","ville":"Lomé","est_de_garde":false},
-            {"id":123,"nom":"Pharmacie FLAMME D'AMOUR","telephone":"70457014","localisation":"Qt Bobole kope - Kpogan non loin du cimetiere Zogbedjimonou","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":124,"nom":"Pharmacie FOREVER","telephone":"22261177","localisation":"52 Avenue des Kondona face Garage Central Admministratif","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":125,"nom":"Pharmacie FRATERNITE","telephone":"22268155","localisation":"Hédzranawé près de la Clinique St Joseph","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":126,"nom":"Pharmacie GANFAT","telephone":"22550815","localisation":"AGOE DALIKO près du Carf EDEM Camp GP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":127,"nom":"Pharmacie GBEZE","telephone":"22263261","localisation":"Tokoin Novissi, 142 Boulevard Jean Paul II","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":128,"nom":"Pharmacie GBOSSIME","telephone":"22225050","localisation":"Non loin du Marché de Gbossime sur le Boulevard de la KARA","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":129,"nom":"Pharmacie GRATITUDE","telephone":"92189485","localisation":"Agoe Légbassito Zovadjin non loin du carrefour Avinato","zone":"Lomé (Légbassito)","ville":"Lomé","est_de_garde":false},
-            {"id":130,"nom":"Pharmacie GREENRX","telephone":"92961919","localisation":"Ségbé dans l'immeuble MabizPlaza - non loin du Rond point Douane","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":131,"nom":"Pharmacie HANOUKOPE","telephone":"22210115","localisation":"Avenue de la Nouvelle Marche Immeuble Radio Kanal FM","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":132,"nom":"Pharmacie HEDJRANAWE","telephone":"22264961","localisation":"Avenue du Grand du Séminaire non loin de la Banque Atlantique","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":133,"nom":"Pharmacie HELENE","telephone":"92660908","localisation":"Aveta face au marché d' Aveta","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":134,"nom":"Pharmacie HÔPITAL","telephone":"79690808","localisation":"Face Hopital CHU Tokoin","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":135,"nom":"Pharmacie HORIZON","telephone":"90565256","localisation":"165 Bd du 13janvier Nyékonakpoe. Face Sapeurs Pompiers","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":136,"nom":"Pharmacie HOSANNA","telephone":"22515049","localisation":"Carrefour Sagbado-Sémékonawo-en face de la station service SANOL","zone":"Lomé (Sagbado)","ville":"Lomé","est_de_garde":false},
-            {"id":137,"nom":"Pharmacie HYGEA","telephone":"99273636","localisation":"Face Lycée Publique de Baguida route d'Afanoukopé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":138,"nom":"Pharmacie IDEALE","telephone":"70459038","localisation":"Quartier Kpangalam, au bord de la Route Nationale","zone":"Sokodé","ville":"Sokodé","est_de_garde":false},
-            {"id":139,"nom":"Pharmacie INTERNATIONALE","telephone":"22268994","localisation":"Sise Marché de Hédzranawoé Assiyéyé Boulevard du Haho","zone":"Lomé (Hédzranawoé)","ville":"Lomé","est_de_garde":false},
-            {"id":140,"nom":"Pharmacie IRIS","telephone":"91684804","localisation":"Amadahome imm Havon A 500m de la station CAP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":141,"nom":"Pharmacie ISIS","telephone":"70448387","localisation":"Avenue Jean Paul II près des rails NUKAFU Gakpoto","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":142,"nom":"Pharmacie J-MIMSHAK","telephone":"92244270","localisation":"Rue Tchamba 964 a 50m de la base de Satom Hountigomè","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":143,"nom":"Pharmacie JAHNAP","telephone":"22512286","localisation":"A côté de l'EPP Gakli, Djidjolé-Gakli, immeuble Favo","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":144,"nom":"Pharmacie JEANNE D'ARC","telephone":"22220801","localisation":"Pres de Marox Renault Star","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":145,"nom":"Pharmacie JUSTINE","telephone":"22210001","localisation":"291 Bd des Armées - Tokoin Habitat","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":146,"nom":"Pharmacie KARA-CENTRE","telephone":"26606014","localisation":"A 200m du carrefour TOMDE","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":147,"nom":"Pharmacie KEGUE","telephone":"22260412","localisation":"Rue Nazod, non loin de la station Kégué","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":148,"nom":"Pharmacie KEKELI","telephone":"99992249","localisation":"Quartier Lomnava près de la gendarmerie","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":149,"nom":"Pharmacie KELEGOUGAN","telephone":"92953838","localisation":"AGOE Kelegougan Voie contournement","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":150,"nom":"Pharmacie KLOKPE","telephone":"96801003","localisation":"Derrière la Foire Togo 2000","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":151,"nom":"Pharmacie KOBOYO","telephone":"93704812","localisation":"DAVIE, rte de la Nationale No 1 avant le péage de Davié","zone":"Tsévié","ville":"Tsévié","est_de_garde":false},
-            {"id":152,"nom":"Pharmacie KODJOVIAKOPE","telephone":"22218990","localisation":"Avenue Duisbourg","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":153,"nom":"Pharmacie KOMAH","telephone":"70451631","localisation":"Quartier KOMAH pres du Marché de Komah","zone":"Sokodé","ville":"Sokodé","est_de_garde":false},
-            {"id":154,"nom":"Pharmacie KOUESSAN","telephone":"96801001","localisation":"En face du Stade de Kégué","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":155,"nom":"Pharmacie LA BARAKA","telephone":"90174928","localisation":"Agoè LOGOPE, non loin de l'ECOLE LA BRUYERE","zone":"Lomé (Agoè Logopé)","ville":"Lomé","est_de_garde":false},
-            {"id":156,"nom":"Pharmacie LA GRACE","telephone":"22259165","localisation":"Pres de l'Auberge Sahara avant la station SUN AGIP Agoé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":157,"nom":"Pharmacie LA MAIN DE DIEU","telephone":"93402121","localisation":"AGOE ASSIYEYE non loin du Temple des Assemblées de Dieu","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":158,"nom":"Pharmacie LA PERSEVERANCE","telephone":"90144857","localisation":"Atakpamékondji à côté de la Fucec Kkloto-siège","zone":"Kpalimé","ville":"Kpalimé","est_de_garde":false},
-            {"id":159,"nom":"Pharmacie LA PIERRE ANGULAIRE","telephone":"70775606","localisation":"AGOVOUDOU EN FACE ETS LYONNAIS","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":160,"nom":"Pharmacie LA PROSPERITE","telephone":"70448696","localisation":"Bd Eyadéma entre l'Immeuble EDA OBA et la Direction de la Police Judiciaire","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":161,"nom":"Pharmacie LA REFERENCE","telephone":"92515050","localisation":"Route de Kpalimé, Adidogomé Assiyéyé","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":162,"nom":"Pharmacie LA RUCHE","telephone":"91541616","localisation":"Attiégou derrière la clôture de l'aéroport","zone":"Lomé (Aéroport)","ville":"Lomé","est_de_garde":false},
-            {"id":163,"nom":"Pharmacie LA SHEKINA","telephone":"93339205","localisation":"AGOE-NYIVE Qt Atiomé carrefour Amadenta","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":164,"nom":"Pharmacie LAFE ZAKA","telephone":"92312744","localisation":"CINKASSE","zone":"Cinkassé","ville":"Cinkassé","est_de_garde":false},
-            {"id":165,"nom":"Pharmacie LAFIA","telephone":"90184496","localisation":"Quartier COFAC pres de la polyclinique et Hôtel Concorde Kara","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":166,"nom":"Pharmacie LAUS DEO","telephone":"93006575","localisation":"Rte de Léo 2000 face clinique Besthesda","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":167,"nom":"Pharmacie LE DESTIN","telephone":"70411541","localisation":"A côté de l'Agence ECOBANK de Baguida","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":168,"nom":"Pharmacie LE GALIEN","telephone":"70421677","localisation":"Rue pavée d'Adidoadin","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":169,"nom":"Pharmacie LE JOURDAIN","telephone":"22268920","localisation":"Boulevard Léopold Sédar SENGHOR, face au CEG Tokoin Wuiti","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":170,"nom":"Pharmacie LE PROGRES","telephone":"70458655","localisation":"Adakpame Grd contournement, en face l'Ecole Privée Universelle","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":171,"nom":"Pharmacie LE ROCHER","telephone":"92300656","localisation":"Agoe Zongo sur la route national N1 près du terrain de Golfe","zone":"Lomé (Agoè Zongo)","ville":"Lomé","est_de_garde":false},
-            {"id":172,"nom":"Pharmacie LES VERTS PATURAGES","telephone":"91914846","localisation":"Nationale N°5 (Route de Kpalimé)","zone":"Noépé","ville":"Noépé","est_de_garde":false},
-            {"id":173,"nom":"Pharmacie LIBERATION","telephone":"22222525","localisation":"Avenue Libération Prolongée, face à l'Immeuble Fiata","zone":"Lomé (Centre Ville)","ville":"Lomé","est_de_garde":false},
-            {"id":174,"nom":"Pharmacie LIDDY","telephone":"70901960","localisation":"AGOE-DIKAME, Bernard Copé après la station CAP","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":175,"nom":"Pharmacie LUCIOLE","telephone":"71685151","localisation":"Quartier KOUAWORO sur la bretelle du contournement","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":176,"nom":"Pharmacie LUMEN","telephone":"70416836","localisation":"DJAGBLE en face de l'EPP - Plakome","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":177,"nom":"Pharmacie LUMIERE","telephone":"70431549","localisation":"AGBALEPEDOGAN - Lossossime près du Rond Point de l'Œuf","zone":"Lomé (Agbalépédogan)","ville":"Lomé","est_de_garde":false},
-            {"id":178,"nom":"Pharmacie MAA LA","telephone":"90106092","localisation":"Agoe Demakpoe a coté de AZ Bâtiment","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":179,"nom":"Pharmacie MADINA","telephone":"91183333","localisation":"Wuiti en face de la cité CNSS a coté de l'UTB Novissii","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":180,"nom":"Pharmacie MAËLYS","telephone":"70448679","localisation":"1688 Bd Malfakassa BE KPOTA en face de NETADI","zone":"Bè-Kpota, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":181,"nom":"Pharmacie MAIRIE","telephone":"91032121","localisation":"39,Avenue Nicolas Grunitzky Nyékonakpoè","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":182,"nom":"Pharmacie MAGNIFICAT","telephone":"70445159","localisation":"Adidogome Yokoe Agblégan","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":183,"nom":"Pharmacie MAINA","telephone":"70436534","localisation":"Quartier AVEDJI non loin de l'Hôpital Source de Vie","zone":"Lomé (Avédji)","ville":"Lomé","est_de_garde":false},
-            {"id":184,"nom":"Pharmacie MAJESTE","telephone":"71161643","localisation":"Carrefour Dagué Nationale N°2","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":185,"nom":"Pharmacie MATHILDA","telephone":"93025212","localisation":"Route PATASSE- LOMEGAN - ODEF","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":186,"nom":"Pharmacie MATTHIA","telephone":"22212964","localisation":"1048 Avenue de la Libération","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":187,"nom":"Pharmacie MAWULE","telephone":"70459186","localisation":"54 Bd de l'OTI Rond Point Gakpoto, Bè-Kpota","zone":"Bè-Kpota, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":188,"nom":"Pharmacie MAWULOM","telephone":"70178787","localisation":"Agoe quartier Athiémé Carrefour Kponsé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":189,"nom":"Pharmacie MAWUNYO","telephone":"70423464","localisation":"AGOE-Sogbossito, route de Mission TOVE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":190,"nom":"Pharmacie MBA","telephone":"70278181","localisation":"Agoe Légbassito route de Mission Tové","zone":"Lomé (Légbassito)","ville":"Lomé","est_de_garde":false},
-            {"id":191,"nom":"Pharmacie MIDJODJI","telephone":"90097334","localisation":"Notsè KPOTA GARE","zone":"Notsè","ville":"Notsè","est_de_garde":false},
-            {"id":192,"nom":"Pharmacie MISÉRICORDE","telephone":"96800945","localisation":"BE KPOTA a 300m de NISSAN A coté de la station MRS","zone":"Bè-Kpota, Lomé","ville":"Lomé","est_de_garde":false},
-            {"id":193,"nom":"Pharmacie NABINE","telephone":"93362626","localisation":"Sise a Agoe Anome dit Plateau Route du Bar Plateau","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":194,"nom":"Pharmacie NATION","telephone":"96800947","localisation":"Face ancien marché de TOTSI","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":195,"nom":"Pharmacie ND MEDJ","telephone":"90141697","localisation":"Quartier Agoé-Assiyéyé, non loin du marché d'Agoé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":196,"nom":"Pharmacie NELLY'S","telephone":"92011100","localisation":"Klémé Agokpanou, non loin du château d'eau","zone":"Sanguéra","ville":"Sanguéra","est_de_garde":false},
-            {"id":197,"nom":"Pharmacie NERLEM","telephone":"70404323","localisation":"Adidogomé, non loin du Grand Contournement / Route de Kpalimé","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":198,"nom":"Pharmacie NOTRE DAME","telephone":"96801012","localisation":"Route de l' Aéroport entre la Foire Togo 2000 et l'Aéroport","zone":"Lomé (Aéroport)","ville":"Lomé","est_de_garde":false},
-            {"id":199,"nom":"Pharmacie NOTRE DAME DE LA TRINITE","telephone":"98465088","localisation":"Sise au 20 Boulevard de la Paix à Super Taco","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":200,"nom":"Pharmacie NOTRE DAME DE LOURDES","telephone":"70440101","localisation":"Carrefour Maison Blanche en allant a Deux Lions","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":201,"nom":"Pharmacie NOUVEAU MARCHE","telephone":"93277777","localisation":"Carrefour Lama","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":202,"nom":"Pharmacie NOUVELLE SOKODE","telephone":"90638828","localisation":"QUARTIER TCHAWANDA EN FACE DE L’ENTREE DU CHR","zone":"Sokodé","ville":"Sokodé","est_de_garde":false},
-            {"id":203,"nom":"Pharmacie NOUVELLE TULIPE","telephone":"99470070","localisation":"Route de Mission Tové près de la station CAP Agoe Légbassito","zone":"Lomé (Légbassito)","ville":"Lomé","est_de_garde":false},
-            {"id":204,"nom":"Pharmacie O GRAIN D'OR","telephone":"71901166","localisation":"Ahadji-Kpota Rue du carrefour Zorrobar-Grand Contournement","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":205,"nom":"Pharmacie OBSERVANCE","telephone":"22504860","localisation":"SOGBOSSITO en face de la Station TOTAL ENERGIES","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":206,"nom":"Pharmacie OCAM","telephone":"92859955","localisation":"Rue de l'ENTENTE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":207,"nom":"Pharmacie OCEANE","telephone":"22226277","localisation":"Rue HOULATA, perpendiculaire rue de l'Ocam","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":208,"nom":"Pharmacie OSSAN","telephone":"70404425","localisation":"Carrefour AVEDZI, face Ets LA LIMOUSINE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":209,"nom":"Pharmacie PAIX","telephone":"22214151","localisation":"Boulevard du 13 Janvier, non loin du Commissariat Central","zone":"Lomé (Centre Ville)","ville":"Lomé","est_de_garde":false},
-            {"id":210,"nom":"Pharmacie PATIENCE","telephone":"70052339","localisation":"DJAGBLE a 300m du CMS Ayokléfé","zone":"Djagblé","ville":"Djagblé","est_de_garde":false},
-            {"id":211,"nom":"Pharmacie PENIEL","telephone":"90159496","localisation":"Quartier Baguida, non loin de la Direction Générale des Douanes","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":212,"nom":"Pharmacie POPULAIRE","telephone":"22214765","localisation":"située sur la Rue de Commerce à Lomé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":213,"nom":"Pharmacie PORT","telephone":"70415453","localisation":"Face Hôtel Sarakawa","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":214,"nom":"Pharmacie POUR TOUS","telephone":"99982087","localisation":"Angle Boulevard du 13 Janvier et Rue de la Victoire","zone":"Lomé (Centre Ville)","ville":"Lomé","est_de_garde":false},
-            {"id":215,"nom":"Pharmacie PRINCIPALE","telephone":"90826767","localisation":"Route d'Aneho Kogan Yovo kopé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":216,"nom":"Pharmacie PROVIDENCE","telephone":"91148888","localisation":"Bd Jean Paul II","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":217,"nom":"Pharmacie RAOUDHA","telephone":"91613332","localisation":"Située au 4495 Boulevard Zio Hédzranawoé derrière TOGO 2000","zone":"Lomé (Hédzranawoé)","ville":"Lomé","est_de_garde":false},
-            {"id":218,"nom":"Pharmacie RECONFORT","telephone":"93459393","localisation":"Quartier Tomde carrefour SOS","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":219,"nom":"Pharmacie REGINA PACIS","telephone":"90185955","localisation":"ADETIKOPE Rte Nationale N1 près du bar Sous l'Antenne","zone":"Adétikopé","ville":"Adétikopé","est_de_garde":false},
-            {"id":220,"nom":"Pharmacie RENAISSANCE","telephone":"26600939","localisation":"Kara sud route Internationale n1","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":221,"nom":"Pharmacie ROBERTSON","telephone":"22222841","localisation":"607, Avenue François MITTERAND Nyékonakpoè","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":222,"nom":"Pharmacie SAG'BIBA","telephone":"91838783","localisation":"AGOE-Nanegbe à côté de la station T-Oil","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":223,"nom":"Pharmacie SAINT ANTOINE","telephone":"22352764","localisation":"1048, Avenue de la Libération, près de la Poste Centrale","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":224,"nom":"Pharmacie SAINT ESPRIT","telephone":"22510643","localisation":"Sur la Bretelle Agoe Nyivé Kégué Face au CEG Agoe Est","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":225,"nom":"Pharmacie SAINT JOSEPH","telephone":"96800965","localisation":"Bretelle de BE KLIKAME","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":226,"nom":"Pharmacie SAINT KISITO","telephone":"22219963","localisation":"Bd. de la Kara près du Bar TAMTAM","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":227,"nom":"Pharmacie SAINT MICHEL","telephone":"22517022","localisation":"Située a Agoe Nyivé entre la Brasserie BB et l'espace Télécom","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":228,"nom":"Pharmacie SAINT PAUL","telephone":"22268426","localisation":"Bd Jean Paul II","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":229,"nom":"Pharmacie SAINT PHILIPPE","telephone":"90673324","localisation":"SANGUERA Rte Lomé- Kpalimé pres de la station OANDO","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":230,"nom":"Pharmacie SAINT PIERRE","telephone":"70432667","localisation":"Sagboville Hédzranawé Boulevard du Haho","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":231,"nom":"Pharmacie SAINT PIO","telephone":"93404040","localisation":"KLOBATEME, non loin du Complexe scolaire le Bon Samaritain","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":232,"nom":"Pharmacie SAINT SYLVESTRE","telephone":"93515198","localisation":"Zanguéra,Quartier Sanyramé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":233,"nom":"Pharmacie SAINTE FAMILLE","telephone":"22259160","localisation":"Boulevard Jean-Paul II, quartier Atikoumé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":234,"nom":"Pharmacie SAINTE MARIE","telephone":"22218558","localisation":"DJAGBLE non loin du marché d'Avéta - Adja Adoté- kopé","zone":"Djagblé","ville":"Djagblé","est_de_garde":false},
-            {"id":235,"nom":"Pharmacie SAINTE RITA","telephone":"22425348","localisation":"Rue pavée Doulassamé Face Hotel SANA","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":236,"nom":"Pharmacie SALA HOUBEIDA","telephone":"91911535","localisation":"Agoè Kelegougan (Koffi Panou, Carrefour O'queens)","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":237,"nom":"Pharmacie SAMBONE","telephone":"71082148","localisation":"A WORGOU","zone":"Dapaong","ville":"Dapaong","est_de_garde":false},
-            {"id":238,"nom":"Pharmacie SANCTA MADONA","telephone":"70010303","localisation":"Kégué face maison Kader Cougbadja","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":239,"nom":"Pharmacie SANTE","telephone":"70449137","localisation":"Pres de NOPATO","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":240,"nom":"Pharmacie SANTE PLUS","telephone":"90127085","localisation":"Route de Kétao apres la clinique TOUT EST GRACE","zone":"Kara","ville":"Kara","est_de_garde":false},
-            {"id":241,"nom":"Pharmacie SANGUERA","telephone":"70428080","localisation":"Près du lycée Sanguera","zone":"Sanguéra","ville":"Sanguéra","est_de_garde":false},
-            {"id":242,"nom":"Pharmacie SARAH","telephone":"70426902","localisation":"Près du centre de santé d'Adakpamé","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":243,"nom":"Pharmacie SATIS","telephone":"70448517","localisation":"Agoe Logopé face CEG Agoenyivé ouest - Kossigan","zone":"Lomé (Agoè Logopé)","ville":"Lomé","est_de_garde":false},
-            {"id":244,"nom":"Pharmacie SAUVEUR","telephone":"90141105","localisation":"non loin ECOBANK DAPAONG","zone":"Dapaong","ville":"Dapaong","est_de_garde":false},
-            {"id":245,"nom":"Pharmacie SAVANA","telephone":"27701258","localisation":"Dans le Marché","zone":"Dapaong","ville":"Dapaong","est_de_garde":false},
-            {"id":246,"nom":"Pharmacie SEPOPO","telephone":"70346565","localisation":"ADAKPAME grand contournement rond point Sawto","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":247,"nom":"Pharmacie SHALOM","telephone":"22518760","localisation":"Agoè-Cacavéli, non loin de BKS. Sur Bd Faure GNASSINGBE","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":248,"nom":"Pharmacie SIKA","telephone":"92620651","localisation":"DJAGBLE Hihieatro à 200m du complexe scolaire la Persévérance","zone":"Djagblé","ville":"Djagblé","est_de_garde":false},
-            {"id":249,"nom":"Pharmacie SILOE","telephone":"90802639","localisation":"Carrefour Aflao Apédokoe Atigangome","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":250,"nom":"Pharmacie SOLIDARITE","telephone":"22510102","localisation":"Rue Avédji Limousine, Près de l'UTB Totsi","zone":"Lomé (Avédji)","ville":"Lomé","est_de_garde":false},
-            {"id":251,"nom":"Pharmacie SOURCE DE VIE","telephone":"22202759","localisation":"Face Collège Protestant Tokoin Lomé","zone":"Lomé (Tokoin)","ville":"Lomé","est_de_garde":false},
-            {"id":252,"nom":"Pharmacie St RAPHAEL","telephone":"22252121","localisation":"Bd du 30 Août, non loin du marché d'Adidogomé","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":253,"nom":"Pharmacie TAKOE","telephone":"96800977","localisation":"Avant la station CAP ESSO de Zongo - coté opposé","zone":"Lomé (Agoè Zongo)","ville":"Lomé","est_de_garde":false},
-            {"id":254,"nom":"Pharmacie TCHAOUDJO","telephone":"25501160","localisation":"Quartier Zongo sur la Nationale N1 pres du grand marché de Sokodé","zone":"Sokodé","ville":"Sokodé","est_de_garde":false},
-            {"id":255,"nom":"Pharmacie TCHEPSON","telephone":"70429441","localisation":"Face Terminal du Sahel TOGBLEKOPE","zone":"Lomé (Togblékopé)","ville":"Lomé","est_de_garde":false},
-            {"id":256,"nom":"Pharmacie THERYA","telephone":"71612222","localisation":"Petit contournement a 500m de la Foire internationale Togo 2000","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":257,"nom":"Pharmacie TONE","telephone":"90196360","localisation":"A coté du PSI Dapaong","zone":"Dapaong","ville":"Dapaong","est_de_garde":false},
-            {"id":258,"nom":"Pharmacie TRIOMPHE","telephone":"93258036","localisation":"Quartier Bokpokor, route contournement","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":259,"nom":"Pharmacie UNIVERS-SANTE","telephone":"22256171","localisation":"Bd GNASSINGBE Eyadéma Cité OUA face a l'entrée du CHU CAMPUS","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":260,"nom":"Pharmacie VERONIQUE","telephone":"92034040","localisation":"Avépozo en face de l'école nationale de gendarmerie","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":261,"nom":"Pharmacie VERSEAU","telephone":"90019029","localisation":"Pres de la maison Bateau de Baguida","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":262,"nom":"Pharmacie Verte","telephone":"22250326","localisation":"Face Ecole du Parti Klikame","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":263,"nom":"Pharmacie VIGUEUR","telephone":"22516330","localisation":"Rue 267 AGBALEPEDOGAN Kilimandjaro","zone":"Lomé (Agbalépédogan)","ville":"Lomé","est_de_garde":false},
-            {"id":264,"nom":"Pharmacie VITAFLORE","telephone":"70440404","localisation":"Agoe Vakpossito a 100m de la station Shell","zone":"Lomé (Agoè Vakpossito)","ville":"Lomé","est_de_garde":false},
-            {"id":265,"nom":"Pharmacie VITALIS","telephone":"22216979","localisation":"Rue Amoutiévé, à côté de la Caisse, Lagos Kpanou","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":266,"nom":"Pharmacie VITAS","telephone":"22516262","localisation":"Située à Agoè Assiyéyé du côté ouest","zone":"Lomé (Centre)","ville":"Lomé","est_de_garde":false},
-            {"id":267,"nom":"Pharmacie VOLONTAS DEI","telephone":"70422360","localisation":"Avédji carrefour SUN CITY face a l'ancien Bar Sun City","zone":"Lomé (Avédji)","ville":"Lomé","est_de_garde":false},
-            {"id":268,"nom":"Pharmacie WASTINE","telephone":"92611700","localisation":"Adidogome Logoté a 400m du carrefour logoté","zone":"Lomé (Adidogomé)","ville":"Lomé","est_de_garde":false},
-            {"id":269,"nom":"Pharmacie YASMEEM","telephone":"71996979","localisation":"Entre l'hôpital d'Aného et la station TotalEnergies","zone":"Aného","ville":"Aného","est_de_garde":false},
-            {"id":270,"nom":"Pharmacie YEM BLA","telephone":"90889872","localisation":"258, Av. Akéï face à la Résidence","zone":"Lomé (Akéï)","ville":"Lomé","est_de_garde":false},
-            {"id":271,"nom":"Pharmacie YESHUA","telephone":"98772153","localisation":"AGOE Vakpossito vers l'Ecole NDE","zone":"Lomé (Agoè Vakpossito)","ville":"Lomé","est_de_garde":false},
-            {"id":272,"nom":"Pharmacie ZILIDJI","telephone":"92616608","localisation":"Derrière le marche d'agoè zongo","zone":"Lomé (Agoè Zongo)","ville":"Lomé","est_de_garde":false},
-            {"id":273,"nom":"Pharmacie ZIO","telephone":"23304182","localisation":"Sur la Route Nationale N°1, non loin du Grand Marché de Tsévié","zone":"Tsévié","ville":"Tsévié","est_de_garde":false},
-            {"id":274,"nom":"Pharmacie ZONGO","telephone":"70499655","localisation":"Togblékopé carrefour Hermann entre Orabank et la station Sanol","zone":"Lomé, Togblékopé","ville":"Lomé","est_de_garde":false},
-            {"id":275,"nom":"Pharmacie ZOPOMAHE","telephone":"96283410","localisation":"ZOPOMAHE sur la route de Zossime Sanguera","zone":"Lomé (Agoè Zossimé)","ville":"Lomé","est_de_garde":false},
-            {"id":276,"nom":"Pharmacie ZOSSIME","telephone":"22554352","localisation":"AGOE-Zossime pres du marché","zone":"Lomé (Agoè Zossimé)","ville":"Lomé","est_de_garde":false}
-        ];
+<!-- LISTE -->
+<main id="pharmacyList"></main>
 
-        // ============================================================
-        // 2. LOGIQUE PRINCIPALE
-        // ============================================================
-        const allPharmacies = pharmacieData;
-        let currentPage = 1;
-        const PER_PAGE = 15;
+<!-- PAGINATION -->
+<div class="pagination" id="pagination"></div>
 
-        // Éléments DOM
-        const pharmacyList = document.getElementById('pharmacyList');
-        const searchInput = document.getElementById('searchInput');
-        const zoneFilter = document.getElementById('zoneFilter');
-        const gardeToggle = document.getElementById('gardeToggle');
-        const stats = document.getElementById('stats');
-        const pagination = document.getElementById('pagination');
+<!-- CHATBOT -->
+<button class="chat-fab" id="chatToggle" aria-label="Ouvrir le chat">💬</button>
+<div class="chat-window hidden" id="chatWindow">
+    <div class="chat-header">
+        <span>Assistant</span>
+        <button id="chatClose">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="msg msg-bot">Bonjour. Je suis votre assistant pour trouver une pharmacie au Togo.</div>
+        <div class="suggestions-container" id="suggestionContainer">
+            <div class="msg msg-suggestion" data-question="Quelles sont les pharmacies de garde ?">🛡️ Pharmacies de garde</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Lomé">📍 Lomé</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Kara">📍 Kara</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Kpalimé">📍 Kpalimé</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Sokodé">📍 Sokodé</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Atakpamé">📍 Atakpamé</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Tsévié">📍 Tsévié</div>
+            <div class="msg msg-suggestion" data-question="Pharmacies à Dapaong">📍 Dapaong</div>
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Écrivez votre question...">
+        <button id="chatSend">➤</button>
+    </div>
+</div>
 
-        // ============================================================
-        // 3. FILTRE PAR ZONE (génération)
-        // ============================================================
-        function populateZoneFilter() {
-            const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
-            zones.forEach(z => {
-                const opt = document.createElement('option');
-                opt.value = z;
-                opt.textContent = z;
-                zoneFilter.appendChild(opt);
-            });
-        }
-        populateZoneFilter();
+<script>
+    // ============================================================
+    // DONNÉES : 276 PHARMACIES (intégrées)
+    // ============================================================
+    const allPharmacies = [
+        {"id": 1, "nom": "Pharmacie AEROPORT", "telephone": "22262122", "localisation": "Rte de l'Aéroport SITO", "zone": "Lomé (Aéroport)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 2, "nom": "Pharmacie AMITIE", "telephone": "22254774", "localisation": "72 Av des Hydrocarbures SOTED", "zone": "Lomé (Zone Portuaire)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 3, "nom": "Pharmacie BE KPEHENOU", "telephone": "22352503", "localisation": "Boulevard Félix HOUPHOUET - BOIGNY à Bè Kpéhénou", "zone": "Lomé (Bè)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 4, "nom": "Pharmacie BIEN-ETRE", "telephone": "70342660", "localisation": "100 Bd du Haho Hédzranawoe", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 5, "nom": "Pharmacie CONFIANCE", "telephone": "91013338", "localisation": "Face GTA", "zone": "Lomé (Cacaveli)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 6, "nom": "Pharmacie DE L'UNION", "telephone": "71419969", "localisation": "Bd Malfakassa face crèmerie BAMUDAS", "zone": "Bè-Kpota, Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 7, "nom": "Pharmacie DE LA VICTOIRE", "telephone": "70457492", "localisation": "Avédji Wessomé, Bd Faure Gnassingbé", "zone": "Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 8, "nom": "Pharmacie DU GROUPE C", "telephone": "99982087", "localisation": "Agbalépédogan face Clinique la Victoire", "zone": "Lomé (Agbalépédogan)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 9, "nom": "Pharmacie LA COLOMBE", "telephone": "71888484", "localisation": "Kpégolonou, face collège Protestant", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 10, "nom": "Pharmacie LAVOISIER JESPA", "telephone": "98513890", "localisation": "Rond Point de Kpalimè", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 11, "nom": "Pharmacie NOVA", "telephone": "90014182", "localisation": "Carrefour Y. face mission catholique", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 12, "nom": "Pharmacie SEGBE", "telephone": "92594935", "localisation": "Ségbé qt Zanvi près EPP et CEG Ségbé", "zone": "Ségbé", "ville": "Ségbé", "est_de_garde": false},
+        {"id": 13, "nom": "Pharmacie SOTOUBOUA", "telephone": "92666606", "localisation": "N1, Sotouboua", "zone": "Sotouboua", "ville": "Sotouboua", "est_de_garde": false},
+        {"id": 14, "nom": "Pharmacie 2000", "telephone": "91647338", "localisation": "BE KPOTA près Marché Dzifa", "zone": "Lomé (Bè Kpota)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 15, "nom": "Pharmacie 3E ARRONDISSEMENT", "telephone": "22215227", "localisation": "Bd du 13 janvier, près Immeuble FIATA", "zone": "Lomé (Centre Ville)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 16, "nom": "Pharmacie A DIEU LA GLOIRE", "telephone": "93263600", "localisation": "Marché Légbassito, côté Poste", "zone": "Lomé (Légbassito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 17, "nom": "Pharmacie ABRAHAM", "telephone": "92259983", "localisation": "AGOE Logopé Kossigan", "zone": "Lomé (Agoè Logopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 18, "nom": "Pharmacie ACTUELLE", "telephone": "99852490", "localisation": "Route Ségbé, Sagbado - Adidogome", "zone": "Lomé (Sagbado)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 19, "nom": "Pharmacie ADIDOGOME", "telephone": "22511891", "localisation": "Face Camp 2eme RI Adidogomé", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 20, "nom": "Pharmacie ADJOLOLO", "telephone": "22210513", "localisation": "Rue Charité, CMS Nyekonakpoe", "zone": "Lomé (Nyékonakpoé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 21, "nom": "Pharmacie ADONAI", "telephone": "22500405", "localisation": "Face Hotel La Plantation Agoe Nyivé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 22, "nom": "Pharmacie ADOUNI", "telephone": "70393939", "localisation": "Vakpossito Logogome près carrefour AISED", "zone": "Lomé (Agoè Vakpossito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 23, "nom": "Pharmacie AGBEGNIGAN", "telephone": "70200000", "localisation": "Tokoin Ramco - Gbadago", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 24, "nom": "Pharmacie AGBONOU", "telephone": "70707036", "localisation": "Agbonou, Atakpamé", "zone": "Atakpamé", "ville": "Atakpamé", "est_de_garde": false},
+        {"id": 25, "nom": "Pharmacie AGOENVIVE", "telephone": "91610262", "localisation": "Eglise Catholique Agoè-Nyivé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 26, "nom": "Pharmacie AGOU", "telephone": "99716060", "localisation": "AGOU GADZEPE YOVO KOME", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 27, "nom": "Pharmacie AJP-ABOLAVE", "telephone": "90413402", "localisation": "Djablé, route Abolavé", "zone": "Dé Kopé", "ville": "Dé Kopé", "est_de_garde": false},
+        {"id": 28, "nom": "Pharmacie AKODESSEWA", "telephone": "96800866", "localisation": "Boulevard Mobutu", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 29, "nom": "Pharmacie AKOFA", "telephone": "70499628", "localisation": "Av Maman N'Danida Amoutivé", "zone": "Lomé (Amoutivé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 30, "nom": "Pharmacie AL HAYAT", "telephone": "70084646", "localisation": "Route Nationale N1", "zone": "Anié", "ville": "Anié", "est_de_garde": false},
+        {"id": 31, "nom": "Pharmacie ALTA", "telephone": "70084646", "localisation": "AGOE Anonkui Route Mission Tové", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 32, "nom": "Pharmacie AMEN", "telephone": "90885588", "localisation": "Marché Adéticopé, Eglise Christ Roi", "zone": "Adétikopé", "ville": "Adétikopé", "est_de_garde": false},
+        {"id": 33, "nom": "Pharmacie AMESSIAME-BE", "telephone": "96329760", "localisation": "Marché de BE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 34, "nom": "Pharmacie ANFOIN", "telephone": "90519475", "localisation": "ANFOIN-KPOTA 65M EPP ANFOIN", "zone": "Anfoin", "ville": "Anfoin", "est_de_garde": false},
+        {"id": 35, "nom": "Pharmacie APOLLON", "telephone": "93504254", "localisation": "Avédji Face complexe Makafui", "zone": "Lomé (Avédji)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 36, "nom": "Pharmacie APOTHEKA", "telephone": "70443333", "localisation": "Face Fédération Togolaise Football", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 37, "nom": "Pharmacie APOU ANTOINE", "telephone": "22191215", "localisation": "Boulevard Lycée Agoè-Nyivé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 38, "nom": "Pharmacie ARC-EN-CIEL", "telephone": "70425000", "localisation": "Agoè-Téléssou, 50m Carrefour Margot", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 39, "nom": "Pharmacie ASSURANCE", "telephone": "93087676", "localisation": "Adétikopé, National N1", "zone": "Adétikopé", "ville": "Adétikopé", "est_de_garde": false},
+        {"id": 40, "nom": "Pharmacie ATLANTIQUE", "telephone": "92654532", "localisation": "Route Nationale 2, Agbavi", "zone": "Aného", "ville": "Aného", "est_de_garde": false},
+        {"id": 41, "nom": "Pharmacie AUREOLE", "telephone": "96899696", "localisation": "Agoe Trokpossimé, camp GP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 42, "nom": "Pharmacie AURORE", "telephone": "71007575", "localisation": "LANKOUVI, école La divine providence", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 43, "nom": "Pharmacie AVE MARIA", "telephone": "22223301", "localisation": "Face ENSF, CHU Tokoin", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 44, "nom": "Pharmacie AVEPOZO", "telephone": "93017351", "localisation": "Avépozo Be kome, place publique", "zone": "Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 45, "nom": "Pharmacie AZUR", "telephone": "90494456", "localisation": "Apédokoè-Gbomamé, Atigangomé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 46, "nom": "Pharmacie BA-AYETA", "telephone": "97726969", "localisation": "KEGUE Zogbédji, station Ouando", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 47, "nom": "Pharmacie BAGUIDA", "telephone": "70424777", "localisation": "Face CMS de Baguida", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 48, "nom": "Pharmacie BAH", "telephone": "90557959", "localisation": "Bd Zio, Face EPP Hédzranawé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 49, "nom": "Pharmacie BAKOE", "telephone": "90961608", "localisation": "Apessito, mission Tové", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 50, "nom": "Pharmacie BEL AIR", "telephone": "22210321", "localisation": "Ramco, Hôtel Palm Beach", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 51, "nom": "Pharmacie BELIEVE", "telephone": "96801023", "localisation": "Chambre de Commerce CCIT", "zone": "Tsévié", "ville": "Tsévié", "est_de_garde": false},
+        {"id": 52, "nom": "Pharmacie BENEDICTA AURORA", "telephone": "96800958", "localisation": "Ville de Vogan", "zone": "Vogan", "ville": "Vogan", "est_de_garde": false},
+        {"id": 53, "nom": "Pharmacie BESDA", "telephone": "70426825", "localisation": "Route Kpalimé, Adidogomé", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 54, "nom": "Pharmacie BETANIA", "telephone": "96801011", "localisation": "Sito Totsi-Glenkome", "zone": "Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 55, "nom": "Pharmacie BETHEL", "telephone": "22252370", "localisation": "ADIDOGOME Soviépé Bd 30 Aout", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 56, "nom": "Pharmacie BIOVA", "telephone": "70231923", "localisation": "Bd Houphouet Boigny", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 57, "nom": "Pharmacie BON PASTEUR", "telephone": "91434484", "localisation": "44 Av libération, Brother Home", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 58, "nom": "Pharmacie BON SAMARITAIN", "telephone": "22214530", "localisation": "BE PA de SOUZA Hôpital de BE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 59, "nom": "Pharmacie BON SECOURS", "telephone": "70457674", "localisation": "Grand College du Plateau", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 60, "nom": "Pharmacie BONTE", "telephone": "96800900", "localisation": "Route SEGBE, Wonyomé-Adidogomé", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 61, "nom": "Pharmacie CAMPUS", "telephone": "96800885", "localisation": "ADEWI - Boulevard Kara, UTB", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 62, "nom": "Pharmacie CHARITE", "telephone": "22251260", "localisation": "CEG AGOE-NYIVE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 63, "nom": "Pharmacie CHÂTEAU D'EAU", "telephone": "90155017", "localisation": "Chateau d'eau de BE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 64, "nom": "Pharmacie CHRIST ROI", "telephone": "22274666", "localisation": "KAGOME", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 65, "nom": "Pharmacie CITRUS", "telephone": "96800903", "localisation": "Attiégou Carrefour DVA", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 66, "nom": "Pharmacie CLEMENCE", "telephone": "70193535", "localisation": "Cour d'Appel, CEET Agoe", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 67, "nom": "Pharmacie CONSEIL", "telephone": "93109292", "localisation": "CEG Sagbado Logoté", "zone": "Lomé (Sagbado)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 68, "nom": "Pharmacie CRISTAL", "telephone": "22209091", "localisation": "Boulevard Houphouët-Boigny", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 69, "nom": "Pharmacie DAFEANNE", "telephone": "92624444", "localisation": "Agoè sogbossito, contournement", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 70, "nom": "Pharmacie DAPAONG", "telephone": "98244004", "localisation": "Carrefour CARNAVAL", "zone": "Dapaong", "ville": "Dapaong", "est_de_garde": false},
+        {"id": 71, "nom": "Pharmacie de DAVIE", "telephone": "71764444", "localisation": "25m poste police, Davie", "zone": "Tsévié", "ville": "Tsévié", "est_de_garde": false},
+        {"id": 72, "nom": "Pharmacie de L' EDEN", "telephone": "70421398", "localisation": "Route Aneho face cité Baguida", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 73, "nom": "Pharmacie DE L'AVE", "telephone": "92102222", "localisation": "Rue zongo, Assahoun", "zone": "Assahoun", "ville": "Assahoun", "est_de_garde": false},
+        {"id": 74, "nom": "Pharmacie DE LA CITE", "telephone": "22250125", "localisation": "Boulevard 30 Aout", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 75, "nom": "Pharmacie de LA GARE", "telephone": "24410120", "localisation": "Grand Marché Plateaux, Kpalimé", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 76, "nom": "Pharmacie DE LA MARINA", "telephone": "22214846", "localisation": "RN2 BD Mono, frontière Aflao", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 77, "nom": "Pharmacie DELALI", "telephone": "93645372", "localisation": "Hopital Cacaveli", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 78, "nom": "Pharmacie DENIS", "telephone": "93084640", "localisation": "AGOE Kové carrefour Kpokli", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 79, "nom": "Pharmacie DEO GRATIAS", "telephone": "96285713", "localisation": "Notre Dame Miséricorde KEGUE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 80, "nom": "Pharmacie DES ETOILES", "telephone": "22218847", "localisation": "10 Av Nouvelle Marche", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 81, "nom": "Pharmacie des LACS", "telephone": "24410154", "localisation": "RN2, Aného", "zone": "Aného", "ville": "Aného", "est_de_garde": false},
+        {"id": 82, "nom": "Pharmacie DES APOTRES", "telephone": "70453805", "localisation": "49 Bd Moboutou, Akodessewa", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 83, "nom": "Pharmacie DES ECOLES", "telephone": "96800914", "localisation": "Lycée Technique Adidogome", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 84, "nom": "Pharmacie DES LILAS", "telephone": "96165589", "localisation": "Route Kégué, Jean Paul II", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 85, "nom": "Pharmacie DES OLIVIERS", "telephone": "22210356", "localisation": "Rue Rotary Club", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 86, "nom": "Pharmacie DES ORCHIDEES", "telephone": "99010374", "localisation": "AGOE-TELESSOU, LEO 2000", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 87, "nom": "Pharmacie DES ROSES", "telephone": "96800962", "localisation": "AGOE-Vakpossito, Entreprise Union", "zone": "Lomé (Agoè Vakpossito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 88, "nom": "Pharmacie DES VERTS PATURAGES", "telephone": "90342211", "localisation": "Aflao Gakli, Rue OCAM", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 89, "nom": "Pharmacie DIEUDONNE", "telephone": "70448459", "localisation": "AGOE-TELESSOU, station CAP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 90, "nom": "Pharmacie DIFEZI", "telephone": "25500244", "localisation": "KOULOUMDE, stade Sokodé", "zone": "Sokodé", "ville": "Sokodé", "est_de_garde": false},
+        {"id": 91, "nom": "Pharmacie DIVINA GRACIA", "telephone": "93839100", "localisation": "Agoe Fiovi, Bafana Bafana", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 92, "nom": "Pharmacie DJIDJOLE", "telephone": "22256512", "localisation": "DJIDJOLE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 93, "nom": "Pharmacie DODJI", "telephone": "70291677", "localisation": "Ségbé Akato", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 94, "nom": "Pharmacie DONGOYO", "telephone": "71810119", "localisation": "Kara, quartier Dongoyo", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 95, "nom": "Pharmacie DU BOULEVARD", "telephone": "22216549", "localisation": "Bd 13 janvier Doulassamé", "zone": "Lomé (Centre Ville)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 96, "nom": "Pharmacie DU CENTRE", "telephone": "22218330", "localisation": "ASSIVITO face WATT", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 97, "nom": "Pharmacie DU GRAND MARCHE", "telephone": "22212636", "localisation": "Avenue Libération", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 98, "nom": "Pharmacie DU GRAND PLATEAU", "telephone": "98975913", "localisation": "Station T-oil, marché fruits", "zone": "Atakpamé", "ville": "Atakpamé", "est_de_garde": false},
+        {"id": 99, "nom": "Pharmacie du LAC", "telephone": "93549870", "localisation": "Carrefour Togamonou", "zone": "Agbodrafo", "ville": "Agbodrafo", "est_de_garde": false},
+        {"id": 100, "nom": "Pharmacie DU MILLENAIRE", "telephone": "22516431", "localisation": "Gendarmerie Agoe-Nyivé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 101, "nom": "Pharmacie DU PEUPLE", "telephone": "22613729", "localisation": "Rue Santiagou, NUKAFU", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 102, "nom": "Pharmacie DU POINT E", "telephone": "22519171", "localisation": "Aflao Gakli, Djidjolé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 103, "nom": "Pharmacie ECLAIR", "telephone": "97604627", "localisation": "BE Ahligo, Marché Ahligo", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 104, "nom": "Pharmacie EL NOUR", "telephone": "97799374", "localisation": "AGOE-ALINKA, CMS Togblékopé", "zone": "Lomé (Togblékopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 105, "nom": "Pharmacie EL SALI", "telephone": "70124444", "localisation": "Rte Lomé-Kpalimé, Apédokoe", "zone": "Sanguéra", "ville": "Sanguéra", "est_de_garde": false},
+        {"id": 106, "nom": "Pharmacie EL SHADAI", "telephone": "22514425", "localisation": "Face Ecole Théologie ESTAO", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 107, "nom": "Pharmacie EL-NISSI", "telephone": "92012727", "localisation": "Apédokoe Gbomame", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 108, "nom": "Pharmacie EL-SHAMMAH", "telephone": "22469350", "localisation": "Amadahomé, maison Jeunes", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 109, "nom": "Pharmacie ELEMAWUSSI", "telephone": "92012424", "localisation": "Adétikopé, Nationale N1", "zone": "Adétikopé", "ville": "Adétikopé", "est_de_garde": false},
+        {"id": 110, "nom": "Pharmacie ELI-BERACA", "telephone": "92012222", "localisation": "Route Adidogomé, SIKOVIC", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 111, "nom": "Pharmacie ELKANAH", "telephone": "91362165", "localisation": "RN1 Tsévié", "zone": "Tsévié", "ville": "Tsévié", "est_de_garde": false},
+        {"id": 112, "nom": "Pharmacie ELSAM", "telephone": "71560000", "localisation": "LYATA, carrefour Y", "zone": "Atakpamé", "ville": "Atakpamé", "est_de_garde": false},
+        {"id": 113, "nom": "Pharmacie EMMANUEL", "telephone": "22213098", "localisation": "Av Duisbourg Face MIVIP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 114, "nom": "Pharmacie EMMAÜS", "telephone": "22402504", "localisation": "Mission Tové, bar Solidarité", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 115, "nom": "Pharmacie ENOULI", "telephone": "22259068", "localisation": "Agbalépédogan", "zone": "Lomé (Agbalépédogan)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 116, "nom": "Pharmacie EPIPHANIA", "telephone": "70401052", "localisation": "Rue Pampa, AGBEMADON", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 117, "nom": "Pharmacie ESPACE-VIE", "telephone": "99858907", "localisation": "AGOE Logopé, BKS 2", "zone": "Lomé (Agoè Logopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 118, "nom": "Pharmacie ESPERANCE", "telephone": "22210128", "localisation": "Av F J STRAUSS, Ecole Française", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 119, "nom": "Pharmacie ESPOIR", "telephone": "26601415", "localisation": "Mairie KOZAH", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 120, "nom": "Pharmacie EVA", "telephone": "90544545", "localisation": "SANGUERA Klikame, T-OIL", "zone": "Sanguéra", "ville": "Sanguéra", "est_de_garde": false},
+        {"id": 121, "nom": "Pharmacie EXCELLENCE", "telephone": "22517787", "localisation": "AGOE Démakpoé Voie CEDEAO", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 122, "nom": "Pharmacie FIDELIA", "telephone": "22719595", "localisation": "Bè-Kpota, Attiégou", "zone": "Lomé (Bè)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 123, "nom": "Pharmacie FLAMME D'AMOUR", "telephone": "70457014", "localisation": "Bobole kope, cimetiere", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 124, "nom": "Pharmacie FOREVER", "telephone": "22261177", "localisation": "52 Avenue Kondona", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 125, "nom": "Pharmacie FRATERNITE", "telephone": "22268155", "localisation": "Hédzranawé, Clinique St Joseph", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 126, "nom": "Pharmacie GANFAT", "telephone": "22550815", "localisation": "AGOE DALIKO, Camp GP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 127, "nom": "Pharmacie GBEZE", "telephone": "22263261", "localisation": "Tokoin Novissi, Jean Paul II", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 128, "nom": "Pharmacie GBOSSIME", "telephone": "22225050", "localisation": "Marché Gbossime, Boulevard Kara", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 129, "nom": "Pharmacie GRATITUDE", "telephone": "92189485", "localisation": "Agoe Légbassito, Avinato", "zone": "Lomé (Légbassito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 130, "nom": "Pharmacie GREENRX", "telephone": "92961919", "localisation": "Ségbé, MabizPlaza", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 131, "nom": "Pharmacie HANOUKOPE", "telephone": "22210115", "localisation": "Nouvelle Marche, Radio Kanal FM", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 132, "nom": "Pharmacie HEDJRANAWE", "telephone": "22264961", "localisation": "Grand Séminaire, Banque Atlantique", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 133, "nom": "Pharmacie HELENE", "telephone": "92660908", "localisation": "Aveta, marché Aveta", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 134, "nom": "Pharmacie HÔPITAL", "telephone": "79690808", "localisation": "Face CHU Tokoin", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 135, "nom": "Pharmacie HORIZON", "telephone": "90565256", "localisation": "Bd 13 janvier, Sapeurs Pompiers", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 136, "nom": "Pharmacie HOSANNA", "telephone": "22515049", "localisation": "Sagbado-Sémékonawo, SANOL", "zone": "Lomé (Sagbado)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 137, "nom": "Pharmacie HYGEA", "telephone": "99273636", "localisation": "Lycée Baguida, Afanoukopé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 138, "nom": "Pharmacie IDEALE", "telephone": "70459038", "localisation": "Kpangalam, Route Nationale", "zone": "Sokodé", "ville": "Sokodé", "est_de_garde": false},
+        {"id": 139, "nom": "Pharmacie INTERNATIONALE", "telephone": "22268994", "localisation": "Hédzranawoé, Boulevard Haho", "zone": "Lomé (Hédzranawoé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 140, "nom": "Pharmacie IRIS", "telephone": "91684804", "localisation": "Amadahome, station CAP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 141, "nom": "Pharmacie ISIS", "telephone": "70448387", "localisation": "Jean Paul II, NUKAFU", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 142, "nom": "Pharmacie J-MIMSHAK", "telephone": "92244270", "localisation": "Rue Tchamba 964, Satom", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 143, "nom": "Pharmacie JAHNAP", "telephone": "22512286", "localisation": "EPP Gakli, Djidjolé-Gakli", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 144, "nom": "Pharmacie JEANNE D'ARC", "telephone": "22220801", "localisation": "Marox Renault Star", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 145, "nom": "Pharmacie JUSTINE", "telephone": "22210001", "localisation": "291 Bd Armées - Tokoin Habitat", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 146, "nom": "Pharmacie KARA-CENTRE", "telephone": "26606014", "localisation": "Carrefour TOMDE", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 147, "nom": "Pharmacie KEGUE", "telephone": "22260412", "localisation": "Rue Nazod, station Kégué", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 148, "nom": "Pharmacie KEKELI", "telephone": "99992249", "localisation": "Lomnava, gendarmerie", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 149, "nom": "Pharmacie KELEGOUGAN", "telephone": "92953838", "localisation": "AGOE Kelegougan, contournement", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 150, "nom": "Pharmacie KLOKPE", "telephone": "96801003", "localisation": "Foire Togo 2000", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 151, "nom": "Pharmacie KOBOYO", "telephone": "93704812", "localisation": "DAVIE, RN1 avant péage", "zone": "Tsévié", "ville": "Tsévié", "est_de_garde": false},
+        {"id": 152, "nom": "Pharmacie KODJOVIAKOPE", "telephone": "22218990", "localisation": "Avenue Duisbourg", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 153, "nom": "Pharmacie KOMAH", "telephone": "70451631", "localisation": "Marché Komah, Sokodé", "zone": "Sokodé", "ville": "Sokodé", "est_de_garde": false},
+        {"id": 154, "nom": "Pharmacie KOUESSAN", "telephone": "96801001", "localisation": "Stade Kégué", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 155, "nom": "Pharmacie LA BARAKA", "telephone": "90174928", "localisation": "Agoè LOGOPE, La Bruyere", "zone": "Lomé (Agoè Logopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 156, "nom": "Pharmacie LA GRACE", "telephone": "22259165", "localisation": "Auberge Sahara, SUN AGIP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 157, "nom": "Pharmacie LA MAIN DE DIEU", "telephone": "93402121", "localisation": "AGOE ASSIYEYE, Temple Galilée", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 158, "nom": "Pharmacie LA PERSEVERANCE", "telephone": "90144857", "localisation": "Atakpamékondji, Fucec", "zone": "Kpalimé", "ville": "Kpalimé", "est_de_garde": false},
+        {"id": 159, "nom": "Pharmacie LA PIERRE ANGULAIRE", "telephone": "70775606", "localisation": "AGOVOUDOU, ETS LYONNAIS", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 160, "nom": "Pharmacie LA PROSPERITE", "telephone": "70448696", "localisation": "Bd Eyadéma, EDA OBA", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 161, "nom": "Pharmacie LA REFERENCE", "telephone": "92515050", "localisation": "Route Kpalimé, Adidogomé", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 162, "nom": "Pharmacie LA RUCHE", "telephone": "91541616", "localisation": "Attiégou, aéroport", "zone": "Lomé (Aéroport)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 163, "nom": "Pharmacie LA SHEKINA", "telephone": "93339205", "localisation": "AGOE-NYIVE, Amadenta", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 164, "nom": "Pharmacie LAFE ZAKA", "telephone": "92312744", "localisation": "CINKASSE", "zone": "Cinkassé", "ville": "Cinkassé", "est_de_garde": false},
+        {"id": 165, "nom": "Pharmacie LAFIA", "telephone": "90184496", "localisation": "COFAC, polyclinique Kara", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 166, "nom": "Pharmacie LAUS DEO", "telephone": "93006575", "localisation": "Léo 2000, clinique Besthesda", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 167, "nom": "Pharmacie LE DESTIN", "telephone": "70411541", "localisation": "ECOBANK Baguida", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 168, "nom": "Pharmacie LE GALIEN", "telephone": "70421677", "localisation": "Rue pavée Adidoadin", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 169, "nom": "Pharmacie LE JOURDAIN", "telephone": "22268920", "localisation": "Bd Léopold SENGHOR, Tokoin Wuiti", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 170, "nom": "Pharmacie LE PROGRES", "telephone": "70458655", "localisation": "Adakpame, contournement", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 171, "nom": "Pharmacie LE ROCHER", "telephone": "92300656", "localisation": "Agoe Zongo, RN1", "zone": "Lomé (Agoè Zongo)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 172, "nom": "Pharmacie LES VERTS PATURAGES", "telephone": "91914846", "localisation": "Nationale N5 Kpalimé", "zone": "Noépé", "ville": "Noépé", "est_de_garde": false},
+        {"id": 173, "nom": "Pharmacie LIBERATION", "telephone": "22222525", "localisation": "Avenue Libération, Fiata", "zone": "Lomé (Centre Ville)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 174, "nom": "Pharmacie LIDDY", "telephone": "70901960", "localisation": "AGOE-DIKAME, station CAP", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 175, "nom": "Pharmacie LUCIOLE", "telephone": "71685151", "localisation": "KOUAWORO, contournement", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 176, "nom": "Pharmacie LUMEN", "telephone": "70416836", "localisation": "DJAGBLE, EPP Plakome", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 177, "nom": "Pharmacie LUMIERE", "telephone": "70431549", "localisation": "AGBALEPEDOGAN, Rond Point Œuf", "zone": "Lomé (Agbalépédogan)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 178, "nom": "Pharmacie MAA LA", "telephone": "90106092", "localisation": "Agoe Demakpoe, AZ Bâtiment", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 179, "nom": "Pharmacie MADINA", "telephone": "91183333", "localisation": "Wuiti, cité CNSS", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 180, "nom": "Pharmacie MAËLYS", "telephone": "70448679", "localisation": "Bd Malfakassa, NETADI", "zone": "Bè-Kpota, Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 181, "nom": "Pharmacie MAIRIE", "telephone": "91032121", "localisation": "Av Nicolas Grunitzky", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 182, "nom": "Pharmacie MAGNIFICAT", "telephone": "70445159", "localisation": "Adidogome Yokoe", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 183, "nom": "Pharmacie MAINA", "telephone": "70436534", "localisation": "AVEDJI, Hôpital Source de Vie", "zone": "Lomé (Avédji)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 184, "nom": "Pharmacie MAJESTE", "telephone": "71161643", "localisation": "Carrefour Dagué N2", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 185, "nom": "Pharmacie MATHILDA", "telephone": "93025212", "localisation": "PATASSE - LOMEGAN", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 186, "nom": "Pharmacie MATTHIA", "telephone": "22212964", "localisation": "1048 Avenue Libération", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 187, "nom": "Pharmacie MAWULE", "telephone": "70459186", "localisation": "54 Bd OTI, Gakpoto", "zone": "Bè-Kpota, Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 188, "nom": "Pharmacie MAWULOM", "telephone": "70178787", "localisation": "Agoe Athiémé, Kponsé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 189, "nom": "Pharmacie MAWUNYO", "telephone": "70423464", "localisation": "AGOE-Sogbossito, Mission TOVE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 190, "nom": "Pharmacie MBA", "telephone": "70278181", "localisation": "Agoe Légbassito, Mission Tové", "zone": "Lomé (Légbassito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 191, "nom": "Pharmacie MIDJODJI", "telephone": "90097334", "localisation": "Notsè KPOTA GARE", "zone": "Notsè", "ville": "Notsè", "est_de_garde": false},
+        {"id": 192, "nom": "Pharmacie MISÉRICORDE", "telephone": "96800945", "localisation": "BE KPOTA, NISSAN", "zone": "Bè-Kpota, Lomé", "ville": "Lomé", "est_de_garde": false},
+        {"id": 193, "nom": "Pharmacie NABINE", "telephone": "93362626", "localisation": "Agoe Anome, Bar Plateau", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 194, "nom": "Pharmacie NATION", "telephone": "96800947", "localisation": "Marché TOTSI", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 195, "nom": "Pharmacie ND MEDJ", "telephone": "90141697", "localisation": "Agoé-Assiyéyé, marché Agoé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 196, "nom": "Pharmacie NELLY'S", "telephone": "92011100", "localisation": "Klémé Agokpanou, château eau", "zone": "Sanguéra", "ville": "Sanguéra", "est_de_garde": false},
+        {"id": 197, "nom": "Pharmacie NERLEM", "telephone": "70404323", "localisation": "Adidogomé, Grand Contournement", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 198, "nom": "Pharmacie NOTRE DAME", "telephone": "96801012", "localisation": "Route Aéroport, Foire Togo 2000", "zone": "Lomé (Aéroport)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 199, "nom": "Pharmacie NOTRE DAME DE LA TRINITE", "telephone": "98465088", "localisation": "Boulevard Paix, Super Taco", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 200, "nom": "Pharmacie NOTRE DAME DE LOURDES", "telephone": "70440101", "localisation": "Maison Blanche, Deux Lions", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 201, "nom": "Pharmacie NOUVEAU MARCHE", "telephone": "93277777", "localisation": "Carrefour Lama", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 202, "nom": "Pharmacie NOUVELLE SOKODE", "telephone": "90638828", "localisation": "TCHAWANDA, CHR Sokodé", "zone": "Sokodé", "ville": "Sokodé", "est_de_garde": false},
+        {"id": 203, "nom": "Pharmacie NOUVELLE TULIPE", "telephone": "99470070", "localisation": "Mission Tové, station CAP", "zone": "Lomé (Légbassito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 204, "nom": "Pharmacie O GRAIN D'OR", "telephone": "71901166", "localisation": "Ahadji-Kpota, Zorrobar", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 205, "nom": "Pharmacie OBSERVANCE", "telephone": "22504860", "localisation": "SOGBOSSITO, TOTAL ENERGIES", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 206, "nom": "Pharmacie OCAM", "telephone": "92859955", "localisation": "Rue ENTENTE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 207, "nom": "Pharmacie OCEANE", "telephone": "22226277", "localisation": "Rue HOULATA, rue OCAM", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 208, "nom": "Pharmacie OSSAN", "telephone": "70404425", "localisation": "AVEDZI, LA LIMOUSINE", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 209, "nom": "Pharmacie PAIX", "telephone": "22214151", "localisation": "Bd 13 Janvier, Commissariat", "zone": "Lomé (Centre Ville)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 210, "nom": "Pharmacie PATIENCE", "telephone": "70052339", "localisation": "DJAGBLE, CMS Ayokléfé", "zone": "Djagblé", "ville": "Djagblé", "est_de_garde": false},
+        {"id": 211, "nom": "Pharmacie PENIEL", "telephone": "90159496", "localisation": "Baguida, Douanes", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 212, "nom": "Pharmacie POPULAIRE", "telephone": "22214765", "localisation": "Rue Commerce", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 213, "nom": "Pharmacie PORT", "telephone": "70415453", "localisation": "Hôtel Sarakawa", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 214, "nom": "Pharmacie POUR TOUS", "telephone": "99982087", "localisation": "Bd 13 Janvier, Clinique Victoire", "zone": "Lomé (Centre Ville)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 215, "nom": "Pharmacie PRINCIPALE", "telephone": "90826767", "localisation": "Route Aneho Kogan", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 216, "nom": "Pharmacie PROVIDENCE", "telephone": "91148888", "localisation": "Bd Jean Paul II", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 217, "nom": "Pharmacie RAOUDHA", "telephone": "91613332", "localisation": "Boulevard Zio, TOGO 2000", "zone": "Lomé (Hédzranawoé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 218, "nom": "Pharmacie RECONFORT", "telephone": "93459393", "localisation": "Tomde carrefour SOS", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 219, "nom": "Pharmacie REGINA PACIS", "telephone": "90185955", "localisation": "ADETIKOPE, RN1", "zone": "Adétikopé", "ville": "Adétikopé", "est_de_garde": false},
+        {"id": 220, "nom": "Pharmacie RENAISSANCE", "telephone": "26600939", "localisation": "Kara sud, RN1", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 221, "nom": "Pharmacie ROBERTSON", "telephone": "22222841", "localisation": "Av François MITTERAND", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 222, "nom": "Pharmacie SAG'BIBA", "telephone": "91838783", "localisation": "AGOE-Nanegbe, T-Oil", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 223, "nom": "Pharmacie SAINT ANTOINE", "telephone": "22352764", "localisation": "1048 Avenue Libération, Poste", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 224, "nom": "Pharmacie SAINT ESPRIT", "telephone": "22510643", "localisation": "Bretelle Agoe Nyivé, CEG Est", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 225, "nom": "Pharmacie SAINT JOSEPH", "telephone": "96800965", "localisation": "Bretelle BE KLIKAME", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 226, "nom": "Pharmacie SAINT KISITO", "telephone": "22219963", "localisation": "Bd Kara, Bar TAMTAM", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 227, "nom": "Pharmacie SAINT MICHEL", "telephone": "22517022", "localisation": "Agoe Nyivé, Brasserie BB", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 228, "nom": "Pharmacie SAINT PAUL", "telephone": "22268426", "localisation": "Bd Jean Paul II", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 229, "nom": "Pharmacie SAINT PHILIPPE", "telephone": "90673324", "localisation": "SANGUERA, OANDO", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 230, "nom": "Pharmacie SAINT PIERRE", "telephone": "70432667", "localisation": "Sagboville, Bd Haho", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 231, "nom": "Pharmacie SAINT PIO", "telephone": "93404040", "localisation": "KLOBATEME, Bon Samaritain", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 232, "nom": "Pharmacie SAINT SYLVESTRE", "telephone": "93515198", "localisation": "Zanguéra, Sanyramé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 233, "nom": "Pharmacie SAINTE FAMILLE", "telephone": "22259160", "localisation": "Bd Jean-Paul II, Atikoumé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 234, "nom": "Pharmacie SAINTE MARIE", "telephone": "22218558", "localisation": "DJAGBLE, marché Avéta", "zone": "Djagblé", "ville": "Djagblé", "est_de_garde": false},
+        {"id": 235, "nom": "Pharmacie SAINTE RITA", "telephone": "22425348", "localisation": "Rue pavée Doulassamé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 236, "nom": "Pharmacie SALA HOUBEIDA", "telephone": "91911535", "localisation": "Agoè Kelegougan", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 237, "nom": "Pharmacie SAMBONE", "telephone": "71082148", "localisation": "A WORGOU", "zone": "Dapaong", "ville": "Dapaong", "est_de_garde": false},
+        {"id": 238, "nom": "Pharmacie SANCTA MADONA", "telephone": "70010303", "localisation": "Kégué, maison Kader", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 239, "nom": "Pharmacie SANTE", "telephone": "70449137", "localisation": "NOPATO", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 240, "nom": "Pharmacie SANTE PLUS", "telephone": "90127085", "localisation": "Route Kétao", "zone": "Kara", "ville": "Kara", "est_de_garde": false},
+        {"id": 241, "nom": "Pharmacie SANGUERA", "telephone": "70428080", "localisation": "Lycée Sanguera", "zone": "Sanguéra", "ville": "Sanguéra", "est_de_garde": false},
+        {"id": 242, "nom": "Pharmacie SARAH", "telephone": "70426902", "localisation": "Adakpamé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 243, "nom": "Pharmacie SATIS", "telephone": "70448517", "localisation": "Agoe Logopé, CEG Agoenyivé", "zone": "Lomé (Agoè Logopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 244, "nom": "Pharmacie SAUVEUR", "telephone": "90141105", "localisation": "ECOBANK DAPAONG", "zone": "Dapaong", "ville": "Dapaong", "est_de_garde": false},
+        {"id": 245, "nom": "Pharmacie SAVANA", "telephone": "27701258", "localisation": "Marché", "zone": "Dapaong", "ville": "Dapaong", "est_de_garde": false},
+        {"id": 246, "nom": "Pharmacie SEPOPO", "telephone": "70346565", "localisation": "ADAKPAME, Sawto", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 247, "nom": "Pharmacie SHALOM", "telephone": "22518760", "localisation": "Agoè-Cacavéli, Bd Faure", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 248, "nom": "Pharmacie SIKA", "telephone": "92620651", "localisation": "DJAGBLE, Hihieatro", "zone": "Djagblé", "ville": "Djagblé", "est_de_garde": false},
+        {"id": 249, "nom": "Pharmacie SILOE", "telephone": "90802639", "localisation": "Carrefour Aflao, Atigangome", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 250, "nom": "Pharmacie SOLIDARITE", "telephone": "22510102", "localisation": "Avédji, UTB Totsi", "zone": "Lomé (Avédji)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 251, "nom": "Pharmacie SOURCE DE VIE", "telephone": "22202759", "localisation": "Collège Protestant Tokoin", "zone": "Lomé (Tokoin)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 252, "nom": "Pharmacie St RAPHAEL", "telephone": "22252121", "localisation": "Bd 30 Août, Adidogomé", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 253, "nom": "Pharmacie TAKOE", "telephone": "96800977", "localisation": "Station CAP, Zongo", "zone": "Lomé (Agoè Zongo)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 254, "nom": "Pharmacie TCHAOUDJO", "telephone": "25501160", "localisation": "Zongo, grand marché Sokodé", "zone": "Sokodé", "ville": "Sokodé", "est_de_garde": false},
+        {"id": 255, "nom": "Pharmacie TCHEPSON", "telephone": "70429441", "localisation": "Terminal Sahel TOGBLEKOPE", "zone": "Lomé (Togblékopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 256, "nom": "Pharmacie THERYA", "telephone": "71612222", "localisation": "Petit contournement, Foire 2000", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 257, "nom": "Pharmacie TONE", "telephone": "90196360", "localisation": "PSI Dapaong", "zone": "Dapaong", "ville": "Dapaong", "est_de_garde": false},
+        {"id": 258, "nom": "Pharmacie TRIOMPHE", "telephone": "93258036", "localisation": "Bokpokor, contournement", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 259, "nom": "Pharmacie UNIVERS-SANTE", "telephone": "22256171", "localisation": "Bd GNASSINGBE, CHU CAMPUS", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 260, "nom": "Pharmacie VERONIQUE", "telephone": "92034040", "localisation": "Avépozo, gendarmerie", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 261, "nom": "Pharmacie VERSEAU", "telephone": "90019029", "localisation": "Maison Bateau Baguida", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 262, "nom": "Pharmacie Verte", "telephone": "22250326", "localisation": "Ecole Parti Klikame", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 263, "nom": "Pharmacie VIGUEUR", "telephone": "22516330", "localisation": "AGBALEPEDOGAN", "zone": "Lomé (Agbalépédogan)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 264, "nom": "Pharmacie VITAFLORE", "telephone": "70440404", "localisation": "Agoe Vakpossito, Shell", "zone": "Lomé (Agoè Vakpossito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 265, "nom": "Pharmacie VITALIS", "telephone": "22216979", "localisation": "Amoutiévé, Lagos Kpanou", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 266, "nom": "Pharmacie VITAS", "telephone": "22516262", "localisation": "Agoè Assiyéyé", "zone": "Lomé (Centre)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 267, "nom": "Pharmacie VOLONTAS DEI", "telephone": "70422360", "localisation": "Avédji, Sun City", "zone": "Lomé (Avédji)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 268, "nom": "Pharmacie WASTINE", "telephone": "92611700", "localisation": "Adidogome Logoté", "zone": "Lomé (Adidogomé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 269, "nom": "Pharmacie YASMEEM", "telephone": "71996979", "localisation": "Aného, TotalEnergies", "zone": "Aného", "ville": "Aného", "est_de_garde": false},
+        {"id": 270, "nom": "Pharmacie YEM BLA", "telephone": "90889872", "localisation": "Av. Akéï, Résidence", "zone": "Lomé (Akéï)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 271, "nom": "Pharmacie YESHUA", "telephone": "98772153", "localisation": "AGOE Vakpossito, Ecole NDE", "zone": "Lomé (Agoè Vakpossito)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 272, "nom": "Pharmacie ZILIDJI", "telephone": "92616608", "localisation": "Marché Agoè Zongo", "zone": "Lomé (Agoè Zongo)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 273, "nom": "Pharmacie ZIO", "telephone": "23304182", "localisation": "RN1, Grand Marché Tsévié", "zone": "Tsévié", "ville": "Tsévié", "est_de_garde": false},
+        {"id": 274, "nom": "Pharmacie ZONGO", "telephone": "70499655", "localisation": "Togblékopé, Orabank", "zone": "Lomé (Togblékopé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 275, "nom": "Pharmacie ZOPOMAHE", "telephone": "96283410", "localisation": "Zossime Sanguera", "zone": "Lomé (Agoè Zossimé)", "ville": "Lomé", "est_de_garde": false},
+        {"id": 276, "nom": "Pharmacie ZOSSIME", "telephone": "22554352", "localisation": "AGOE-Zossime, marché", "zone": "Lomé (Agoè Zossimé)", "ville": "Lomé", "est_de_garde": false}
+    ];
 
-        // ============================================================
-        // 4. FILTRAGE
-        // ============================================================
-        function getFiltered() {
-            const search = searchInput.value.toLowerCase().trim();
-            const zone = zoneFilter.value;
-            const gardeOnly = gardeToggle.checked;
+    // ============================================================
+    // LOGIQUE PRINCIPALE
+    // ============================================================
+    const data = allPharmacies;
+    let currentPage = 1;
+    const PER_PAGE = 15;
 
-            return allPharmacies.filter(p => {
-                const matchNom = p.nom.toLowerCase().includes(search);
-                const matchZone = zone === 'all' || p.zone === zone;
-                const matchGarde = gardeOnly ? p.est_de_garde === true : true;
-                return matchNom && matchZone && matchGarde;
-            });
-        }
+    const listEl = document.getElementById('pharmacyList');
+    const searchInput = document.getElementById('searchInput');
+    const zoneFilter = document.getElementById('zoneFilter');
+    const gardeToggle = document.getElementById('gardeToggle');
+    const statsEl = document.getElementById('stats');
+    const paginationEl = document.getElementById('pagination');
 
-        // ============================================================
-        // 5. AFFICHAGE + PAGINATION
-        // ============================================================
-        function render() {
-            const filtered = getFiltered();
-            const total = filtered.length;
-            const totalPages = Math.ceil(total / PER_PAGE) || 1;
+    // Remplir les zones
+    const zones = [...new Set(data.map(p => p.zone))].sort();
+    zones.forEach(z => {
+        const opt = document.createElement('option');
+        opt.value = z;
+        opt.textContent = z;
+        zoneFilter.appendChild(opt);
+    });
 
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
+    function getFiltered() {
+        const q = searchInput.value.toLowerCase().trim();
+        const zone = zoneFilter.value;
+        const garde = gardeToggle.checked;
+        return data.filter(p => {
+            const matchNom = p.nom.toLowerCase().includes(q);
+            const matchZone = zone === 'all' || p.zone === zone;
+            const matchGarde = garde ? p.est_de_garde === true : true;
+            return matchNom && matchZone && matchGarde;
+        });
+    }
 
-            const start = (currentPage - 1) * PER_PAGE;
-            const end = start + PER_PAGE;
-            const pageItems = filtered.slice(start, end);
+    function render() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const totalPages = Math.ceil(total / PER_PAGE) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
 
-            stats.textContent = `${total} pharmacie${total > 1 ? 's' : ''}`;
+        const start = (currentPage - 1) * PER_PAGE;
+        const pageItems = filtered.slice(start, start + PER_PAGE);
 
-            if (pageItems.length === 0) {
-                pharmacyList.innerHTML = `<p style="text-align:center;color:#6a8a6a;padding:40px 0;">Aucune pharmacie trouvée.</p>`;
-            } else {
-                pharmacyList.innerHTML = pageItems.map(p => {
-                    const gardeBadge = p.est_de_garde ? `<span class="badge-garde">🛡️ De garde</span>` : '';
-                    const telLink = p.telephone ? `<a href="tel:${p.telephone}" class="btn btn-appel">📞 Appeler</a>` : '';
-                    const mapLink = p.localisation ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nom + ' ' + p.localisation)}" target="_blank" class="btn">🗺️ Itinéraire</a>` : '';
-                    return `
-                        <div class="pharmacy-card ${p.est_de_garde ? 'garde' : ''}">
-                            <div class="nom">${p.nom}</div>
-                            <div class="zone">📍 ${p.zone}</div>
-                            ${p.localisation ? `<div class="localisation">${p.localisation}</div>` : ''}
+        statsEl.textContent = `${total} pharmacie${total > 1 ? 's' : ''}`;
+
+        if (pageItems.length === 0) {
+            listEl.innerHTML = `<div style="text-align:center;padding:48px 0;color:#8a9a8a;">Aucune pharmacie trouvée</div>`;
+        } else {
+            listEl.innerHTML = pageItems.map(p => {
+                const gardeBadge = p.est_de_garde ? `<span class="card-badge">Garde</span>` : '';
+                const tel = p.telephone || '';
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nom + ' ' + (p.localisation || ''))}`;
+                return `
+                    <div class="card ${p.est_de_garde ? 'garde' : ''}">
+                        <div class="card-header">
+                            <span class="card-name">${p.nom}</span>
                             ${gardeBadge}
-                            <div class="actions">
-                                ${telLink}
-                                ${mapLink}
-                            </div>
                         </div>
-                    `;
-                }).join('');
-            }
-
-            renderPagination(totalPages);
+                        <div class="card-zone">${p.zone}</div>
+                        ${p.localisation ? `<div class="card-location">${p.localisation}</div>` : ''}
+                        <div class="card-actions">
+                            ${tel ? `<a href="tel:${tel}" class="btn-call">Appeler</a>` : ''}
+                            <a href="${mapUrl}" target="_blank" class="btn-map">Itinéraire</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function renderPagination(totalPages) {
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-
-            let html = '';
-            html += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">‹</button>`;
-
-            const maxVisible = 5;
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-            if (endPage - startPage < maxVisible - 1) {
-                startPage = Math.max(1, endPage - maxVisible + 1);
-            }
-
-            if (startPage > 1) {
-                html += `<button onclick="goToPage(1)">1</button>`;
-                if (startPage > 2) html += `<span style="padding:0 4px;color:#8aaa8a;">…</span>`;
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) html += `<span style="padding:0 4px;color:#8aaa8a;">…</span>`;
-                html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
-            }
-
-            html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">›</button>`;
-            pagination.innerHTML = html;
+        // Pagination
+        if (totalPages <= 1) {
+            paginationEl.innerHTML = '';
+            return;
         }
-
-        function goToPage(page) {
-            const filtered = getFiltered();
-            const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
-            render();
-            document.getElementById('pharmacyList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        let html = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="goTo(${currentPage - 1})">‹</button>`;
+        const maxVisible = 5;
+        let s = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let e = Math.min(totalPages, s + maxVisible - 1);
+        if (e - s < maxVisible - 1) s = Math.max(1, e - maxVisible + 1);
+        if (s > 1) {
+            html += `<button onclick="goTo(1)">1</button>`;
+            if (s > 2) html += `<span class="pagination-ellipsis">…</span>`;
         }
+        for (let i = s; i <= e; i++) {
+            html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goTo(${i})">${i}</button>`;
+        }
+        if (e < totalPages) {
+            if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
+            html += `<button onclick="goTo(${totalPages})">${totalPages}</button>`;
+        }
+        html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="goTo(${currentPage + 1})">›</button>`;
+        paginationEl.innerHTML = html;
+    }
 
-        // ============================================================
-        // 6. ÉVÉNEMENTS
-        // ============================================================
-        searchInput.addEventListener('input', () => { currentPage = 1;
-            render(); });
-        zoneFilter.addEventListener('change', () => { currentPage = 1;
-            render(); });
-        gardeToggle.addEventListener('change', () => { currentPage = 1;
-            render(); });
+    function goTo(page) {
+        const filtered = getFiltered();
+        const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        render();
+        document.getElementById('pharmacyList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-        // ============================================================
-        // 7. CHATBOT
-        // ============================================================
-        const chatToggle = document.getElementById('chatToggle');
-        const chatWindow = document.getElementById('chatWindow');
-        const chatClose = document.getElementById('chatClose');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const chatSend = document.getElementById('chatSend');
+    searchInput.addEventListener('input', () => { currentPage = 1;
+        render(); });
+    zoneFilter.addEventListener('change', () => { currentPage = 1;
+        render(); });
+    gardeToggle.addEventListener('change', () => { currentPage = 1;
+        render(); });
 
-        chatToggle.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
-        chatClose.addEventListener('click', () => chatWindow.classList.add('hidden'));
+    // ============================================================
+    // CHATBOT AVANCÉ AVEC SUGGESTIONS
+    // ============================================================
+    const chatToggle = document.getElementById('chatToggle');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatClose = document.getElementById('chatClose');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
 
-        function sendChatMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-            chatMessages.innerHTML += `<div class="message user">${text}</div>`;
-            chatInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatToggle.addEventListener('click', () => {
+        chatWindow.classList.toggle('hidden');
+        chatWindow.classList.toggle('open');
+    });
+    chatClose.addEventListener('click', () => {
+        chatWindow.classList.add('hidden');
+        chatWindow.classList.remove('open');
+    });
 
-            setTimeout(() => {
-                const lower = text.toLowerCase();
-                let reponse = "Désolé, je n'ai pas trouvé de réponse. Essayez avec une ville (Lomé, Kara...) ou 'garde'.";
-                if (lower.includes('garde')) {
-                    const gardes = allPharmacies.filter(p => p.est_de_garde);
-                    if (gardes.length > 0) {
-                        reponse = "🛡️ Pharmacies de garde aujourd'hui :\n" + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
+    // Suggestions cliquables
+    document.querySelectorAll('.msg-suggestion').forEach(el => {
+        el.addEventListener('click', () => {
+            chatInput.value = el.dataset.question || el.textContent.trim();
+            sendChatMessage();
+        });
+    });
+
+    function sendChatMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        chatMessages.innerHTML += `<div class="msg msg-user">${text}</div>`;
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            const lower = text.toLowerCase();
+            let response = '';
+
+            // GARDE
+            if (lower.includes('garde')) {
+                const gardes = data.filter(p => p.est_de_garde);
+                if (gardes.length > 0) {
+                    response = '🛡️ Pharmacies de garde :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
+                } else {
+                    response = 'Aucune pharmacie de garde pour le moment.';
+                }
+            } else {
+                // Recherche par ville ou mot-clé
+                const words = lower.split(' ');
+                const keyword = words.find(w => w.length > 2);
+                if (keyword) {
+                    const results = data.filter(p =>
+                        p.nom.toLowerCase().includes(keyword) ||
+                        p.zone.toLowerCase().includes(keyword) ||
+                        p.ville.toLowerCase().includes(keyword)
+                    );
+                    if (results.length > 0) {
+                        const maxShow = 5;
+                        const list = results.slice(0, maxShow).map(p =>
+                            `• ${p.nom} (${p.zone})${p.est_de_garde ? ' 🛡️' : ''}`
+                        ).join('\n');
+                        response = `🔍 ${results.length} résultat(s) :\n${list}`;
+                        if (results.length > maxShow) {
+                            response += `\n... et ${results.length - maxShow} autre(s).`;
+                        }
                     } else {
-                        reponse = "Aucune pharmacie de garde enregistrée.";
+                        response = 'Aucune pharmacie trouvée pour "' + keyword + '".';
                     }
                 } else {
-                    const mots = lower.split(' ');
-                    const keyword = mots.find(m => m.length > 2);
-                    if (keyword) {
-                        const results = allPharmacies.filter(p =>
-                            p.nom.toLowerCase().includes(keyword) ||
-                            p.zone.toLowerCase().includes(keyword) ||
-                            p.ville.toLowerCase().includes(keyword)
-                        );
-                        if (results.length > 0) {
-                            const maxShow = 5;
-                            const list = results.slice(0, maxShow).map(p =>
-                                `• ${p.nom} (${p.zone})${p.est_de_garde ? ' 🛡️' : ''}`
-                            ).join('\n');
-                            reponse = `J'ai trouvé ${results.length} pharmacie(s) :\n${list}`;
-                            if (results.length > maxShow) {
-                                reponse += `\n... et ${results.length - maxShow} autre(s).`;
-                            }
-                        }
-                    }
+                    response = 'Posez une question sur les pharmacies, les gardes ou une ville (Lomé, Kara, Kpalimé...).';
                 }
-                chatMessages.innerHTML += `<div class="message bot">${reponse.replace(/\n/g, '<br>')}</div>`;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 300);
-        }
+            }
 
-        chatSend.addEventListener('click', sendChatMessage);
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+            chatMessages.innerHTML += `<div class="msg msg-bot">${response.replace(/\n/g, '<br>')}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 350);
+    }
 
-        // ============================================================
-        // 8. LANCEMENT
-        // ============================================================
-        render();
-        console.log('✅ ANN_PHARMA_TG chargé avec succès - 276 pharmacies');
-    </script>
+    chatSend.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendChatMessage(); });
+
+    // LANCEMENT
+    render();
+    console.log('ANN_PHARMA_TG chargé - 276 pharmacies');
+</script>
 </body>
 </html>

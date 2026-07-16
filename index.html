@@ -574,14 +574,29 @@
             display: block;
             margin-bottom: 10px;
         }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray-300);
+            margin-top: 30px;
+            padding-top: 14px;
+            border-top: 1px solid var(--gray-200);
+            line-height: 1.6;
+        }
+        .app-footer a {
+            color: var(--gray-600);
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 
     <!-- HEADER -->
     <header class="app-header">
-        <h1>PHARMA<span>_TOGO</span></h1>
-        <p class="sub">Annuaire officiel des pharmacies du Togo</p>
+        <h1>PHARMA<span>_FINDER</span></h1>
+        <p class="sub">Togo • Trouvez une pharmacie facilement</p>
     </header>
 
     <!-- FILTRES -->
@@ -632,6 +647,13 @@
             <button id="chatSend">➤</button>
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+        PharmaFinder Togo est un service indépendant d'information.
+        <br>Les données sont fournies à titre indicatif.
+        <br>Merci de vérifier les informations auprès des pharmacies.
+    </footer>
 
     <script>
         // ============================================================
@@ -1143,7 +1165,7 @@
 
         // LANCEMENT
         render();
-        console.log('✅ PHARMA_TOGO chargé - 276 pharmacies');
+        console.log('✅ PharmaFinder Togo chargé - 276 pharmacies');
     </script>
 </body>
 </html>

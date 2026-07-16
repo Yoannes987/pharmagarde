@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ANN_PHARMA_TG</title>
+    <title>PharmaFinder Togo - Trouvez une pharmacie facilement</title>
     <style>
         /* ===== RESET ===== */
         * {
@@ -54,10 +54,11 @@
             font-weight: 300;
             color: var(--gray-600);
         }
-        .app-header p {
-            font-size: 14px;
+        .app-header .sub {
+            font-size: 13px;
             color: var(--gray-600);
             margin-top: 2px;
+            letter-spacing: 0.3px;
         }
 
         /* ===== FILTRES ===== */
@@ -301,7 +302,6 @@
             background: var(--primary);
             color: #fff;
             border: none;
-            font-size: 22px;
             box-shadow: 0 4px 20px rgba(10, 126, 60, 0.35);
             cursor: pointer;
             z-index: 1000;
@@ -309,7 +309,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 22px;
             line-height: 1;
+            padding: 0;
         }
         .chat-fab:hover {
             transform: scale(1.06);
@@ -368,6 +370,9 @@
             opacity: 0.75;
             padding: 0 4px;
             transition: opacity 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-header button:hover {
             opacity: 1;
@@ -458,6 +463,7 @@
             border: none;
             color: #fff;
             width: 42px;
+            height: 42px;
             border-radius: 50%;
             font-size: 17px;
             cursor: pointer;
@@ -466,6 +472,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
+            line-height: 1;
         }
         .chat-input-area button:hover {
             background: var(--primary-dark);
@@ -508,6 +516,10 @@
             }
             .stats {
                 text-align: right;
+            }
+            .chat-fab {
+                bottom: 28px;
+                right: 28px;
             }
         }
         @media (max-width: 420px) {
@@ -568,8 +580,8 @@
 
     <!-- HEADER -->
     <header class="app-header">
-        <h1>ANN<span>_PHARMA</span></h1>
-        <p>Annuaire des pharmacies du Togo</p>
+        <h1>PHARMA<span>_TOGO</span></h1>
+        <p class="sub">Annuaire officiel des pharmacies du Togo</p>
     </header>
 
     <!-- FILTRES -->
@@ -599,7 +611,7 @@
     <button class="chat-fab" id="chatToggle" aria-label="Ouvrir le chat">💬</button>
     <div class="chat-window hidden" id="chatWindow">
         <div class="chat-header">
-            <span>Assistant</span>
+            <span>Assistant Pharma</span>
             <button id="chatClose">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages">
@@ -1018,7 +1030,7 @@
             render(); });
 
         // ============================================================
-        // CHATBOT AVANCÉ AVEC DÉTECTION SÉMANTIQUE
+        // CHATBOT AVANCÉ
         // ============================================================
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chatWindow');
@@ -1036,7 +1048,6 @@
             chatWindow.classList.remove('open');
         });
 
-        // Suggestions cliquables
         document.querySelectorAll('.msg-suggestion').forEach(el => {
             el.addEventListener('click', () => {
                 chatInput.value = el.dataset.query || el.textContent.trim();
@@ -1055,114 +1066,70 @@
                 const lower = text.toLowerCase();
                 let response = '';
 
-                // 1. Détection des pharmacies de garde
-                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes(
-                    'urgence')) {
+                // Garde
+                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes('urgence')) {
                     const gardes = data.filter(p => p.est_de_garde);
                     if (gardes.length > 0) {
-                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p =>
-                            `• ${p.nom} (${p.zone})`).join('\n');
+                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
                     } else {
                         response = 'Aucune pharmacie de garde enregistrée pour le moment.';
                     }
                 }
-                // 2. Détection de ville / zone
+                // Villes
                 else if (lower.includes('lomé') || lower.includes('lome')) {
-                    const results = data.filter(p => p.ville === 'Lomé' || p.zone.includes('Lomé'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Lomé (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Lomé.';
-                    }
+                    const r = data.filter(p => p.ville === 'Lomé' || p.zone.includes('Lomé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Lomé.'; }
                 } else if (lower.includes('kara')) {
-                    const results = data.filter(p => p.ville === 'Kara' || p.zone.includes('Kara'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Kara (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Kara.';
-                    }
+                    const r = data.filter(p => p.ville === 'Kara' || p.zone.includes('Kara'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Kara.'; }
                 } else if (lower.includes('kpalimé') || lower.includes('kpalime')) {
-                    const results = data.filter(p => p.ville === 'Kpalimé' || p.zone.includes('Kpalimé'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Kpalimé (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Kpalimé.';
-                    }
+                    const r = data.filter(p => p.ville === 'Kpalimé' || p.zone.includes('Kpalimé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Kpalimé.'; }
                 } else if (lower.includes('sokodé') || lower.includes('sokode')) {
-                    const results = data.filter(p => p.ville === 'Sokodé' || p.zone.includes('Sokodé'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Sokodé (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Sokodé.';
-                    }
+                    const r = data.filter(p => p.ville === 'Sokodé' || p.zone.includes('Sokodé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Sokodé.'; }
                 } else if (lower.includes('atakpamé') || lower.includes('atakpame')) {
-                    const results = data.filter(p => p.ville === 'Atakpamé' || p.zone.includes('Atakpamé'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Atakpamé (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Atakpamé.';
-                    }
-                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes(
-                    'tove')) {
-                    const results = data.filter(p => p.ville === 'Tsévié' || p.zone.includes('Tsévié') || p.zone.includes(
-                        'Tové'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Tsévié (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Tsévié.';
-                    }
+                    const r = data.filter(p => p.ville === 'Atakpamé' || p.zone.includes('Atakpamé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Atakpamé.'; }
+                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes('tove')) {
+                    const r = data.filter(p => p.ville === 'Tsévié' || p.zone.includes('Tsévié') || p.zone.includes('Tové'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Tsévié.'; }
                 } else if (lower.includes('dapaong')) {
-                    const results = data.filter(p => p.ville === 'Dapaong' || p.zone.includes('Dapaong'));
-                    if (results.length > 0) {
-                        response = '📍 Pharmacies à Dapaong (' + results.length + ' résultat(s)) :\n' + results.slice(0,
-                            10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (results.length > 10 ?
-                            `\n... et ${results.length - 10} autre(s).` : '');
-                    } else {
-                        response = 'Aucune pharmacie trouvée à Dapaong.';
-                    }
+                    const r = data.filter(p => p.ville === 'Dapaong' || p.zone.includes('Dapaong'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
                 }
-                // 3. Recherche générale par mot-clé
+                // Recherche générale
                 else {
                     const words = lower.split(' ');
                     const keywords = words.filter(w => w.length > 2);
                     if (keywords.length > 0) {
                         let results = [];
                         keywords.forEach(kw => {
-                            const found = data.filter(p =>
-                                p.nom.toLowerCase().includes(kw) ||
-                                p.zone.toLowerCase().includes(kw) ||
-                                p.ville.toLowerCase().includes(kw)
-                            );
+                            const found = data.filter(p => p.nom.toLowerCase().includes(kw) || p.zone.toLowerCase().includes(kw) || p.ville.toLowerCase().includes(kw));
                             results = results.concat(found);
                         });
-                        // Dédupliquer
                         results = results.filter((p, i, self) => self.findIndex(p2 => p2.id === p.id) === i);
                         if (results.length > 0) {
-                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') +
-                                '" :\n' +
-                                results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${p.est_de_garde ? ' 🛡️' : ''}`)
-                                .join('\n') +
-                                (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
+                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') + '" :\n' + results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${p.est_de_garde ? ' 🛡️' : ''}`).join('\n') + (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
                         } else {
-                            response =
-                                'Aucune pharmacie trouvée pour "' + keywords.join('", "') +
-                                '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong) ou tapez "garde".';
+                            response = 'Aucune pharmacie trouvée pour "' + keywords.join('", "') + '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong) ou tapez "garde".';
                         }
                     } else {
-                        response =
-                            'Posez une question sur les pharmacies, les gardes ou une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong).';
+                        response = 'Posez une question sur les pharmacies, les gardes ou une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong).';
                     }
                 }
 
@@ -1176,7 +1143,7 @@
 
         // LANCEMENT
         render();
-        console.log('ANN_PHARMA_TG chargé - 276 pharmacies');
+        console.log('✅ PHARMA_TOGO chargé - 276 pharmacies');
     </script>
 </body>
 </html>

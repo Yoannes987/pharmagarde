@@ -61,6 +61,25 @@
             letter-spacing: 0.3px;
         }
 
+        /* ===== BANDEAU GARDE ===== */
+        .garde-banner {
+            background: #fefbf5;
+            border: 1px solid #c07a2a;
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #7a5a1a;
+            display: none;
+        }
+        .garde-banner.active {
+            display: block;
+        }
+        .garde-banner strong {
+            color: #c07a2a;
+        }
+
         /* ===== FILTRES ===== */
         .filters {
             background: #fff;
@@ -642,6 +661,11 @@
         <p class="sub">Togo • Trouvez une pharmacie facilement</p>
     </header>
 
+    <!-- BANDEAU GARDE -->
+    <div class="garde-banner" id="gardeBanner">
+        🛡️ <strong>Pharmacies de garde</strong> — Semaine du <span id="gardeSemaine">...</span>
+    </div>
+
     <!-- FILTRES -->
     <section class="filters">
         <div class="filters-row">
@@ -704,14 +728,16 @@
 
     <script>
         // ============================================================
-        //  DONNÉES : CHARGEMENT DEPUIS pharmacies.json
+        //  DONNÉES : CHARGEMENT DEPUIS pharmacies.json ET gardes.json
         // ============================================================
         let allPharmacies = [];
+        let gardesIds = [];
+        let gardeSemaine = '';
 
         // État des filtres
         let currentPage = 1;
         const PER_PAGE = 15;
-        let selectedServices = []; // liste des services actifs
+        let selectedServices = [];
 
         // Éléments DOM
         const listEl = document.getElementById('pharmacyList');
@@ -721,42 +747,63 @@
         const statsEl = document.getElementById('stats');
         const paginationEl = document.getElementById('pagination');
         const serviceFiltersEl = document.getElementById('serviceFilters');
+        const gardeBanner = document.getElementById('gardeBanner');
+        const gardeSemaineEl = document.getElementById('gardeSemaine');
 
         // ============================================================
-        //  CHARGEMENT DES DONNÉES
+        //  FONCTION POUR VÉRIFIER SI UNE PHARMACIE EST DE GARDE
         // ============================================================
-        fetch('pharmacies.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Fichier pharmacies.json introuvable');
-                return response.json();
-            })
-            .then(data => {
-                allPharmacies = data;
-                // Remplir les zones
-                const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
-                zones.forEach(z => {
-                    const opt = document.createElement('option');
-                    opt.value = z;
-                    opt.textContent = z;
-                    zoneFilter.appendChild(opt);
-                });
-                // Générer les boutons de services
-                generateServiceFilters();
-                // Afficher
-                render();
-                console.log(`✅ ${allPharmacies.length} pharmacies chargées`);
-            })
-            .catch(err => {
-                console.error('Erreur de chargement:', err);
-                listEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données. Vérifiez que le fichier pharmacies.json est présent.</div>`;
-                statsEl.textContent = 'Erreur';
+        function isGarde(pharmacy) {
+            return gardesIds.includes(pharmacy.id);
+        }
+
+        // ============================================================
+        //  CHARGEMENT DES DONNÉES (PARALLÈLE)
+        // ============================================================
+        Promise.all([
+            fetch('pharmacies.json').then(r => { if (!r.ok) throw new Error('pharmacies.json introuvable'); return r.json(); }),
+            fetch('gardes.json').then(r => { if (!r.ok) throw new Error('gardes.json introuvable'); return r.json(); })
+        ])
+        .then(([pharmaciesData, gardesData]) => {
+            allPharmacies = pharmaciesData;
+            gardesIds = gardesData.pharmacies || [];
+            gardeSemaine = gardesData.semaine || '';
+
+            // Afficher le bandeau si des gardes existent
+            if (gardesIds.length > 0 && gardeSemaine) {
+                gardeBanner.classList.add('active');
+                gardeSemaineEl.textContent = gardeSemaine;
+            } else if (gardesIds.length > 0) {
+                gardeBanner.classList.add('active');
+                gardeSemaineEl.textContent = 'en cours';
+            }
+
+            // Remplir les zones
+            const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
+            zones.forEach(z => {
+                const opt = document.createElement('option');
+                opt.value = z;
+                opt.textContent = z;
+                zoneFilter.appendChild(opt);
             });
+
+            // Générer les boutons de services
+            generateServiceFilters();
+
+            // Afficher
+            render();
+            console.log(`✅ ${allPharmacies.length} pharmacies chargées, ${gardesIds.length} gardes actives`);
+        })
+        .catch(err => {
+            console.error('Erreur de chargement:', err);
+            listEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données. Vérifiez que les fichiers pharmacies.json et gardes.json sont présents.</div>`;
+            statsEl.textContent = 'Erreur';
+        });
 
         // ============================================================
         //  GÉNÉRATION DES BOUTONS SERVICES
         // ============================================================
         function generateServiceFilters() {
-            // Récupérer tous les services uniques
             const serviceSet = new Set();
             allPharmacies.forEach(p => {
                 if (p.services && Array.isArray(p.services)) {
@@ -772,7 +819,6 @@
                 `<button class="service-btn" data-service="${service}">${service}</button>`
             ).join('');
 
-            // Écouteurs
             document.querySelectorAll('.service-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const service = this.dataset.service;
@@ -799,13 +845,10 @@
             const garde = gardeToggle.checked;
 
             return allPharmacies.filter(p => {
-                // Texte
                 const matchNom = p.nom.toLowerCase().includes(q);
-                // Zone
                 const matchZone = zone === 'all' || p.zone === zone;
-                // Garde
-                const matchGarde = garde ? p.est_de_garde === true : true;
-                // Services (si des services sont sélectionnés, la pharmacie doit les avoir TOUS)
+                // Garde : utilise le fichier externe
+                const matchGarde = garde ? isGarde(p) : true;
                 let matchServices = true;
                 if (selectedServices.length > 0) {
                     matchServices = selectedServices.every(s => p.services && p.services.includes(s));
@@ -833,16 +876,16 @@
                 listEl.innerHTML = `<div class="empty-state"><span>🔍</span>Aucune pharmacie trouvée</div>`;
             } else {
                 listEl.innerHTML = pageItems.map(p => {
-                    const gardeBadge = p.est_de_garde ? `<span class="card-badge">Garde</span>` : '';
+                    const estDeGarde = isGarde(p);
+                    const gardeBadge = estDeGarde ? `<span class="card-badge">Garde</span>` : '';
                     const tel = p.telephone || '';
                     const mapUrl =
                         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nom + ' ' + (p.localisation || ''))}`;
-                    // Tags services
                     const servicesHtml = (p.services && p.services.length > 0) ?
                         `<div class="card-services">${p.services.map(s => `<span class="service-tag">${s}</span>`).join('')}</div>` :
                         '';
                     return `
-                        <div class="card ${p.est_de_garde ? 'garde' : ''}">
+                        <div class="card ${estDeGarde ? 'garde' : ''}">
                             <div class="card-header">
                                 <span class="card-name">${p.nom}</span>
                                 ${gardeBadge}
@@ -902,7 +945,7 @@
             render(); });
 
         // ============================================================
-        //  CHATBOT (identique à votre version, avec les données chargées)
+        //  CHATBOT
         // ============================================================
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chatWindow');
@@ -938,50 +981,50 @@
                 const lower = text.toLowerCase();
                 let response = '';
 
-                // Garde
+                // Garde (utilise le fichier externe)
                 if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes('urgence')) {
-                    const gardes = allPharmacies.filter(p => p.est_de_garde);
+                    const gardes = allPharmacies.filter(p => isGarde(p));
                     if (gardes.length > 0) {
                         response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
                     } else {
                         response = 'Aucune pharmacie de garde enregistrée pour le moment.';
                     }
                 }
-                // Villes (on utilise p.ville)
+                // Villes
                 else if (lower.includes('lomé') || lower.includes('lome')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Lomé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Lomé.'; }
                 } else if (lower.includes('kara')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kara'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Kara.'; }
                 } else if (lower.includes('kpalimé') || lower.includes('kpalime')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kpalimé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Kpalimé.'; }
                 } else if (lower.includes('sokodé') || lower.includes('sokode')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Sokodé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Sokodé.'; }
                 } else if (lower.includes('atakpamé') || lower.includes('atakpame')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Atakpamé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Atakpamé.'; }
                 } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes('tove')) {
                     const r = allPharmacies.filter(p => p.ville && (p.ville.includes('Tsévié') || p.ville.includes('Tové')));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Tsévié.'; }
                 } else if (lower.includes('dapaong')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Dapaong'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
                 }
                 // Recherche générale
@@ -996,7 +1039,7 @@
                         });
                         results = results.filter((p, i, self) => self.findIndex(p2 => p2.id === p.id) === i);
                         if (results.length > 0) {
-                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') + '" :\n' + results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${p.est_de_garde ? ' 🛡️' : ''}`).join('\n') + (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
+                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') + '" :\n' + results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
                         } else {
                             response = 'Aucune pharmacie trouvée pour "' + keywords.join('", "') + '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong) ou tapez "garde".';
                         }

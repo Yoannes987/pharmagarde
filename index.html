@@ -82,21 +82,60 @@
             color: #c07a2a;
         }
 
-        /* ===== FILTRES ===== */
-        .filters {
+        /* ===== ONGLETS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #fff;
+            color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+        .tab-btn:hover:not(.active) {
+            background: var(--gray-200);
+        }
+        .tab-content {
+            display: none;
             background: #fff;
             border-radius: var(--radius);
-            padding: 16px 16px 14px 16px;
+            padding: 16px;
             box-shadow: var(--shadow);
-            margin-bottom: 18px;
         }
-        .filters-row {
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== FILTRES DANS ONGLETS ===== */
+        .filter-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-bottom: 14px;
         }
-        .filters-row input,
-        .filters-row select {
+        .filter-group .row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .filter-group input,
+        .filter-group select {
             width: 100%;
             padding: 11px 15px;
             border: 1.5px solid var(--gray-200);
@@ -109,24 +148,20 @@
             -webkit-appearance: none;
             appearance: none;
         }
-        .filters-row input:focus,
-        .filters-row select:focus {
+        .filter-group input:focus,
+        .filter-group select:focus {
             border-color: var(--primary);
             background: #fff;
         }
-        .filters-row input::placeholder {
+        .filter-group input::placeholder {
             color: var(--gray-300);
         }
-
-        .filters-bottom {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding-top: 4px;
+        .filter-group .stats {
+            font-size: 13px;
+            color: var(--gray-600);
+            text-align: right;
         }
-        .toggle-wrap {
+        .filter-group .toggle-wrap {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -137,7 +172,7 @@
             user-select: none;
             flex-shrink: 0;
         }
-        .toggle-wrap input[type="checkbox"] {
+        .filter-group .toggle-wrap input[type="checkbox"] {
             width: 38px;
             height: 20px;
             -webkit-appearance: none;
@@ -150,7 +185,7 @@
             cursor: pointer;
             flex-shrink: 0;
         }
-        .toggle-wrap input[type="checkbox"]::after {
+        .filter-group .toggle-wrap input[type="checkbox"]::after {
             content: "";
             position: absolute;
             top: 2px;
@@ -162,30 +197,17 @@
             transition: transform 0.25s;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
-        .toggle-wrap input[type="checkbox"]:checked {
+        .filter-group .toggle-wrap input[type="checkbox"]:checked {
             background: var(--primary);
         }
-        .toggle-wrap input[type="checkbox"]:checked::after {
+        .filter-group .toggle-wrap input[type="checkbox"]:checked::after {
             transform: translateX(18px);
         }
-
-        .stats {
-            font-size: 13px;
-            color: var(--gray-600);
-            text-align: right;
-            padding-top: 0;
-            margin: 0;
-            flex-shrink: 0;
-        }
-
-        /* ===== FILTRES SERVICES ===== */
         .service-filters {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--gray-200);
+            margin-top: 6px;
         }
         .service-btn {
             padding: 6px 14px;
@@ -206,42 +228,13 @@
             border-color: var(--primary);
             color: #fff;
         }
-
-        /* ===== RECHERCHE MÉDICAMENTS ===== */
-        .med-search-section {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 2px solid var(--gray-200);
-        }
-        .med-search-section .med-search-row {
+        .filter-bottom-row {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
             gap: 10px;
-        }
-        .med-search-section .med-search-row input,
-        .med-search-section .med-search-row select {
-            width: 100%;
-            padding: 11px 15px;
-            border: 1.5px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            background: var(--gray-50);
-            color: var(--gray-800);
-            outline: none;
-            transition: border 0.2s, background 0.2s;
-        }
-        .med-search-section .med-search-row input:focus,
-        .med-search-section .med-search-row select:focus {
-            border-color: var(--primary);
-            background: #fff;
-        }
-        .med-search-section .med-search-row input::placeholder {
-            color: var(--gray-300);
-        }
-        .med-search-section .med-stats {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-top: 6px;
+            padding-top: 4px;
         }
 
         /* ===== LISTE PHARMACIES ===== */
@@ -251,7 +244,6 @@
             gap: 12px;
             margin-bottom: 22px;
         }
-
         .card {
             background: #fff;
             border-radius: var(--radius);
@@ -357,7 +349,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 12px;
             margin-bottom: 22px;
         }
         .med-card {
@@ -446,6 +437,20 @@
             font-weight: 500;
         }
 
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--gray-600);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .empty-state span {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
         /* ===== CHATBOT ===== */
         .chat-fab {
             position: fixed;
@@ -474,7 +479,6 @@
         .chat-fab:active {
             transform: scale(0.94);
         }
-
         .chat-window {
             position: fixed;
             bottom: 90px;
@@ -504,7 +508,6 @@
         .chat-window.hidden {
             display: none;
         }
-
         .chat-header {
             background: var(--primary);
             color: #fff;
@@ -532,7 +535,6 @@
         .chat-header button:hover {
             opacity: 1;
         }
-
         .chat-messages {
             flex: 1;
             padding: 12px 14px;
@@ -581,7 +583,6 @@
         .chat-messages .msg-suggestion:active {
             transform: scale(0.96);
         }
-
         .suggestions-grid {
             display: flex;
             flex-wrap: wrap;
@@ -591,7 +592,6 @@
         .suggestions-grid .msg-suggestion {
             flex: 0 0 auto;
         }
-
         .chat-input-area {
             display: flex;
             border-top: 1px solid var(--gray-200);
@@ -636,88 +636,6 @@
         .chat-input-area button:active {
             transform: scale(0.93);
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (min-width: 600px) {
-            body {
-                padding: 28px 40px 130px 40px;
-                max-width: 840px;
-                margin: 0 auto;
-            }
-            .chat-window {
-                width: 400px;
-                height: 500px;
-                right: 24px;
-                bottom: 98px;
-            }
-            .filters-row {
-                flex-direction: row;
-                gap: 10px;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-            .filters-row input {
-                flex: 2;
-                min-width: 160px;
-            }
-            .filters-row select {
-                flex: 1;
-                min-width: 130px;
-            }
-            .filters-bottom {
-                flex: 0 1 auto;
-                justify-content: flex-end;
-                gap: 14px;
-            }
-            .stats {
-                text-align: right;
-            }
-            .chat-fab {
-                bottom: 28px;
-                right: 28px;
-            }
-            .med-search-section .med-search-row {
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-items: center;
-            }
-            .med-search-section .med-search-row input {
-                flex: 2;
-                min-width: 160px;
-            }
-            .med-search-section .med-search-row select {
-                flex: 1;
-                min-width: 130px;
-            }
-        }
-        @media (max-width: 420px) {
-            .filters-bottom {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 6px;
-            }
-            .toggle-wrap {
-                font-size: 13px;
-            }
-            .stats {
-                font-size: 12px;
-            }
-            .chat-window {
-                right: 8px;
-                width: 94vw;
-                height: 440px;
-                bottom: 82px;
-            }
-            .chat-fab {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-                right: 14px;
-                bottom: 18px;
-            }
-        }
-
-        /* ===== SCROLLBAR ===== */
         .chat-messages::-webkit-scrollbar {
             width: 4px;
         }
@@ -727,20 +645,6 @@
         .chat-messages::-webkit-scrollbar-thumb {
             background: var(--gray-300);
             border-radius: 10px;
-        }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 48px 16px;
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .empty-state span {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 10px;
         }
 
         /* ===== FOOTER ===== */
@@ -758,40 +662,64 @@
             text-decoration: none;
         }
 
-        /* ===== ONGLETS ===== */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 14px;
-            background: var(--gray-100);
-            border-radius: var(--radius-sm);
-            padding: 4px;
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 600px) {
+            body {
+                padding: 28px 40px 130px 40px;
+                max-width: 840px;
+                margin: 0 auto;
+            }
+            .chat-window {
+                width: 400px;
+                height: 500px;
+                right: 24px;
+                bottom: 98px;
+            }
+            .filter-group .row {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            .filter-group .row input {
+                flex: 2;
+                min-width: 160px;
+            }
+            .filter-group .row select {
+                flex: 1;
+                min-width: 130px;
+            }
+            .filter-bottom-row {
+                flex: 0 1 auto;
+                justify-content: flex-end;
+                gap: 14px;
+            }
+            .chat-fab {
+                bottom: 28px;
+                right: 28px;
+            }
         }
-        .tab-btn {
-            flex: 1;
-            padding: 10px 12px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: transparent;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-600);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #fff;
-            color: var(--primary-dark);
-            box-shadow: var(--shadow);
-        }
-        .tab-btn:hover:not(.active) {
-            background: var(--gray-200);
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
+        @media (max-width: 420px) {
+            .filter-bottom-row {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 6px;
+            }
+            .filter-group .toggle-wrap {
+                font-size: 13px;
+            }
+            .chat-window {
+                right: 8px;
+                width: 94vw;
+                height: 440px;
+                bottom: 82px;
+            }
+            .chat-fab {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                right: 14px;
+                bottom: 18px;
+            }
         }
     </style>
 </head>
@@ -808,29 +736,41 @@
         🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
     </div>
 
-    <!-- FILTRES -->
-    <section class="filters">
-        <div class="filters-row">
-            <input type="text" id="searchInput" placeholder="Rechercher une pharmacie...">
-            <select id="zoneFilter">
-                <option value="all">Toutes les zones</option>
-            </select>
-        </div>
-        <div class="filters-bottom">
-            <label class="toggle-wrap">
-                <input type="checkbox" id="gardeToggle">
-                <span>Garde</span>
-            </label>
-            <span class="stats" id="stats">Chargement...</span>
-        </div>
-        <!-- Filtres services -->
-        <div class="service-filters" id="serviceFilters">
-            <!-- Les boutons seront générés dynamiquement -->
+    <!-- ONGLETS -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="pharmacies">🏥 Pharmacies</button>
+        <button class="tab-btn" data-tab="medicaments">💊 Médicaments</button>
+    </div>
+
+    <!-- CONTENU ONGLET PHARMACIES -->
+    <div class="tab-content active" id="tab-pharmacies">
+        <div class="filter-group">
+            <div class="row">
+                <input type="text" id="searchInput" placeholder="Rechercher une pharmacie...">
+                <select id="zoneFilter">
+                    <option value="all">Toutes les zones</option>
+                </select>
+            </div>
+            <div class="filter-bottom-row">
+                <label class="toggle-wrap">
+                    <input type="checkbox" id="gardeToggle">
+                    <span>Garde</span>
+                </label>
+                <span class="stats" id="stats">Chargement...</span>
+            </div>
+            <div class="service-filters" id="serviceFilters">
+                <!-- généré dynamiquement -->
+            </div>
         </div>
 
-        <!-- SECTION RECHERCHE MÉDICAMENTS -->
-        <div class="med-search-section">
-            <div class="med-search-row">
+        <div id="pharmacyList"></div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- CONTENU ONGLET MÉDICAMENTS -->
+    <div class="tab-content" id="tab-medicaments">
+        <div class="filter-group">
+            <div class="row">
                 <input type="text" id="medSearchInput" placeholder="🔍 Rechercher un médicament (ex: Paracétamol, Amoxicilline...)">
                 <select id="medCategorieFilter">
                     <option value="all">Toutes les catégories</option>
@@ -839,24 +779,9 @@
                     <option value="all">Toutes les formes</option>
                 </select>
             </div>
-            <div class="med-stats" id="medStats">Chargement des médicaments...</div>
+            <div style="text-align:right;"><span class="stats" id="medStats">Chargement des médicaments...</span></div>
         </div>
-    </section>
 
-    <!-- ONGLETS -->
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="pharmacies">🏥 Pharmacies</button>
-        <button class="tab-btn" data-tab="medicaments">💊 Médicaments</button>
-    </div>
-
-    <!-- CONTENU PHARMACIES -->
-    <div class="tab-content active" id="tab-pharmacies">
-        <main id="pharmacyList"></main>
-        <div class="pagination" id="pagination"></div>
-    </div>
-
-    <!-- CONTENU MÉDICAMENTS -->
-    <div class="tab-content" id="tab-medicaments">
         <div id="medicamentList"></div>
         <div class="pagination" id="medPagination"></div>
     </div>
@@ -898,19 +823,19 @@
 
     <script>
         // ============================================================
-        //  DONNÉES : CHARGEMENT DEPUIS pharmacies.json, gardes.json et medicaments.json
+        //  DONNÉES : CHARGEMENT
         // ============================================================
         let allPharmacies = [];
         let gardesIds = [];
         let gardeSemaine = '';
         let allMedicaments = [];
 
-        // État des filtres pharmacies
+        // État pharmacies
         let currentPage = 1;
         const PER_PAGE = 15;
         let selectedServices = [];
 
-        // État des filtres médicaments
+        // État médicaments
         let medCurrentPage = 1;
         const MED_PER_PAGE = 15;
 
@@ -925,7 +850,6 @@
         const gardeBanner = document.getElementById('gardeBanner');
         const gardeSemaineEl = document.getElementById('gardeSemaine');
 
-        // Éléments DOM médicaments
         const medListEl = document.getElementById('medicamentList');
         const medSearchInput = document.getElementById('medSearchInput');
         const medCategorieFilter = document.getElementById('medCategorieFilter');
@@ -940,21 +864,17 @@
             medicaments: document.getElementById('tab-medicaments')
         };
 
-        // ============================================================
-        //  FONCTION POUR VÉRIFIER SI UNE PHARMACIE EST DE GARDE
-        // ============================================================
         function isGarde(pharmacy) {
             return gardesIds.includes(pharmacy.id);
         }
 
         // ============================================================
-        //  CHARGEMENT DES DONNÉES (PARALLÈLE)
+        //  CHARGEMENT PARALLÈLE
         // ============================================================
         Promise.all([
             fetch('pharmacies.json').then(r => { if (!r.ok) throw new Error('pharmacies.json introuvable'); return r.json(); }),
             fetch('gardes.json').then(r => { if (!r.ok) throw new Error('gardes.json introuvable'); return r.json(); }),
-            fetch('medicaments.json').then(r => { if (!r.ok) throw new Error('medicaments.json introuvable'); return r
-                    .json(); })
+            fetch('medicaments.json').then(r => { if (!r.ok) throw new Error('medicaments.json introuvable'); return r.json(); })
         ])
         .then(([pharmaciesData, gardesData, medicamentsData]) => {
             allPharmacies = pharmaciesData;
@@ -962,7 +882,6 @@
             gardeSemaine = gardesData.semaine || '';
             allMedicaments = medicamentsData.medicaments || [];
 
-            // Afficher le bandeau si des gardes existent
             if (gardesIds.length > 0 && gardeSemaine) {
                 gardeBanner.classList.add('active');
                 gardeSemaineEl.textContent = gardeSemaine;
@@ -971,7 +890,7 @@
                 gardeSemaineEl.textContent = 'en cours';
             }
 
-            // Remplir les zones
+            // Zones
             const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
             zones.forEach(z => {
                 const opt = document.createElement('option');
@@ -980,22 +899,17 @@
                 zoneFilter.appendChild(opt);
             });
 
-            // Générer les boutons de services
             generateServiceFilters();
-
-            // Remplir les filtres médicaments
             populateMedFilters();
-
-            // Afficher
             renderPharmacies();
             renderMedicaments();
             console.log(`✅ ${allPharmacies.length} pharmacies, ${gardesIds.length} gardes, ${allMedicaments.length} médicaments`);
         })
         .catch(err => {
             console.error('Erreur de chargement:', err);
-            listEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données. Vérifiez que les fichiers sont présents.</div>`;
+            listEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données.</div>`;
             statsEl.textContent = 'Erreur';
-            medStatsEl.textContent = 'Erreur de chargement des médicaments';
+            medStatsEl.textContent = 'Erreur';
         });
 
         // ============================================================
@@ -1009,12 +923,11 @@
                 Object.keys(tabContents).forEach(key => {
                     tabContents[key].classList.toggle('active', key === tab);
                 });
-                // Recalculer les hauteurs si besoin
             });
         });
 
         // ============================================================
-        //  GÉNÉRATION DES BOUTONS SERVICES (pharmacies)
+        //  SERVICES PHARMACIES
         // ============================================================
         function generateServiceFilters() {
             const serviceSet = new Set();
@@ -1053,18 +966,15 @@
         //  FILTRES MÉDICAMENTS
         // ============================================================
         function populateMedFilters() {
-            // Catégories
             const categories = [...new Set(allMedicaments.map(m => m.categorie_id || 'non_categorise'))].sort();
             categories.forEach(c => {
                 const opt = document.createElement('option');
                 opt.value = c;
-                // Trouver le nom de la catégorie
-                const catObj = window.medCategories ? window.medCategories.find(cat => cat.id === c) : null;
-                opt.textContent = catObj ? catObj.nom : c;
+                // on peut trouver le nom depuis l'objet categories si disponible, sinon on met l'id
+                opt.textContent = c;
                 medCategorieFilter.appendChild(opt);
             });
 
-            // Formes
             const formes = [...new Set(allMedicaments.map(m => m.forme || 'non_renseigne'))].sort();
             formes.forEach(f => {
                 const opt = document.createElement('option');
@@ -1073,7 +983,6 @@
                 medFormeFilter.appendChild(opt);
             });
 
-            // Écouteurs
             medSearchInput.addEventListener('input', () => { medCurrentPage = 1;
                 renderMedicaments(); });
             medCategorieFilter.addEventListener('change', () => { medCurrentPage = 1;
@@ -1147,7 +1056,7 @@
                 }).join('');
             }
 
-            renderPagination(totalPages, currentPage, paginationEl, renderPharmacies);
+            renderPagination(totalPages, currentPage, paginationEl, 'pharmacies');
         }
 
         // ============================================================
@@ -1168,7 +1077,7 @@
         }
 
         // ============================================================
-        //  AFFICHAGE MÉDICAMENTS (avec nom en rouge)
+        //  AFFICHAGE MÉDICAMENTS
         // ============================================================
         function renderMedicaments() {
             const filtered = getFilteredMedicaments();
@@ -1186,7 +1095,6 @@
                 medListEl.innerHTML = `<div class="empty-state"><span>💊</span>Aucun médicament trouvé</div>`;
             } else {
                 medListEl.innerHTML = pageItems.map(m => {
-                    // Récupérer les pharmacies qui proposent ce médicament
                     const pharmIds = m.pharmacies || [];
                     let pharmHtml = '';
                     if (pharmIds.length > 0) {
@@ -1203,16 +1111,10 @@
                             `<div class="med-pharmacies" style="color:var(--gray-300);">📌 Aucune pharmacie renseignée pour ce médicament</div>`;
                     }
 
-                    // Tags (catégorie, forme, population)
                     const tags = [];
-                    if (m.categorie_id) {
-                        const catObj = window.medCategories ? window.medCategories.find(c => c.id === m.categorie_id) :
-                            null;
-                        tags.push(catObj ? catObj.nom : m.categorie_id);
-                    }
+                    if (m.categorie_id) tags.push(m.categorie_id);
                     if (m.forme) tags.push(m.forme);
                     if (m.population && m.population.length > 0) tags.push(m.population.join('/'));
-
                     const tagsHtml = tags.map(t => `<span class="med-tag">${t}</span>`).join('');
 
                     return `
@@ -1228,14 +1130,13 @@
                 }).join('');
             }
 
-            renderPagination(totalPages, medCurrentPage, medPaginationEl, renderMedicaments);
+            renderPagination(totalPages, medCurrentPage, medPaginationEl, 'medicaments');
 
-            // Ajouter les événements sur les liens pharmacies
+            // Liaison pharmacie
             document.querySelectorAll('.pharm-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const id = parseInt(this.dataset.pharmacyId);
-                    // Basculer vers l'onglet pharmacies et filtrer
                     document.querySelector('.tab-btn[data-tab="pharmacies"]').click();
                     const pharm = allPharmacies.find(p => p.id === id);
                     if (pharm) {
@@ -1251,49 +1152,59 @@
         // ============================================================
         //  PAGINATION GENERIQUE
         // ============================================================
-        function renderPagination(totalPages, current, container, renderFn) {
+        function renderPagination(totalPages, current, container, type) {
             if (totalPages <= 1) {
                 container.innerHTML = '';
                 return;
             }
-            let html = `<button ${current === 1 ? 'disabled' : ''} onclick="goToPage(${current - 1}, '${container.id}', ${totalPages}, ${renderFn})">‹</button>`;
+            let html = `<button ${current === 1 ? 'disabled' : ''} onclick="goToPage(${current - 1}, '${type}')">‹</button>`;
             const maxVisible = 5;
             let s = Math.max(1, current - Math.floor(maxVisible / 2));
             let e = Math.min(totalPages, s + maxVisible - 1);
             if (e - s < maxVisible - 1) s = Math.max(1, e - maxVisible + 1);
             if (s > 1) {
-                html += `<button onclick="goToPage(1, '${container.id}', ${totalPages}, ${renderFn})">1</button>`;
+                html += `<button onclick="goToPage(1, '${type}')">1</button>`;
                 if (s > 2) html += `<span class="pagination-ellipsis">…</span>`;
             }
             for (let i = s; i <= e; i++) {
                 html +=
-                `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i}, '${container.id}', ${totalPages}, ${renderFn})">${i}</button>`;
+                `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i}, '${type}')">${i}</button>`;
             }
             if (e < totalPages) {
                 if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
-                html +=
-                `<button onclick="goToPage(${totalPages}, '${container.id}', ${totalPages}, ${renderFn})">${totalPages}</button>`;
+                html += `<button onclick="goToPage(${totalPages}, '${type}')">${totalPages}</button>`;
             }
-            html += `<button ${current === totalPages ? 'disabled' : ''} onclick="goToPage(${current + 1}, '${container.id}', ${totalPages}, ${renderFn})">›</button>`;
+            html += `<button ${current === totalPages ? 'disabled' : ''} onclick="goToPage(${current + 1}, '${type}')">›</button>`;
             container.innerHTML = html;
         }
 
-        // Fonction globale pour la pagination
-        window.goToPage = function(page, containerId, totalPages, renderFn) {
-            if (page < 1 || page > totalPages) return;
-            // Déterminer quel type de pagination
-            if (containerId === 'pagination') {
+        window.goToPage = function(page, type) {
+            if (type === 'pharmacies') {
+                const filtered = getFilteredPharmacies();
+                const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
+                if (page < 1 || page > totalPages) return;
                 currentPage = page;
-                renderFn();
-            } else if (containerId === 'medPagination') {
+                renderPharmacies();
+            } else if (type === 'medicaments') {
+                const filtered = getFilteredMedicaments();
+                const totalPages = Math.ceil(filtered.length / MED_PER_PAGE) || 1;
+                if (page < 1 || page > totalPages) return;
                 medCurrentPage = page;
-                renderFn();
+                renderMedicaments();
             }
             document.querySelector('.tab-content.active').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        // Écouteurs pharmacies
+        searchInput.addEventListener('input', () => { currentPage = 1;
+            renderPharmacies(); });
+        zoneFilter.addEventListener('change', () => { currentPage = 1;
+            renderPharmacies(); });
+        gardeToggle.addEventListener('change', () => { currentPage = 1;
+            renderPharmacies(); });
+
         // ============================================================
-        //  CHATBOT AMÉLIORÉ
+        //  CHATBOT (version complète)
         // ============================================================
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chatWindow');
@@ -1329,12 +1240,11 @@
                 const lower = text.toLowerCase();
                 let response = '';
 
-                // === RECHERCHE DE MÉDICAMENT ===
+                // Recherche médicament
                 const medFound = allMedicaments.filter(m =>
                     m.dci.toLowerCase().includes(lower) ||
                     (m.sous_categorie && m.sous_categorie.toLowerCase().includes(lower))
                 );
-
                 if (medFound.length > 0) {
                     const top = medFound.slice(0, 5);
                     response = '💊 **Médicament(s) trouvé(s) :**\n';
@@ -1348,27 +1258,24 @@
                             ' (aucune pharmacie renseignée)';
                         response += `• **${m.dci}** ${m.dosage ? '- '+m.dosage : ''}${pharmText}\n`;
                     });
-                    if (medFound.length > 5) {
-                        response += `\n... et ${medFound.length - 5} autre(s) médicament(s).`;
-                    }
+                    if (medFound.length > 5) response += `\n... et ${medFound.length - 5} autre(s).`;
                     response += `\n\n💡 Pour plus de détails, utilisez l'onglet "Médicaments".`;
                     chatMessages.innerHTML += `<div class="msg msg-bot">${response.replace(/\n/g, '<br>')}</div>`;
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     return;
                 }
 
-                // === GARDE ===
-                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes(
-                        'urgence')) {
+                // Garde
+                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes('urgence')) {
                     const gardes = allPharmacies.filter(p => isGarde(p));
                     if (gardes.length > 0) {
-                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`)
-                            .join('\n');
+                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join(
+                            '\n');
                     } else {
                         response = 'Aucune pharmacie de garde enregistrée pour le moment.';
                     }
                 }
-                // === VILLES ===
+                // Villes
                 else if (lower.includes('lomé') || lower.includes('lome')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Lomé'));
                     if (r.length > 0) {
@@ -1421,7 +1328,7 @@
                             `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
                 }
-                // === RECHERCHE GÉNÉRALE ===
+                // Recherche générale
                 else {
                     const words = lower.split(' ');
                     const keywords = words.filter(w => w.length > 2);
@@ -1433,28 +1340,26 @@
                                 kw)));
                             results = results.concat(found);
                         });
-                        // Chercher aussi dans les médicaments
                         const medResults = allMedicaments.filter(m =>
                             keywords.some(kw => m.dci.toLowerCase().includes(kw))
                         );
                         results = results.filter((p, i, self) => self.findIndex(p2 => p2.id === p.id) === i);
                         if (results.length > 0 || medResults.length > 0) {
-                            let responseParts = [];
+                            let parts = [];
                             if (results.length > 0) {
-                                responseParts.push(`🏥 ${results.length} pharmacie(s) trouvée(s) :\n` + results.slice(0, 10)
+                                parts.push(`🏥 ${results.length} pharmacie(s) trouvée(s) :\n` + results.slice(0, 10)
                                     .map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (
                                     results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : ''));
                             }
                             if (medResults.length > 0) {
-                                responseParts.push(`💊 ${medResults.length} médicament(s) trouvé(s) :\n` + medResults.slice(
-                                    0, 5).map(m => `• ${m.dci}${m.dosage ? ' - '+m.dosage : ''}`).join(
-                                    '\n') + (medResults.length > 5 ? `\n... et ${medResults.length - 5} autre(s).` :
-                                    ''));
+                                parts.push(`💊 ${medResults.length} médicament(s) trouvé(s) :\n` + medResults.slice(0, 5)
+                                    .map(m => `• ${m.dci}${m.dosage ? ' - '+m.dosage : ''}`).join('\n') + (
+                                    medResults.length > 5 ? `\n... et ${medResults.length - 5} autre(s).` : ''));
                             }
-                            response = responseParts.join('\n\n');
+                            response = parts.join('\n\n');
                         } else {
                             response =
-                                'Aucun résultat trouvé pour "' + keywords.join('", "') + '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong), "garde" ou un médicament (Paracétamol, Amoxicilline...).';
+                                'Aucun résultat trouvé. Essayez une ville, "garde" ou un médicament (Paracétamol, Amoxicilline...).';
                         }
                     } else {
                         response =
@@ -1469,22 +1374,6 @@
 
         chatSend.addEventListener('click', sendChatMessage);
         chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendChatMessage(); });
-
-        // ============================================================
-        //  LIEN ENTRE LES FICHIERS (catégories stockées globalement)
-        // ============================================================
-        // On stocke les catégories pour les utiliser dans les filtres
-        let medCategories = [];
-        // On récupère les catégories depuis le fichier medicaments.json si disponible
-        // On va les charger au moment du fetch principal
-
-        // Modification du Promise.all pour capturer les catégories
-        const originalFetch = window.fetch;
-        // On va simplement stocker les catégories après le chargement
-        // Je modifie la fonction populateMedFilters pour utiliser les catégories du fichier
-
-        // Je vais ajouter une variable globale pour les catégories
-        window.medCategories = [];
     </script>
 </body>
 </html>

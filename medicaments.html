@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>PharmaFinder Togo - Médicaments</title>
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #0a7e3c;
+            --primary-dark: #06542a;
+            --primary-light: #e8f5ee;
+            --gray-50: #f7faf7;
+            --gray-100: #eef3ee;
+            --gray-200: #dce4dc;
+            --gray-300: #b8c8b8;
+            --gray-600: #5a6e5a;
+            --gray-800: #1c2a1c;
+            --shadow: 0 2px 16px rgba(0, 20, 0, 0.06);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --red: #c0392b;
+            --red-light: #fde8e6;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            padding: 18px 14px 130px 14px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 18px;
+        }
+        .app-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--primary-dark);
+        }
+        .app-header h1 span {
+            font-weight: 300;
+            color: var(--gray-600);
+        }
+        .app-header .sub {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+        .app-header .nav-links {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        .app-header .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1.5px solid var(--primary);
+            transition: 0.2s;
+        }
+        .app-header .nav-links a:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ===== FILTRES ===== */
+        .filters {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 16px 16px 14px 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+        .filters-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .filters-row input,
+        .filters-row select {
+            width: 100%;
+            padding: 11px 15px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            outline: none;
+            transition: border 0.2s, background 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .filters-row input:focus,
+        .filters-row select:focus {
+            border-color: var(--primary);
+            background: #fff;
+        }
+        .filters-row input::placeholder {
+            color: var(--gray-300);
+        }
+        .filters-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 4px;
+        }
+        .stats {
+            font-size: 13px;
+            color: var(--gray-600);
+            text-align: right;
+            padding-top: 0;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        /* ===== LISTE MÉDICAMENTS ===== */
+        #medicamentList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .med-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--red);
+            transition: transform 0.12s;
+        }
+        .med-card .med-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--red);
+            line-height: 1.3;
+        }
+        .med-card .med-detail {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+        .med-card .med-detail strong {
+            color: var(--gray-800);
+        }
+        .med-card .med-pharmacies {
+            margin-top: 6px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        .med-card .med-pharmacies a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .med-card .med-pharmacies a:hover {
+            text-decoration: underline;
+        }
+        .med-tag {
+            display: inline-block;
+            font-size: 11px;
+            background: var(--red-light);
+            color: var(--red);
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+            margin-right: 4px;
+        }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: 4px 0 6px 0;
+        }
+        .pagination button {
+            padding: 6px 13px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--gray-200);
+            background: #fff;
+            color: var(--gray-800);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            min-width: 38px;
+        }
+        .pagination button.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .pagination button:hover:not(.active):not(:disabled) {
+            background: var(--gray-100);
+        }
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+        .pagination-ellipsis {
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            color: var(--gray-300);
+            font-weight: 500;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--gray-600);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .empty-state span {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray-300);
+            margin-top: 30px;
+            padding-top: 14px;
+            border-top: 1px solid var(--gray-200);
+            line-height: 1.6;
+        }
+        .app-footer a {
+            color: var(--gray-600);
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 600px) {
+            body {
+                padding: 28px 40px 130px 40px;
+                max-width: 840px;
+                margin: 0 auto;
+            }
+            .filters-row {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            .filters-row input {
+                flex: 2;
+                min-width: 160px;
+            }
+            .filters-row select {
+                flex: 1;
+                min-width: 130px;
+            }
+        }
+        @media (max-width: 420px) {
+            .filters-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 6px;
+            }
+            .stats {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <h1>PHARMA<span>_FINDER</span></h1>
+        <p class="sub">Togo • Recherche de médicaments</p>
+        <div class="nav-links">
+            <a href="index.html">🏥 Retour aux pharmacies</a>
+        </div>
+    </header>
+
+    <!-- FILTRES MÉDICAMENTS -->
+    <section class="filters">
+        <div class="filters-row">
+            <input type="text" id="medSearchInput" placeholder="🔍 Rechercher un médicament (ex: Paracétamol, Amoxicilline...)">
+            <select id="medCategorieFilter">
+                <option value="all">Toutes les catégories</option>
+            </select>
+            <select id="medFormeFilter">
+                <option value="all">Toutes les formes</option>
+            </select>
+        </div>
+        <div class="filters-bottom">
+            <span class="stats" id="medStats">Chargement des médicaments...</span>
+        </div>
+    </section>
+
+    <!-- LISTE MÉDICAMENTS -->
+    <main id="medicamentList"></main>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="medPagination"></div>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+        PharmaFinder Togo est un service indépendant d'information.
+        <br>Les données sont fournies à titre indicatif.
+        <br>Merci de vérifier les informations auprès des pharmacies.
+    </footer>
+
+    <script>
+        // ============================================================
+        //  CHARGEMENT DES DONNÉES
+        // ============================================================
+        let allPharmacies = [];
+        let allMedicaments = [];
+
+        let medCurrentPage = 1;
+        const MED_PER_PAGE = 15;
+
+        const medListEl = document.getElementById('medicamentList');
+        const medSearchInput = document.getElementById('medSearchInput');
+        const medCategorieFilter = document.getElementById('medCategorieFilter');
+        const medFormeFilter = document.getElementById('medFormeFilter');
+        const medStatsEl = document.getElementById('medStats');
+        const medPaginationEl = document.getElementById('medPagination');
+
+        // ============================================================
+        //  CHARGEMENT PARALLÈLE (pharmacies + medicaments)
+        // ============================================================
+        Promise.all([
+            fetch('pharmacies.json').then(r => { if (!r.ok) throw new Error('pharmacies.json introuvable'); return r.json(); }),
+            fetch('medicaments.json').then(r => { if (!r.ok) throw new Error('medicaments.json introuvable'); return r.json(); })
+        ])
+        .then(([pharmaciesData, medicamentsData]) => {
+            allPharmacies = pharmaciesData;
+            allMedicaments = medicamentsData.medicaments || [];
+
+            // Remplir les filtres
+            populateMedFilters();
+
+            // Afficher
+            renderMedicaments();
+            console.log(`✅ ${allPharmacies.length} pharmacies, ${allMedicaments.length} médicaments`);
+        })
+        .catch(err => {
+            console.error('Erreur de chargement:', err);
+            medListEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données. Vérifiez que les fichiers sont présents.</div>`;
+            medStatsEl.textContent = 'Erreur';
+        });
+
+        // ============================================================
+        //  FILTRES MÉDICAMENTS
+        // ============================================================
+        function populateMedFilters() {
+            // Catégories
+            const categories = [...new Set(allMedicaments.map(m => m.categorie_id || 'non_categorise'))].sort();
+            categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                medCategorieFilter.appendChild(opt);
+            });
+
+            // Formes
+            const formes = [...new Set(allMedicaments.map(m => m.forme || 'non_renseigne'))].sort();
+            formes.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f;
+                opt.textContent = f;
+                medFormeFilter.appendChild(opt);
+            });
+
+            // Écouteurs
+            medSearchInput.addEventListener('input', () => { medCurrentPage = 1;
+                renderMedicaments(); });
+            medCategorieFilter.addEventListener('change', () => { medCurrentPage = 1;
+                renderMedicaments(); });
+            medFormeFilter.addEventListener('change', () => { medCurrentPage = 1;
+                renderMedicaments(); });
+        }
+
+        // ============================================================
+        //  FILTRAGE
+        // ============================================================
+        function getFilteredMedicaments() {
+            const q = medSearchInput.value.toLowerCase().trim();
+            const categorie = medCategorieFilter.value;
+            const forme = medFormeFilter.value;
+
+            return allMedicaments.filter(m => {
+                const matchNom = m.dci.toLowerCase().includes(q) ||
+                    (m.sous_categorie && m.sous_categorie.toLowerCase().includes(q));
+                const matchCategorie = categorie === 'all' || m.categorie_id === categorie;
+                const matchForme = forme === 'all' || m.forme === forme;
+                return matchNom && matchCategorie && matchForme;
+            });
+        }
+
+        // ============================================================
+        //  AFFICHAGE
+        // ============================================================
+        function renderMedicaments() {
+            const filtered = getFilteredMedicaments();
+            const total = filtered.length;
+            const totalPages = Math.ceil(total / MED_PER_PAGE) || 1;
+            if (medCurrentPage > totalPages) medCurrentPage = totalPages;
+            if (medCurrentPage < 1) medCurrentPage = 1;
+
+            const start = (medCurrentPage - 1) * MED_PER_PAGE;
+            const pageItems = filtered.slice(start, start + MED_PER_PAGE);
+
+            medStatsEl.textContent = `${total} médicament${total > 1 ? 's' : ''}`;
+
+            if (pageItems.length === 0) {
+                medListEl.innerHTML = `<div class="empty-state"><span>💊</span>Aucun médicament trouvé</div>`;
+            } else {
+                medListEl.innerHTML = pageItems.map(m => {
+                    const pharmIds = m.pharmacies || [];
+                    let pharmHtml = '';
+                    if (pharmIds.length > 0) {
+                        const pharmNames = pharmIds.map(id => {
+                            const p = allPharmacies.find(ph => ph.id === id);
+                            return p ?
+                                `<a href="index.html?pharmacy=${encodeURIComponent(p.nom)}" target="_top">${p.nom}</a>` :
+                                '';
+                        }).filter(Boolean);
+                        if (pharmNames.length > 0) {
+                            pharmHtml = `<div class="med-pharmacies">📍 Disponible dans : ${pharmNames.join(', ')}</div>`;
+                        }
+                    } else {
+                        pharmHtml =
+                            `<div class="med-pharmacies" style="color:var(--gray-300);">📌 Aucune pharmacie renseignée pour ce médicament</div>`;
+                    }
+
+                    const tags = [];
+                    if (m.categorie_id) tags.push(m.categorie_id);
+                    if (m.forme) tags.push(m.forme);
+                    if (m.population && m.population.length > 0) tags.push(m.population.join('/'));
+                    const tagsHtml = tags.map(t => `<span class="med-tag">${t}</span>`).join('');
+
+                    return `
+                        <div class="med-card">
+                            <div class="med-name">💊 ${m.dci}</div>
+                            ${m.dosage ? `<div class="med-detail"><strong>Dosage :</strong> ${m.dosage}</div>` : ''}
+                            ${m.sous_categorie ? `<div class="med-detail"><strong>Catégorie :</strong> ${m.sous_categorie}</div>` : ''}
+                            ${m.indications ? `<div class="med-detail"><strong>Indications :</strong> ${m.indications}</div>` : ''}
+                            <div class="med-detail" style="margin-top:4px;">${tagsHtml}</div>
+                            ${pharmHtml}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderPagination(totalPages, medCurrentPage, medPaginationEl);
+        }
+
+        // ============================================================
+        //  PAGINATION
+        // ============================================================
+        function renderPagination(totalPages, current, container) {
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            let html = `<button ${current === 1 ? 'disabled' : ''} onclick="goToPage(${current - 1})">‹</button>`;
+            const maxVisible = 5;
+            let s = Math.max(1, current - Math.floor(maxVisible / 2));
+            let e = Math.min(totalPages, s + maxVisible - 1);
+            if (e - s < maxVisible - 1) s = Math.max(1, e - maxVisible + 1);
+            if (s > 1) {
+                html += `<button onclick="goToPage(1)">1</button>`;
+                if (s > 2) html += `<span class="pagination-ellipsis">…</span>`;
+            }
+            for (let i = s; i <= e; i++) {
+                html +=
+                `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            if (e < totalPages) {
+                if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
+                html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+            html += `<button ${current === totalPages ? 'disabled' : ''} onclick="goToPage(${current + 1})">›</button>`;
+            container.innerHTML = html;
+        }
+
+        window.goToPage = function(page) {
+            const filtered = getFilteredMedicaments();
+            const totalPages = Math.ceil(filtered.length / MED_PER_PAGE) || 1;
+            if (page < 1 || page > totalPages) return;
+            medCurrentPage = page;
+            renderMedicaments();
+            document.getElementById('medicamentList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // ============================================================
+        //  RECHERCHE PARAMETRE URL (si on vient de index.html)
+        // ============================================================
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const medName = urlParams.get('medicament');
+            if (medName) {
+                medSearchInput.value = medName;
+                renderMedicaments();
+            }
+        })();
+    </script>
+</body>
+</html>

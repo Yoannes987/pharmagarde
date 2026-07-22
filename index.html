@@ -123,7 +123,7 @@
             color: #c07a2a;
         }
 
-        /* ===== FILTRES REFONDU ===== */
+        /* ===== FILTRES ===== */
         .filters {
             background: #fff;
             border-radius: var(--radius);
@@ -186,7 +186,6 @@
             color: var(--gray-300);
         }
 
-        /* Ligne 1 : Recherche + Zone + GPS */
         .row-main .filter-item {
             flex: 1;
         }
@@ -802,7 +801,7 @@
             </div>
 
             <!-- Ligne 2 : Garde + Stats -->
-            <div class="filter-row actions-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
                 <label class="toggle-garde">
                     <input type="checkbox" id="gardeToggle">
                     <span class="toggle-slider"></span>
@@ -875,7 +874,7 @@
         // Géolocalisation
         let userPosition = null;
         let isGeoActive = false;
-        const MAX_DISTANCE_KM = 15; // Rayon de 15 km (non affiché)
+        const MAX_DISTANCE_KM = 15;
         const geoBtn = document.getElementById('geoBtn');
 
         // Éléments DOM

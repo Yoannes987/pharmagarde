@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>PharmaFinder Togo - Trouvez une pharmacie facilement</title>
     <style>
-        /* ===== RESET ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ==== RESET ==== */
+        * { margin:0; padding:0; box-sizing:border-box; }
         :root {
             --primary: #0a7e3c;
             --primary-dark: #06542a;
@@ -23,7 +23,7 @@
             --orange: #f39c12;
             --orange-dark: #e67e22;
         }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior:smooth; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--gray-50);
@@ -162,22 +162,6 @@
         .btn-gps.loading { opacity:0.7; cursor:wait; }
         .gps-icon { font-size:16px; }
         .gps-text { font-size:13px; }
-
-        /* ===== STATUT GPS ===== */
-        .gps-status {
-            font-size:13px;
-            color:var(--gray-600);
-            margin-top:4px;
-            padding:6px 12px;
-            background:var(--gray-100);
-            border-radius:var(--radius-sm);
-            display:inline-block;
-            width:100%;
-            text-align:center;
-        }
-        .gps-status.success { background:#d4edda; color:#155724; }
-        .gps-status.error { background:#f8d7da; color:#721c24; }
-        .gps-status.info { background:#d1ecf1; color:#0c5460; }
 
         /* ===== TOGGLE GARDE ===== */
         .toggle-garde {
@@ -524,9 +508,6 @@
                     </button>
                 </div>
             </div>
-            <!-- STATUS GPS -->
-            <div id="gpsStatus" class="gps-status info">⏳ En attente de localisation...</div>
-
             <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
                 <label class="toggle-garde">
                     <input type="checkbox" id="gardeToggle">
@@ -594,7 +575,6 @@
         let userPosition = null;
         let isGeoActive = false;
         const geoBtn = document.getElementById('geoBtn');
-        const gpsStatus = document.getElementById('gpsStatus');
 
         const listEl = document.getElementById('pharmacyList');
         const searchInput = document.getElementById('searchInput');
@@ -609,14 +589,6 @@
         function isGarde(p) { return gardesIds.includes(p.id); }
 
         // ============================================================
-        //  MISE À JOUR DU STATUT GPS
-        // ============================================================
-        function setGpsStatus(message, type = 'info') {
-            gpsStatus.textContent = message;
-            gpsStatus.className = 'gps-status ' + type;
-        }
-
-        // ============================================================
         //  GÉOLOCALISATION
         // ============================================================
         function getDistance(lat1, lon1, lat2, lon2) {
@@ -629,13 +601,11 @@
 
         function getPosition() {
             if (!navigator.geolocation) {
-                setGpsStatus('⚠️ La géolocalisation n\'est pas supportée par votre navigateur.', 'error');
+                alert('⚠️ La géolocalisation n\'est pas supportée par votre navigateur.');
                 return;
             }
-            setGpsStatus('⏳ Localisation en cours...', 'info');
             geoBtn.classList.add('loading');
             geoBtn.innerHTML = '<span class="gps-icon">⏳</span><span class="gps-text">Localisation...</span>';
-
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     userPosition = { lat: pos.coords.latitude, lon: pos.coords.longitude };
@@ -643,7 +613,6 @@
                     geoBtn.classList.remove('loading');
                     geoBtn.classList.add('active');
                     geoBtn.innerHTML = '<span class="gps-icon">✅</span><span class="gps-text">Près de moi</span>';
-                    setGpsStatus(`📍 Position : ${userPosition.lat.toFixed(4)}, ${userPosition.lon.toFixed(4)}`, 'success');
                     currentPage = 1;
                     render();
                     console.log('📍 Position:', userPosition.lat, userPosition.lon);
@@ -651,21 +620,7 @@
                 (err) => {
                     geoBtn.classList.remove('loading');
                     geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
-                    let msg = 'Impossible de vous localiser. ';
-                    switch (err.code) {
-                        case err.PERMISSION_DENIED:
-                            msg += 'Veuillez autoriser la géolocalisation dans les paramètres de votre navigateur.';
-                            break;
-                        case err.POSITION_UNAVAILABLE:
-                            msg += 'Position indisponible. Vérifiez que votre GPS est activé.';
-                            break;
-                        case err.TIMEOUT:
-                            msg += 'Délai dépassé. Réessayez.';
-                            break;
-                        default:
-                            msg += 'Erreur inconnue.';
-                    }
-                    setGpsStatus('⚠️ ' + msg, 'error');
+                    alert('⚠️ Impossible de vous localiser. Vérifiez les autorisations.');
                     isGeoActive = false;
                     userPosition = null;
                     render();
@@ -678,7 +633,6 @@
             userPosition = null;
             geoBtn.classList.remove('active');
             geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
-            setGpsStatus('⏳ En attente de localisation...', 'info');
             currentPage = 1;
             render();
         }
@@ -761,7 +715,7 @@
         }
 
         // ============================================================
-        //  FILTRAGE AVEC DIAGNOSTIC
+        //  FILTRAGE AVEC RAYON MAX 50 KM ET TRI PAR DISTANCE
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -779,7 +733,7 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // Géolocalisation avec diagnostic
+            // Géolocalisation
             if (isGeoActive && userPosition) {
                 // Calcul des distances
                 results = results.map(p => {
@@ -790,17 +744,11 @@
                     return { ...p, distance: Infinity };
                 });
 
+                // Rayon max 50 km
                 const RAYON_MAX = 50;
                 results = results.filter(p => p.distance <= RAYON_MAX);
                 results.sort((a, b) => a.distance - b.distance);
                 console.log(`📍 ${results.length} pharmacies dans ${RAYON_MAX} km`);
-
-                // Mise à jour du statut
-                if (results.length === 0) {
-                    setGpsStatus(`🔍 Aucune pharmacie trouvée dans un rayon de ${RAYON_MAX} km (${allPharmacies.length} pharmacies en base).`, 'error');
-                } else {
-                    setGpsStatus(`✅ ${results.length} pharmacie(s) trouvée(s) dans ${RAYON_MAX} km. La plus proche : ${results[0]?.distance?.toFixed(1)} km.`, 'success');
-                }
             } else {
                 // Tri alphabétique
                 results.sort((a, b) => a.nom.localeCompare(b.nom));
@@ -897,7 +845,7 @@
         gardeToggle.addEventListener('change', () => { currentPage = 1; render(); });
 
         // ============================================================
-        //  CHATBOT (simplifié)
+        //  CHATBOT
         // ============================================================
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chatWindow');

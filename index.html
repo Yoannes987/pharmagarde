@@ -186,22 +186,24 @@
             color: var(--gray-300);
         }
 
-        .actions-row {
-            justify-content: space-between;
+        /* Ligne 1 : Recherche + Zone + GPS */
+        .row-main .filter-item {
+            flex: 1;
         }
-        .filter-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+        .row-main .filter-item.gps-item {
+            flex: 0 0 auto;
+            min-width: auto;
+            border: none;
+            background: transparent;
         }
 
-        /* ===== BOUTON GPS ===== */
+        /* ===== BOUTON GPS INTÉGRÉ ===== */
         .btn-gps {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 30px;
             border: none;
             background: var(--orange);
@@ -212,6 +214,9 @@
             transition: 0.2s;
             font-family: inherit;
             box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+            line-height: 1;
+            min-height: 44px;
+            white-space: nowrap;
         }
         .btn-gps:hover {
             background: var(--orange-dark);
@@ -723,20 +728,16 @@
             .filter-item {
                 min-width: 100%;
             }
-            .actions-row {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .filter-left {
-                justify-content: center;
-            }
-            .stats {
-                text-align: center;
+            .row-main .filter-item.gps-item {
+                flex: 1;
+                min-width: auto;
             }
             .btn-gps {
-                padding: 6px 14px;
+                padding: 8px 14px;
                 font-size: 13px;
+                min-height: 40px;
+                width: 100%;
+                justify-content: center;
             }
             .chat-window {
                 right: 8px;
@@ -780,8 +781,8 @@
     <!-- FILTRES REFONDU -->
     <section class="filters">
         <div class="filters-grid">
-            <!-- Ligne 1 : Recherche + Zone -->
-            <div class="filter-row">
+            <!-- Ligne 1 : Recherche + Zone + GPS (intégré) -->
+            <div class="filter-row row-main">
                 <div class="filter-item search-item">
                     <span class="filter-icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="Pharmacie ou quartier...">
@@ -792,22 +793,24 @@
                         <option value="all">Toutes les zones</option>
                     </select>
                 </div>
-            </div>
-            <!-- Ligne 2 : Garde + GPS + Stats -->
-            <div class="filter-row actions-row">
-                <div class="filter-left">
+                <div class="filter-item gps-item">
                     <button id="geoBtn" class="btn-gps" type="button">
                         <span class="gps-icon">📍</span>
                         <span class="gps-text">Près de moi</span>
                     </button>
-                    <label class="toggle-garde">
-                        <input type="checkbox" id="gardeToggle">
-                        <span class="toggle-slider"></span>
-                        <span class="toggle-label">Garde</span>
-                    </label>
                 </div>
+            </div>
+
+            <!-- Ligne 2 : Garde + Stats -->
+            <div class="filter-row actions-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                <label class="toggle-garde">
+                    <input type="checkbox" id="gardeToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Garde</span>
+                </label>
                 <span class="stats" id="stats">Chargement...</span>
             </div>
+
             <!-- Ligne 3 : Services -->
             <div class="filter-row services-row">
                 <div class="service-filters" id="serviceFilters">
@@ -872,7 +875,7 @@
         // Géolocalisation
         let userPosition = null;
         let isGeoActive = false;
-        const MAX_DISTANCE_KM = 50; // Rayon augmenté à 50 km pour couvrir tout le Togo
+        const MAX_DISTANCE_KM = 15; // Rayon de 15 km (non affiché)
         const geoBtn = document.getElementById('geoBtn');
 
         // Éléments DOM
@@ -925,7 +928,7 @@
                     isGeoActive = true;
                     geoBtn.classList.remove('loading');
                     geoBtn.classList.add('active');
-                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Actif (tri par distance)</span>';
+                    geoBtn.innerHTML = '<span class="gps-icon">✅</span><span class="gps-text">Près de moi</span>';
                     currentPage = 1;
                     render();
                     console.log(`📍 Position: ${userPosition.lat}, ${userPosition.lon}`);
@@ -1011,7 +1014,7 @@
         });
 
         // ============================================================
-        //  GÉNÉRATION DES BOUTONS SERVICES (sans message "Aucun service")
+        //  GÉNÉRATION DES BOUTONS SERVICES
         // ============================================================
         function generateServiceFilters() {
             const serviceSet = new Set();
@@ -1022,7 +1025,7 @@
             });
             const serviceList = [...serviceSet].sort();
             if (serviceList.length === 0) {
-                serviceFiltersEl.innerHTML = ''; // Rien, pas de message
+                serviceFiltersEl.innerHTML = '';
                 return;
             }
             serviceFiltersEl.innerHTML = serviceList.map(service =>
@@ -1047,7 +1050,7 @@
         }
 
         // ============================================================
-        //  FILTRAGE (avec géolocalisation + rayon + garde)
+        //  FILTRAGE (avec géolocalisation + rayon 15 km)
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -1077,10 +1080,9 @@
                         );
                         return { ...p, distance: distance };
                     }
-                    // Si pas de coordonnées, on met une distance énorme pour qu'ils soient en bas de la liste
                     return { ...p, distance: Infinity };
                 });
-                // Filtrer par rayon (MAX_DISTANCE_KM)
+                // Filtrer par rayon (15 km)
                 results = results.filter(p => p.distance <= MAX_DISTANCE_KM);
                 results.sort((a, b) => a.distance - b.distance);
             } else {

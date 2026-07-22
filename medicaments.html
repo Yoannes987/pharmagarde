@@ -39,6 +39,47 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ===== NAVIGATION SWITCH ===== */
+        .nav-switch {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--gray-600);
+            background: var(--gray-100);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+        }
+        .nav-btn:hover {
+            background: var(--gray-200);
+            transform: translateY(-1px);
+        }
+        .nav-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(10, 126, 60, 0.3);
+        }
+        .nav-btn.active:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+
         /* ===== HEADER ===== */
         .app-header {
             text-align: center;
@@ -61,23 +102,6 @@
             color: var(--gray-600);
             margin-top: 2px;
             letter-spacing: 0.3px;
-        }
-        .app-header .nav-links {
-            margin-top: 8px;
-            font-size: 14px;
-        }
-        .app-header .nav-links a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 30px;
-            border: 1.5px solid var(--primary);
-            transition: 0.2s;
-        }
-        .app-header .nav-links a:hover {
-            background: var(--primary);
-            color: #fff;
         }
 
         /* ===== FILTRES ===== */
@@ -284,6 +308,10 @@
             .stats {
                 font-size: 12px;
             }
+            .nav-btn {
+                padding: 6px 14px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -293,8 +321,11 @@
     <header class="app-header">
         <h1>PHARMA<span>_FINDER</span></h1>
         <p class="sub">Togo • Recherche de médicaments</p>
-        <div class="nav-links">
-            <a href="index.html">🏥 Retour aux pharmacies</a>
+
+        <!-- SWITCH NAVIGATION -->
+        <div class="nav-switch">
+            <a href="index.html" class="nav-btn">🏥 Pharmacies</a>
+            <a href="medicaments.html" class="nav-btn active">💊 Médicaments</a>
         </div>
     </header>
 

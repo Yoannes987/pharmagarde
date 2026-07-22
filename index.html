@@ -746,7 +746,7 @@
         }
 
         // ============================================================
-        //  FILTRAGE AVEC RAYON ADAPTATIF
+        //  FILTRAGE AVEC RAYON MAX 50 KM ET TRI PAR DISTANCE
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -764,7 +764,7 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // Géolocalisation avec rayon adaptatif
+            // ===== GÉOLOCALISATION AVEC RAYON MAX 50 KM =====
             if (isGeoActive && userPosition) {
                 // Calcul des distances
                 results = results.map(p => {
@@ -775,25 +775,16 @@
                     return { ...p, distance: Infinity };
                 });
 
-                // Rayons adaptatifs : 5, 10, 20, 50, ∞
-                const rayons = [5, 10, 20, 50, Infinity];
-                let rayonActif = rayons[0];
-                let resultatsFiltres = [];
-
-                for (let i = 0; i < rayons.length; i++) {
-                    const r = rayons[i];
-                    const temp = results.filter(p => p.distance <= r);
-                    if (temp.length >= 5 || r === Infinity) {
-                        resultatsFiltres = temp;
-                        rayonActif = r;
-                        break;
-                    }
-                }
-
-                results = resultatsFiltres;
+                // 🔥 RAYON MAX : 50 km (on ne va pas au-delà)
+                const RAYON_MAX = 50;
+                results = results.filter(p => p.distance <= RAYON_MAX);
+                
+                // 🔥 TRI STRICT PAR DISTANCE (du plus proche au plus loin)
                 results.sort((a, b) => a.distance - b.distance);
-                console.log(`📍 Rayon utilisé : ${rayonActif === Infinity ? '∞' : rayonActif + ' km'} - ${results.length} pharmacies`);
+                
+                console.log(`📍 ${results.length} pharmacies trouvées dans ${RAYON_MAX} km`);
             } else {
+                // Si pas de géolocalisation, tri alphabétique
                 results.sort((a, b) => a.nom.localeCompare(b.nom));
             }
 
@@ -888,7 +879,7 @@
         gardeToggle.addEventListener('change', () => { currentPage = 1; render(); });
 
         // ============================================================
-        //  CHATBOT (version simplifiée)
+        //  CHATBOT
         // ============================================================
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chatWindow');
@@ -936,6 +927,36 @@
                     if (r.length > 0) {
                         response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Lomé.'; }
+                } else if (lower.includes('kara')) {
+                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kara'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Kara.'; }
+                } else if (lower.includes('kpalimé') || lower.includes('kpalime')) {
+                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kpalimé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Kpalimé.'; }
+                } else if (lower.includes('sokodé') || lower.includes('sokode')) {
+                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Sokodé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Sokodé.'; }
+                } else if (lower.includes('atakpamé') || lower.includes('atakpame')) {
+                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Atakpamé'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Atakpamé.'; }
+                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes('tove')) {
+                    const r = allPharmacies.filter(p => p.ville && (p.ville.includes('Tsévié') || p.ville.includes('Tové')));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Tsévié.'; }
+                } else if (lower.includes('dapaong')) {
+                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Dapaong'));
+                    if (r.length > 0) {
+                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                    } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
                 } else {
                     const words = lower.split(' ');
                     const keywords = words.filter(w => w.length > 2);

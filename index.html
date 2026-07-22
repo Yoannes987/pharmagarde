@@ -872,7 +872,7 @@
         // Géolocalisation
         let userPosition = null;
         let isGeoActive = false;
-        const MAX_DISTANCE_KM = 10; // Rayon maximum de recherche
+        const MAX_DISTANCE_KM = 50; // Rayon augmenté à 50 km pour couvrir tout le Togo
         const geoBtn = document.getElementById('geoBtn');
 
         // Éléments DOM
@@ -925,8 +925,7 @@
                     isGeoActive = true;
                     geoBtn.classList.remove('loading');
                     geoBtn.classList.add('active');
-                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Activé (' + MAX_DISTANCE_KM +
-                        ' km)</span>';
+                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Actif (tri par distance)</span>';
                     currentPage = 1;
                     render();
                     console.log(`📍 Position: ${userPosition.lat}, ${userPosition.lon}`);
@@ -1078,6 +1077,7 @@
                         );
                         return { ...p, distance: distance };
                     }
+                    // Si pas de coordonnées, on met une distance énorme pour qu'ils soient en bas de la liste
                     return { ...p, distance: Infinity };
                 });
                 // Filtrer par rayon (MAX_DISTANCE_KM)

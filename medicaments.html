@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>PharmaFinder Togo - Médicaments</title>
     <style>
-        /* ===== RESET ===== */
+        /* ==== RESET ==== */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +21,7 @@
             --gray-300: #b8c8b8;
             --gray-600: #5a6e5a;
             --gray-800: #1c2a1c;
-            --shadow: 0 2px 16px rgba(0, 20, 0, 0.06);
+            --shadow: 0 2px 16px rgba(0,20,0,0.06);
             --radius: 14px;
             --radius-sm: 8px;
             --red: #c0392b;
@@ -63,22 +63,14 @@
             border: none;
             cursor: pointer;
         }
-        .nav-btn:hover {
-            background: var(--gray-200);
-            transform: translateY(-1px);
-        }
+        .nav-btn:hover { background: var(--gray-200); transform: translateY(-1px); }
         .nav-btn.active {
             background: var(--primary);
             color: #fff;
-            box-shadow: 0 2px 12px rgba(10, 126, 60, 0.3);
+            box-shadow: 0 2px 12px rgba(10,126,60,0.3);
         }
-        .nav-btn.active:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        .nav-btn:active {
-            transform: scale(0.96);
-        }
+        .nav-btn.active:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .nav-btn:active { transform: scale(0.96); }
 
         /* ===== HEADER ===== */
         .app-header {
@@ -93,10 +85,7 @@
             letter-spacing: -0.5px;
             color: var(--primary-dark);
         }
-        .app-header h1 span {
-            font-weight: 300;
-            color: var(--gray-600);
-        }
+        .app-header h1 span { font-weight: 300; color: var(--gray-600); }
         .app-header .sub {
             font-size: 13px;
             color: var(--gray-600);
@@ -136,9 +125,7 @@
             border-color: var(--primary);
             background: #fff;
         }
-        .filters-row input::placeholder {
-            color: var(--gray-300);
-        }
+        .filters-row input::placeholder { color: var(--gray-300); }
         .filters-bottom {
             display: flex;
             flex-wrap: wrap;
@@ -182,9 +169,7 @@
             color: var(--gray-600);
             margin-top: 4px;
         }
-        .med-card .med-detail strong {
-            color: var(--gray-800);
-        }
+        .med-card .med-detail strong { color: var(--gray-800); }
         .med-card .med-pharmacies {
             margin-top: 6px;
             font-size: 13px;
@@ -195,9 +180,7 @@
             text-decoration: none;
             font-weight: 500;
         }
-        .med-card .med-pharmacies a:hover {
-            text-decoration: underline;
-        }
+        .med-card .med-pharmacies a:hover { text-decoration: underline; }
         .med-tag {
             display: inline-block;
             font-size: 11px;
@@ -235,34 +218,13 @@
             border-color: var(--primary);
             color: #fff;
         }
-        .pagination button:hover:not(.active):not(:disabled) {
-            background: var(--gray-100);
-        }
-        .pagination button:disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
-        .pagination-ellipsis {
-            display: flex;
-            align-items: center;
-            padding: 0 4px;
-            color: var(--gray-300);
-            font-weight: 500;
-        }
+        .pagination button:hover:not(.active):not(:disabled) { background: var(--gray-100); }
+        .pagination button:disabled { opacity: 0.3; cursor: default; }
+        .pagination-ellipsis { display: flex; align-items: center; padding: 0 4px; color: var(--gray-300); font-weight: 500; }
 
         /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 48px 16px;
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .empty-state span {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 10px;
-        }
+        .empty-state { text-align: center; padding: 48px 16px; color: var(--gray-600); font-size: 15px; line-height: 1.6; }
+        .empty-state span { font-size: 32px; display: block; margin-bottom: 10px; }
 
         /* ===== FOOTER ===== */
         .app-footer {
@@ -274,45 +236,19 @@
             border-top: 1px solid var(--gray-200);
             line-height: 1.6;
         }
-        .app-footer a {
-            color: var(--gray-600);
-            text-decoration: none;
-        }
+        .app-footer a { color: var(--gray-600); text-decoration: none; }
 
         /* ===== RESPONSIVE ===== */
         @media (min-width: 600px) {
-            body {
-                padding: 28px 40px 130px 40px;
-                max-width: 840px;
-                margin: 0 auto;
-            }
-            .filters-row {
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-items: center;
-            }
-            .filters-row input {
-                flex: 2;
-                min-width: 160px;
-            }
-            .filters-row select {
-                flex: 1;
-                min-width: 130px;
-            }
+            body { padding: 28px 40px 130px 40px; max-width: 840px; margin: 0 auto; }
+            .filters-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
+            .filters-row input { flex: 2; min-width: 160px; }
+            .filters-row select { flex: 1; min-width: 130px; }
         }
         @media (max-width: 420px) {
-            .filters-bottom {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 6px;
-            }
-            .stats {
-                font-size: 12px;
-            }
-            .nav-btn {
-                padding: 6px 14px;
-                font-size: 13px;
-            }
+            .filters-bottom { flex-direction: row; justify-content: space-between; gap: 6px; }
+            .stats { font-size: 12px; }
+            .nav-btn { padding: 6px 14px; font-size: 13px; }
         }
     </style>
 </head>
@@ -361,7 +297,7 @@
 
     <script>
         // ============================================================
-        //  CHARGEMENT DES DONNÉES
+        //  CHARGEMENT DES DONNÉES AVEC DIAGNOSTIC
         // ============================================================
         let allPharmacies = [];
         let allMedicaments = [];
@@ -377,7 +313,7 @@
         const medPaginationEl = document.getElementById('medPagination');
 
         // ============================================================
-        //  CHARGEMENT PARALLÈLE (pharmacies + medicaments) AVEC DIAGNOSTIC
+        //  CHARGEMENT PARALLÈLE AVEC DÉTECTION AUTOMATIQUE DU NOM
         // ============================================================
         Promise.all([
             fetch('pharmacies.json').then(r => {
@@ -392,49 +328,71 @@
         .then(([pharmaciesData, medicamentsData]) => {
             allPharmacies = pharmaciesData;
 
-            // 🔍 Diagnostic de la structure de medicamentsData
+            // 🔍 Diagnostic
             console.log('📦 medicamentsData reçu :', medicamentsData);
             console.log('🔍 Type :', typeof medicamentsData);
             console.log('🔍 Clés :', Object.keys(medicamentsData));
 
-            // ===== CHARGEMENT INTELLIGENT =====
+            // ===== EXTRACTION INTELLIGENTE =====
+            let rawMedicaments = [];
             if (medicamentsData.medicaments && Array.isArray(medicamentsData.medicaments)) {
-                // Structure A : { "medicaments": [...] }
-                allMedicaments = medicamentsData.medicaments;
-                console.log('✅ Structure A détectée (clé "medicaments")');
+                rawMedicaments = medicamentsData.medicaments;
             } else if (Array.isArray(medicamentsData)) {
-                // Structure B : [...] (tableau direct)
-                allMedicaments = medicamentsData;
-                console.log('✅ Structure B détectée (tableau direct)');
-            } else if (medicamentsData.meta && medicamentsData.medicaments) {
-                // Structure C : { "meta": {...}, "medicaments": [...] }
-                allMedicaments = medicamentsData.medicaments;
-                console.log('✅ Structure C détectée (meta + medicaments)');
+                rawMedicaments = medicamentsData;
             } else {
-                // Structure inconnue : on tente de récupérer ce qui ressemble à un tableau
-                console.warn('⚠️ Format inattendu, tentative de récupération...');
-                const keys = Object.keys(medicamentsData);
-                let found = false;
-                for (const key of keys) {
+                // Parcourir les clés pour trouver un tableau
+                for (const key of Object.keys(medicamentsData)) {
                     if (Array.isArray(medicamentsData[key]) && medicamentsData[key].length > 0) {
-                        allMedicaments = medicamentsData[key];
-                        found = true;
-                        console.log(`✅ Récupéré depuis la clé "${key}" (${allMedicaments.length} éléments)`);
+                        rawMedicaments = medicamentsData[key];
+                        console.log(`✅ Tableau trouvé dans la clé "${key}"`);
                         break;
                     }
                 }
-                if (!found) {
-                    allMedicaments = [];
-                    console.error('❌ Aucun tableau de médicaments trouvé dans le fichier JSON.');
+                if (rawMedicaments.length === 0) {
+                    rawMedicaments = Object.values(medicamentsData).flat();
                 }
             }
 
-            // Vérification finale
-            if (!Array.isArray(allMedicaments)) {
-                allMedicaments = [];
+            if (!Array.isArray(rawMedicaments) || rawMedicaments.length === 0) {
+                throw new Error('Aucun médicament trouvé dans le fichier JSON.');
             }
 
-            console.log(`✅ ${allMedicaments.length} médicaments chargés`);
+            // ===== NORMALISATION : trouver le champ contenant le nom =====
+            // On essaie d'utiliser le premier élément pour détecter la clé du nom
+            const sample = rawMedicaments[0];
+            let nameKey = 'dci'; // par défaut
+            if (sample && typeof sample === 'object') {
+                if ('dci' in sample) nameKey = 'dci';
+                else if ('nom' in sample) nameKey = 'nom';
+                else if ('name' in sample) nameKey = 'name';
+                else if ('medicament' in sample) nameKey = 'medicament';
+                else {
+                    // Si aucune clé connue, on prend la première clé string
+                    const firstKey = Object.keys(sample).find(k => typeof sample[k] === 'string');
+                    if (firstKey) nameKey = firstKey;
+                }
+                console.log(`🔍 Clé utilisée pour le nom : "${nameKey}"`);
+            }
+
+            // ===== CONSTRUCTION DU TABLEAU FINAL =====
+            allMedicaments = rawMedicaments.map(item => {
+                // Créer un objet avec les champs normalisés
+                return {
+                    dci: item[nameKey] || item.dci || item.nom || item.name || 'Médicament inconnu',
+                    forme: item.forme || '',
+                    dosage: item.dosage || '',
+                    categorie_id: item.categorie_id || item.categorie || '',
+                    sous_categorie: item.sous_categorie || '',
+                    population: item.population || [],
+                    niveau_soins: item.niveau_soins || [],
+                    indications: item.indications || '',
+                    pharmacies: item.pharmacies || [],
+                    // On garde les autres champs si besoin
+                    ...item
+                };
+            });
+
+            console.log(`✅ ${allMedicaments.length} médicaments normalisés`);
 
             // Remplir les filtres
             populateMedFilters();
@@ -444,12 +402,12 @@
         })
         .catch(err => {
             console.error('❌ Erreur de chargement:', err.message);
-            medListEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Erreur : ${err.message}</div>`;
+            medListEl.innerHTML = `<div class="empty-state"><span>⚠️</span>${err.message}</div>`;
             medStatsEl.textContent = 'Erreur';
         });
 
         // ============================================================
-        //  FILTRES MÉDICAMENTS
+        //  FILTRES
         // ============================================================
         function populateMedFilters() {
             // Catégories
@@ -471,18 +429,9 @@
             });
 
             // Écouteurs
-            medSearchInput.addEventListener('input', () => {
-                medCurrentPage = 1;
-                renderMedicaments();
-            });
-            medCategorieFilter.addEventListener('change', () => {
-                medCurrentPage = 1;
-                renderMedicaments();
-            });
-            medFormeFilter.addEventListener('change', () => {
-                medCurrentPage = 1;
-                renderMedicaments();
-            });
+            medSearchInput.addEventListener('input', () => { medCurrentPage = 1; renderMedicaments(); });
+            medCategorieFilter.addEventListener('change', () => { medCurrentPage = 1; renderMedicaments(); });
+            medFormeFilter.addEventListener('change', () => { medCurrentPage = 1; renderMedicaments(); });
         }
 
         // ============================================================
@@ -494,8 +443,8 @@
             const forme = medFormeFilter.value;
 
             return allMedicaments.filter(m => {
-                const matchNom = m.dci.toLowerCase().includes(q) ||
-                    (m.sous_categorie && m.sous_categorie.toLowerCase().includes(q));
+                const matchNom = (m.dci || '').toLowerCase().includes(q) ||
+                    (m.sous_categorie || '').toLowerCase().includes(q);
                 const matchCategorie = categorie === 'all' || m.categorie_id === categorie;
                 const matchForme = forme === 'all' || m.forme === forme;
                 return matchNom && matchCategorie && matchForme;
@@ -503,7 +452,7 @@
         }
 
         // ============================================================
-        //  AFFICHAGE
+        //  AFFICHAGE (nom en rouge)
         // ============================================================
         function renderMedicaments() {
             const filtered = getFilteredMedicaments();
@@ -578,8 +527,7 @@
                 if (s > 2) html += `<span class="pagination-ellipsis">…</span>`;
             }
             for (let i = s; i <= e; i++) {
-                html +=
-                    `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                html += `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
             }
             if (e < totalPages) {
                 if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
@@ -595,14 +543,11 @@
             if (page < 1 || page > totalPages) return;
             medCurrentPage = page;
             renderMedicaments();
-            document.getElementById('medicamentList').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            document.getElementById('medicamentList').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         // ============================================================
-        //  RECHERCHE PARAMETRE URL (si on vient de index.html)
+        //  RECHERCHE PARAMETRE URL
         // ============================================================
         (function() {
             const urlParams = new URLSearchParams(window.location.search);

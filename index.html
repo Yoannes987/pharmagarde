@@ -165,6 +165,14 @@
             gap: 10px;
             padding-top: 4px;
         }
+
+        .filters-left {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
         .toggle-wrap {
             display: flex;
             align-items: center;
@@ -217,6 +225,38 @@
             flex-shrink: 0;
         }
 
+        /* ===== BOUTON GÉOLOCALISATION ===== */
+        .geo-btn {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1.5px solid var(--primary);
+            background: #fff;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+        .geo-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .geo-btn:active {
+            transform: scale(0.95);
+        }
+        .geo-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .geo-btn.loading {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
         /* ===== FILTRES SERVICES ===== */
         .service-filters {
             display: flex;
@@ -236,6 +276,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: 0.15s;
+            font-family: inherit;
         }
         .service-btn:hover {
             background: var(--gray-100);
@@ -302,6 +343,12 @@
             color: #5a6e5a;
             line-height: 1.4;
             margin-bottom: 6px;
+        }
+        .card-distance {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 2px;
+            margin-bottom: 4px;
         }
         .card-services {
             display: flex;
@@ -373,6 +420,7 @@
             cursor: pointer;
             transition: 0.15s;
             min-width: 38px;
+            font-family: inherit;
         }
         .pagination button.active {
             background: var(--primary);
@@ -631,6 +679,9 @@
                 justify-content: space-between;
                 gap: 6px;
             }
+            .filters-left {
+                gap: 6px;
+            }
             .toggle-wrap {
                 font-size: 13px;
             }
@@ -650,11 +701,13 @@
                 right: 14px;
                 bottom: 18px;
             }
-
-            /* Mobile switch */
             .nav-btn {
                 padding: 6px 14px;
                 font-size: 13px;
+            }
+            .geo-btn {
+                padding: 4px 12px;
+                font-size: 12px;
             }
         }
 
@@ -728,10 +781,13 @@
             </select>
         </div>
         <div class="filters-bottom">
-            <label class="toggle-wrap">
-                <input type="checkbox" id="gardeToggle">
-                <span>Garde</span>
-            </label>
+            <div class="filters-left">
+                <label class="toggle-wrap">
+                    <input type="checkbox" id="gardeToggle">
+                    <span>Garde</span>
+                </label>
+                <button id="geoBtn" class="geo-btn" type="button">📍 Près de moi</button>
+            </div>
             <span class="stats" id="stats">Chargement...</span>
         </div>
         <!-- Filtres services -->
@@ -792,6 +848,11 @@
         const PER_PAGE = 15;
         let selectedServices = [];
 
+        // Géolocalisation
+        let userPosition = null;
+        let isGeoActive = false;
+        const geoBtn = document.getElementById('geoBtn');
+
         // Éléments DOM
         const listEl = document.getElementById('pharmacyList');
         const searchInput = document.getElementById('searchInput');
@@ -811,6 +872,85 @@
         }
 
         // ============================================================
+        //  GÉOLOCALISATION
+        // ============================================================
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function getPosition() {
+            if (!navigator.geolocation) {
+                alert('⚠️ La géolocalisation n\'est pas supportée par votre navigateur.');
+                return;
+            }
+
+            geoBtn.classList.add('loading');
+            geoBtn.textContent = '⏳ Localisation...';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userPosition = {
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude
+                    };
+                    isGeoActive = true;
+                    geoBtn.classList.remove('loading');
+                    geoBtn.classList.add('active');
+                    geoBtn.textContent = '📍 Activé';
+                    currentPage = 1;
+                    render();
+                    console.log(`📍 Position: ${userPosition.lat}, ${userPosition.lon}`);
+                },
+                (error) => {
+                    geoBtn.classList.remove('loading');
+                    geoBtn.textContent = '📍 Près de moi';
+                    let msg = 'Impossible de vous localiser. ';
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            msg += 'Veuillez autoriser la géolocalisation.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            msg += 'Position indisponible.';
+                            break;
+                        case error.TIMEOUT:
+                            msg += 'Délai dépassé.';
+                            break;
+                        default:
+                            msg += 'Erreur inconnue.';
+                    }
+                    alert('⚠️ ' + msg);
+                    isGeoActive = false;
+                    userPosition = null;
+                    render();
+                }
+            );
+        }
+
+        function resetGeo() {
+            isGeoActive = false;
+            userPosition = null;
+            geoBtn.classList.remove('active');
+            geoBtn.textContent = '📍 Près de moi';
+            currentPage = 1;
+            render();
+        }
+
+        geoBtn.addEventListener('click', function() {
+            if (isGeoActive) {
+                resetGeo();
+            } else {
+                getPosition();
+            }
+        });
+
+        // ============================================================
         //  CHARGEMENT DES DONNÉES (PARALLÈLE)
         // ============================================================
         Promise.all([
@@ -822,7 +962,6 @@
             gardesIds = gardesData.pharmacies || [];
             gardeSemaine = gardesData.semaine || '';
 
-            // Afficher le bandeau si des gardes existent
             if (gardesIds.length > 0 && gardeSemaine) {
                 gardeBanner.classList.add('active');
                 gardeSemaineEl.textContent = gardeSemaine;
@@ -831,7 +970,6 @@
                 gardeSemaineEl.textContent = 'en cours';
             }
 
-            // Remplir les zones
             const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
             zones.forEach(z => {
                 const opt = document.createElement('option');
@@ -840,10 +978,7 @@
                 zoneFilter.appendChild(opt);
             });
 
-            // Générer les boutons de services
             generateServiceFilters();
-
-            // Afficher
             render();
             console.log(`✅ ${allPharmacies.length} pharmacies chargées, ${gardesIds.length} gardes actives`);
         })
@@ -890,17 +1025,16 @@
         }
 
         // ============================================================
-        //  FILTRAGE
+        //  FILTRAGE (avec géolocalisation)
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
             const zone = zoneFilter.value;
             const garde = gardeToggle.checked;
 
-            return allPharmacies.filter(p => {
+            let results = allPharmacies.filter(p => {
                 const matchNom = p.nom.toLowerCase().includes(q);
                 const matchZone = zone === 'all' || p.zone === zone;
-                // Garde : utilise le fichier externe
                 const matchGarde = garde ? isGarde(p) : true;
                 let matchServices = true;
                 if (selectedServices.length > 0) {
@@ -908,6 +1042,27 @@
                 }
                 return matchNom && matchZone && matchGarde && matchServices;
             });
+
+            // Géolocalisation : tri par distance
+            if (isGeoActive && userPosition) {
+                results = results.map(p => {
+                    if (p.latitude && p.longitude) {
+                        const distance = getDistance(
+                            userPosition.lat,
+                            userPosition.lon,
+                            parseFloat(p.latitude),
+                            parseFloat(p.longitude)
+                        );
+                        return { ...p, distance: distance };
+                    }
+                    return { ...p, distance: Infinity };
+                });
+                results.sort((a, b) => a.distance - b.distance);
+            } else {
+                results.sort((a, b) => a.nom.localeCompare(b.nom));
+            }
+
+            return results;
         }
 
         // ============================================================
@@ -937,6 +1092,10 @@
                     const servicesHtml = (p.services && p.services.length > 0) ?
                         `<div class="card-services">${p.services.map(s => `<span class="service-tag">${s}</span>`).join('')}</div>` :
                         '';
+                    const distanceHtml = (isGeoActive && p.distance && p.distance !== Infinity) ?
+                        `<div class="card-distance">📍 à ${p.distance.toFixed(1)} km</div>` :
+                        '';
+
                     return `
                         <div class="card ${estDeGarde ? 'garde' : ''}">
                             <div class="card-header">
@@ -945,6 +1104,7 @@
                             </div>
                             <div class="card-zone">${p.zone}</div>
                             ${p.localisation ? `<div class="card-location">${p.localisation}</div>` : ''}
+                            ${distanceHtml}
                             ${servicesHtml}
                             <div class="card-actions">
                                 ${tel ? `<a href="tel:${tel}" class="btn-call">Appeler</a>` : ''}
@@ -1034,67 +1194,86 @@
                 const lower = text.toLowerCase();
                 let response = '';
 
-                // Garde (utilise le fichier externe)
-                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes('urgence')) {
+                if (lower.includes('garde') || lower.includes('gardes') || lower.includes('urgent') || lower.includes(
+                        'urgence')) {
                     const gardes = allPharmacies.filter(p => isGarde(p));
                     if (gardes.length > 0) {
-                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
+                        response = '🛡️ Pharmacies de garde actuellement :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`)
+                            .join('\n');
                     } else {
                         response = 'Aucune pharmacie de garde enregistrée pour le moment.';
                     }
-                }
-                // Villes
-                else if (lower.includes('lomé') || lower.includes('lome')) {
+                } else if (lower.includes('lomé') || lower.includes('lome')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Lomé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Lomé.'; }
                 } else if (lower.includes('kara')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kara'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Kara.'; }
                 } else if (lower.includes('kpalimé') || lower.includes('kpalime')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kpalimé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Kpalimé.'; }
                 } else if (lower.includes('sokodé') || lower.includes('sokode')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Sokodé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Sokodé.'; }
                 } else if (lower.includes('atakpamé') || lower.includes('atakpame')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Atakpamé'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Atakpamé.'; }
-                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes('tove')) {
-                    const r = allPharmacies.filter(p => p.ville && (p.ville.includes('Tsévié') || p.ville.includes('Tové')));
+                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes(
+                        'tove')) {
+                    const r = allPharmacies.filter(p => p.ville && (p.ville.includes('Tsévié') || p.ville.includes(
+                    'Tové')));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Tsévié.'; }
                 } else if (lower.includes('dapaong')) {
                     const r = allPharmacies.filter(p => p.ville && p.ville.includes('Dapaong'));
                     if (r.length > 0) {
-                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
+                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p =>
+                            `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ?
+                            `\n... et ${r.length - 10} autre(s).` : '');
                     } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
-                }
-                // Recherche générale
-                else {
+                } else {
                     const words = lower.split(' ');
                     const keywords = words.filter(w => w.length > 2);
                     if (keywords.length > 0) {
                         let results = [];
                         keywords.forEach(kw => {
-                            const found = allPharmacies.filter(p => p.nom.toLowerCase().includes(kw) || p.zone.toLowerCase().includes(kw) || (p.ville && p.ville.toLowerCase().includes(kw)));
+                            const found = allPharmacies.filter(p => p.nom.toLowerCase().includes(kw) || p.zone
+                                .toLowerCase().includes(kw) || (p.ville && p.ville.toLowerCase().includes(
+                                kw)));
                             results = results.concat(found);
                         });
                         results = results.filter((p, i, self) => self.findIndex(p2 => p2.id === p.id) === i);
                         if (results.length > 0) {
-                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') + '" :\n' + results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
+                            response = '🔍 ' + results.length + ' résultat(s) pour "' + keywords.join('", "') +
+                                '" :\n' + results.slice(0, 10).map(p =>
+                                `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (results
+                                .length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
                         } else {
-                            response = 'Aucune pharmacie trouvée pour "' + keywords.join('", "') + '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong) ou tapez "garde".';
+                            response = 'Aucune pharmacie trouvée pour "' + keywords.join('", "') +
+                                '". Essayez une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong) ou tapez "garde".';
                         }
                     } else {
                         response = 'Posez une question sur les pharmacies, les gardes ou une ville (Lomé, Kara, Kpalimé, Sokodé, Atakpamé, Tsévié, Dapaong).';

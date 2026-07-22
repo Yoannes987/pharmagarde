@@ -24,6 +24,8 @@
             --shadow: 0 2px 16px rgba(0, 20, 0, 0.06);
             --radius: 14px;
             --radius-sm: 8px;
+            --orange: #f39c12;
+            --orange-dark: #e67e22;
         }
         html {
             scroll-behavior: smooth;
@@ -35,6 +37,30 @@
             padding: 18px 14px 130px 14px;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 18px;
+        }
+        .app-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--primary-dark);
+        }
+        .app-header h1 span {
+            font-weight: 300;
+            color: var(--gray-600);
+        }
+        .app-header .sub {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 2px;
+            letter-spacing: 0.3px;
         }
 
         /* ===== NAVIGATION SWITCH ===== */
@@ -78,30 +104,6 @@
             transform: scale(0.96);
         }
 
-        /* ===== HEADER ===== */
-        .app-header {
-            text-align: center;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--gray-200);
-            margin-bottom: 18px;
-        }
-        .app-header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--primary-dark);
-        }
-        .app-header h1 span {
-            font-weight: 300;
-            color: var(--gray-600);
-        }
-        .app-header .sub {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-top: 2px;
-            letter-spacing: 0.3px;
-        }
-
         /* ===== BANDEAU GARDE ===== */
         .garde-banner {
             background: #fefbf5;
@@ -121,158 +123,191 @@
             color: #c07a2a;
         }
 
-        /* ===== FILTRES ===== */
+        /* ===== FILTRES REFONDU ===== */
         .filters {
             background: #fff;
             border-radius: var(--radius);
-            padding: 16px 16px 14px 16px;
+            padding: 16px;
             box-shadow: var(--shadow);
             margin-bottom: 18px;
         }
-        .filters-row {
+        .filters-grid {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+        }
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
             gap: 10px;
         }
-        .filters-row input,
-        .filters-row select {
-            width: 100%;
-            padding: 11px 15px;
-            border: 1.5px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-size: 15px;
+        .filter-item {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 140px;
             background: var(--gray-50);
-            color: var(--gray-800);
-            outline: none;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--gray-200);
             transition: border 0.2s, background 0.2s;
-            -webkit-appearance: none;
-            appearance: none;
+            overflow: hidden;
         }
-        .filters-row input:focus,
-        .filters-row select:focus {
+        .filter-item:focus-within {
             border-color: var(--primary);
             background: #fff;
         }
-        .filters-row input::placeholder {
+        .filter-icon {
+            padding: 0 0 0 12px;
+            font-size: 16px;
+            color: var(--gray-300);
+            flex-shrink: 0;
+        }
+        .filter-item input,
+        .filter-item select {
+            width: 100%;
+            padding: 11px 12px;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            color: var(--gray-800);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .filter-item select {
+            cursor: pointer;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        .filter-item input::placeholder {
             color: var(--gray-300);
         }
 
-        .filters-bottom {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
+        .actions-row {
             justify-content: space-between;
-            gap: 10px;
-            padding-top: 4px;
         }
-
-        .filters-left {
+        .filter-left {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .toggle-wrap {
+        /* ===== BOUTON GPS ===== */
+        .btn-gps {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: none;
+            background: var(--orange);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+        .btn-gps:hover {
+            background: var(--orange-dark);
+            transform: translateY(-1px);
+        }
+        .btn-gps:active {
+            transform: scale(0.95);
+        }
+        .btn-gps.active {
+            background: #27ae60;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+        .btn-gps.active:hover {
+            background: #2ecc71;
+        }
+        .btn-gps.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+        .gps-icon {
+            font-size: 16px;
+        }
+        .gps-text {
+            font-size: 13px;
+        }
+
+        /* ===== TOGGLE GARDE ===== */
+        .toggle-garde {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-600);
             cursor: pointer;
             user-select: none;
-            flex-shrink: 0;
         }
-        .toggle-wrap input[type="checkbox"] {
-            width: 38px;
-            height: 20px;
-            -webkit-appearance: none;
-            appearance: none;
+        .toggle-garde input {
+            display: none;
+        }
+        .toggle-slider {
+            width: 40px;
+            height: 22px;
             background: var(--gray-300);
             border-radius: 30px;
             position: relative;
-            outline: none;
             transition: background 0.25s;
-            cursor: pointer;
             flex-shrink: 0;
         }
-        .toggle-wrap input[type="checkbox"]::after {
+        .toggle-slider::after {
             content: "";
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: #fff;
             border-radius: 50%;
             transition: transform 0.25s;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
-        .toggle-wrap input[type="checkbox"]:checked {
+        .toggle-garde input:checked + .toggle-slider {
             background: var(--primary);
         }
-        .toggle-wrap input[type="checkbox"]:checked::after {
+        .toggle-garde input:checked + .toggle-slider::after {
             transform: translateX(18px);
         }
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
 
+        /* ===== STATS ===== */
         .stats {
             font-size: 13px;
             color: var(--gray-600);
             text-align: right;
-            padding-top: 0;
-            margin: 0;
+            font-weight: 500;
             flex-shrink: 0;
         }
 
-        /* ===== BOUTON GÉOLOCALISATION ===== */
-        .geo-btn {
-            padding: 6px 16px;
-            border-radius: 30px;
-            border: 1.5px solid var(--primary);
-            background: #fff;
-            color: var(--primary);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: inherit;
+        /* ===== SERVICES ===== */
+        .services-row {
+            border-top: 1px solid var(--gray-200);
+            padding-top: 10px;
         }
-        .geo-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        .geo-btn:active {
-            transform: scale(0.95);
-        }
-        .geo-btn.active {
-            background: var(--primary);
-            color: #fff;
-        }
-        .geo-btn.loading {
-            opacity: 0.6;
-            cursor: wait;
-        }
-
-        /* ===== FILTRES SERVICES ===== */
         .service-filters {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--gray-200);
         }
         .service-btn {
-            padding: 6px 14px;
+            padding: 4px 12px;
             border-radius: 30px;
             border: 1.5px solid var(--gray-300);
             background: #fff;
             color: var(--gray-600);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: 0.15s;
@@ -294,7 +329,6 @@
             gap: 12px;
             margin-bottom: 22px;
         }
-
         .card {
             background: #fff;
             border-radius: var(--radius);
@@ -470,7 +504,6 @@
         .chat-fab:active {
             transform: scale(0.94);
         }
-
         .chat-window {
             position: fixed;
             bottom: 90px;
@@ -500,7 +533,6 @@
         .chat-window.hidden {
             display: none;
         }
-
         .chat-header {
             background: var(--primary);
             color: #fff;
@@ -528,7 +560,6 @@
         .chat-header button:hover {
             opacity: 1;
         }
-
         .chat-messages {
             flex: 1;
             padding: 12px 14px;
@@ -577,7 +608,6 @@
         .chat-messages .msg-suggestion:active {
             transform: scale(0.96);
         }
-
         .suggestions-grid {
             display: flex;
             flex-wrap: wrap;
@@ -587,7 +617,6 @@
         .suggestions-grid .msg-suggestion {
             flex: 0 0 auto;
         }
-
         .chat-input-area {
             display: flex;
             border-top: 1px solid var(--gray-200);
@@ -632,86 +661,6 @@
         .chat-input-area button:active {
             transform: scale(0.93);
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (min-width: 600px) {
-            body {
-                padding: 28px 40px 130px 40px;
-                max-width: 740px;
-                margin: 0 auto;
-            }
-            .chat-window {
-                width: 400px;
-                height: 500px;
-                right: 24px;
-                bottom: 98px;
-            }
-            .filters-row {
-                flex-direction: row;
-                gap: 10px;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-            .filters-row input {
-                flex: 2;
-                min-width: 160px;
-            }
-            .filters-row select {
-                flex: 1;
-                min-width: 130px;
-            }
-            .filters-bottom {
-                flex: 0 1 auto;
-                justify-content: flex-end;
-                gap: 14px;
-            }
-            .stats {
-                text-align: right;
-            }
-            .chat-fab {
-                bottom: 28px;
-                right: 28px;
-            }
-        }
-        @media (max-width: 420px) {
-            .filters-bottom {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 6px;
-            }
-            .filters-left {
-                gap: 6px;
-            }
-            .toggle-wrap {
-                font-size: 13px;
-            }
-            .stats {
-                font-size: 12px;
-            }
-            .chat-window {
-                right: 8px;
-                width: 94vw;
-                height: 440px;
-                bottom: 82px;
-            }
-            .chat-fab {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-                right: 14px;
-                bottom: 18px;
-            }
-            .nav-btn {
-                padding: 6px 14px;
-                font-size: 13px;
-            }
-            .geo-btn {
-                padding: 4px 12px;
-                font-size: 12px;
-            }
-        }
-
-        /* ===== SCROLLBAR ===== */
         .chat-messages::-webkit-scrollbar {
             width: 4px;
         }
@@ -751,6 +700,62 @@
             color: var(--gray-600);
             text-decoration: none;
         }
+
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 600px) {
+            body {
+                padding: 28px 40px 130px 40px;
+                max-width: 740px;
+                margin: 0 auto;
+            }
+            .chat-window {
+                width: 400px;
+                height: 500px;
+                right: 24px;
+                bottom: 98px;
+            }
+            .chat-fab {
+                bottom: 28px;
+                right: 28px;
+            }
+        }
+        @media (max-width: 500px) {
+            .filter-item {
+                min-width: 100%;
+            }
+            .actions-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .filter-left {
+                justify-content: center;
+            }
+            .stats {
+                text-align: center;
+            }
+            .btn-gps {
+                padding: 6px 14px;
+                font-size: 13px;
+            }
+            .chat-window {
+                right: 8px;
+                width: 94vw;
+                height: 440px;
+                bottom: 82px;
+            }
+            .chat-fab {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                right: 14px;
+                bottom: 18px;
+            }
+            .nav-btn {
+                padding: 6px 14px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -772,27 +777,43 @@
         🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
     </div>
 
-    <!-- FILTRES -->
+    <!-- FILTRES REFONDU -->
     <section class="filters">
-        <div class="filters-row">
-            <input type="text" id="searchInput" placeholder="Rechercher une pharmacie...">
-            <select id="zoneFilter">
-                <option value="all">Toutes les zones</option>
-            </select>
-        </div>
-        <div class="filters-bottom">
-            <div class="filters-left">
-                <label class="toggle-wrap">
-                    <input type="checkbox" id="gardeToggle">
-                    <span>Garde</span>
-                </label>
-                <button id="geoBtn" class="geo-btn" type="button">📍 Près de moi</button>
+        <div class="filters-grid">
+            <!-- Ligne 1 : Recherche + Zone -->
+            <div class="filter-row">
+                <div class="filter-item search-item">
+                    <span class="filter-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Pharmacie ou quartier...">
+                </div>
+                <div class="filter-item zone-item">
+                    <span class="filter-icon">📍</span>
+                    <select id="zoneFilter">
+                        <option value="all">Toutes les zones</option>
+                    </select>
+                </div>
             </div>
-            <span class="stats" id="stats">Chargement...</span>
-        </div>
-        <!-- Filtres services -->
-        <div class="service-filters" id="serviceFilters">
-            <!-- Les boutons seront générés dynamiquement -->
+            <!-- Ligne 2 : Garde + GPS + Stats -->
+            <div class="filter-row actions-row">
+                <div class="filter-left">
+                    <button id="geoBtn" class="btn-gps" type="button">
+                        <span class="gps-icon">📍</span>
+                        <span class="gps-text">Près de moi</span>
+                    </button>
+                    <label class="toggle-garde">
+                        <input type="checkbox" id="gardeToggle">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Garde</span>
+                    </label>
+                </div>
+                <span class="stats" id="stats">Chargement...</span>
+            </div>
+            <!-- Ligne 3 : Services -->
+            <div class="filter-row services-row">
+                <div class="service-filters" id="serviceFilters">
+                    <!-- généré dynamiquement -->
+                </div>
+            </div>
         </div>
     </section>
 
@@ -851,6 +872,7 @@
         // Géolocalisation
         let userPosition = null;
         let isGeoActive = false;
+        const MAX_DISTANCE_KM = 10; // Rayon maximum de recherche
         const geoBtn = document.getElementById('geoBtn');
 
         // Éléments DOM
@@ -892,7 +914,7 @@
             }
 
             geoBtn.classList.add('loading');
-            geoBtn.textContent = '⏳ Localisation...';
+            geoBtn.innerHTML = '<span class="gps-icon">⏳</span><span class="gps-text">Localisation...</span>';
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -903,14 +925,15 @@
                     isGeoActive = true;
                     geoBtn.classList.remove('loading');
                     geoBtn.classList.add('active');
-                    geoBtn.textContent = '📍 Activé';
+                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Activé (' + MAX_DISTANCE_KM +
+                        ' km)</span>';
                     currentPage = 1;
                     render();
                     console.log(`📍 Position: ${userPosition.lat}, ${userPosition.lon}`);
                 },
                 (error) => {
                     geoBtn.classList.remove('loading');
-                    geoBtn.textContent = '📍 Près de moi';
+                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
                     let msg = 'Impossible de vous localiser. ';
                     switch (error.code) {
                         case error.PERMISSION_DENIED:
@@ -937,7 +960,7 @@
             isGeoActive = false;
             userPosition = null;
             geoBtn.classList.remove('active');
-            geoBtn.textContent = '📍 Près de moi';
+            geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
             currentPage = 1;
             render();
         }
@@ -989,7 +1012,7 @@
         });
 
         // ============================================================
-        //  GÉNÉRATION DES BOUTONS SERVICES
+        //  GÉNÉRATION DES BOUTONS SERVICES (sans message "Aucun service")
         // ============================================================
         function generateServiceFilters() {
             const serviceSet = new Set();
@@ -1000,7 +1023,7 @@
             });
             const serviceList = [...serviceSet].sort();
             if (serviceList.length === 0) {
-                serviceFiltersEl.innerHTML = '<span style="font-size:13px;color:var(--gray-300);">Aucun service renseigné</span>';
+                serviceFiltersEl.innerHTML = ''; // Rien, pas de message
                 return;
             }
             serviceFiltersEl.innerHTML = serviceList.map(service =>
@@ -1025,7 +1048,7 @@
         }
 
         // ============================================================
-        //  FILTRAGE (avec géolocalisation)
+        //  FILTRAGE (avec géolocalisation + rayon + garde)
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -1043,7 +1066,7 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // Géolocalisation : tri par distance
+            // Géolocalisation : calcul de la distance, filtrage par rayon et tri
             if (isGeoActive && userPosition) {
                 results = results.map(p => {
                     if (p.latitude && p.longitude) {
@@ -1057,8 +1080,11 @@
                     }
                     return { ...p, distance: Infinity };
                 });
+                // Filtrer par rayon (MAX_DISTANCE_KM)
+                results = results.filter(p => p.distance <= MAX_DISTANCE_KM);
                 results.sort((a, b) => a.distance - b.distance);
             } else {
+                // Tri par nom (ordre alphabétique)
                 results.sort((a, b) => a.nom.localeCompare(b.nom));
             }
 

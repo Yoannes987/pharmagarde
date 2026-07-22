@@ -228,6 +228,7 @@
             cursor: pointer;
             transition: 0.15s;
             min-width: 38px;
+            font-family: inherit;
         }
         .pagination button.active {
             background: var(--primary);
@@ -376,26 +377,74 @@
         const medPaginationEl = document.getElementById('medPagination');
 
         // ============================================================
-        //  CHARGEMENT PARALLÈLE (pharmacies + medicaments)
+        //  CHARGEMENT PARALLÈLE (pharmacies + medicaments) AVEC DIAGNOSTIC
         // ============================================================
         Promise.all([
-            fetch('pharmacies.json').then(r => { if (!r.ok) throw new Error('pharmacies.json introuvable'); return r.json(); }),
-            fetch('medicaments.json').then(r => { if (!r.ok) throw new Error('medicaments.json introuvable'); return r.json(); })
+            fetch('pharmacies.json').then(r => {
+                if (!r.ok) throw new Error('pharmacies.json introuvable (' + r.status + ')');
+                return r.json();
+            }),
+            fetch('medicaments.json').then(r => {
+                if (!r.ok) throw new Error('medicaments.json introuvable (' + r.status + ')');
+                return r.json();
+            })
         ])
         .then(([pharmaciesData, medicamentsData]) => {
             allPharmacies = pharmaciesData;
-            allMedicaments = medicamentsData.medicaments || [];
+
+            // 🔍 Diagnostic de la structure de medicamentsData
+            console.log('📦 medicamentsData reçu :', medicamentsData);
+            console.log('🔍 Type :', typeof medicamentsData);
+            console.log('🔍 Clés :', Object.keys(medicamentsData));
+
+            // ===== CHARGEMENT INTELLIGENT =====
+            if (medicamentsData.medicaments && Array.isArray(medicamentsData.medicaments)) {
+                // Structure A : { "medicaments": [...] }
+                allMedicaments = medicamentsData.medicaments;
+                console.log('✅ Structure A détectée (clé "medicaments")');
+            } else if (Array.isArray(medicamentsData)) {
+                // Structure B : [...] (tableau direct)
+                allMedicaments = medicamentsData;
+                console.log('✅ Structure B détectée (tableau direct)');
+            } else if (medicamentsData.meta && medicamentsData.medicaments) {
+                // Structure C : { "meta": {...}, "medicaments": [...] }
+                allMedicaments = medicamentsData.medicaments;
+                console.log('✅ Structure C détectée (meta + medicaments)');
+            } else {
+                // Structure inconnue : on tente de récupérer ce qui ressemble à un tableau
+                console.warn('⚠️ Format inattendu, tentative de récupération...');
+                const keys = Object.keys(medicamentsData);
+                let found = false;
+                for (const key of keys) {
+                    if (Array.isArray(medicamentsData[key]) && medicamentsData[key].length > 0) {
+                        allMedicaments = medicamentsData[key];
+                        found = true;
+                        console.log(`✅ Récupéré depuis la clé "${key}" (${allMedicaments.length} éléments)`);
+                        break;
+                    }
+                }
+                if (!found) {
+                    allMedicaments = [];
+                    console.error('❌ Aucun tableau de médicaments trouvé dans le fichier JSON.');
+                }
+            }
+
+            // Vérification finale
+            if (!Array.isArray(allMedicaments)) {
+                allMedicaments = [];
+            }
+
+            console.log(`✅ ${allMedicaments.length} médicaments chargés`);
 
             // Remplir les filtres
             populateMedFilters();
 
             // Afficher
             renderMedicaments();
-            console.log(`✅ ${allPharmacies.length} pharmacies, ${allMedicaments.length} médicaments`);
         })
         .catch(err => {
-            console.error('Erreur de chargement:', err);
-            medListEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Impossible de charger les données. Vérifiez que les fichiers sont présents.</div>`;
+            console.error('❌ Erreur de chargement:', err.message);
+            medListEl.innerHTML = `<div class="empty-state"><span>⚠️</span>Erreur : ${err.message}</div>`;
             medStatsEl.textContent = 'Erreur';
         });
 
@@ -422,12 +471,18 @@
             });
 
             // Écouteurs
-            medSearchInput.addEventListener('input', () => { medCurrentPage = 1;
-                renderMedicaments(); });
-            medCategorieFilter.addEventListener('change', () => { medCurrentPage = 1;
-                renderMedicaments(); });
-            medFormeFilter.addEventListener('change', () => { medCurrentPage = 1;
-                renderMedicaments(); });
+            medSearchInput.addEventListener('input', () => {
+                medCurrentPage = 1;
+                renderMedicaments();
+            });
+            medCategorieFilter.addEventListener('change', () => {
+                medCurrentPage = 1;
+                renderMedicaments();
+            });
+            medFormeFilter.addEventListener('change', () => {
+                medCurrentPage = 1;
+                renderMedicaments();
+            });
         }
 
         // ============================================================
@@ -524,7 +579,7 @@
             }
             for (let i = s; i <= e; i++) {
                 html +=
-                `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    `<button class="${i === current ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
             }
             if (e < totalPages) {
                 if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
@@ -540,7 +595,10 @@
             if (page < 1 || page > totalPages) return;
             medCurrentPage = page;
             renderMedicaments();
-            document.getElementById('medicamentList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('medicamentList').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         };
 
         // ============================================================

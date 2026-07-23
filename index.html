@@ -205,6 +205,29 @@
             flex-shrink:0;
         }
 
+        /* ===== FILTRE DE TRI ===== */
+        #sortFilter {
+            font-family:inherit;
+            padding:6px 30px 6px 12px;
+            border-radius:30px;
+            border:1.5px solid var(--gray-200);
+            background:var(--gray-50);
+            font-size:13px;
+            font-weight:500;
+            color:var(--gray-800);
+            outline:none;
+            cursor:pointer;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;
+            background-position:right 12px center;
+            -webkit-appearance:none;
+            appearance:none;
+        }
+        #sortFilter:focus {
+            border-color:var(--primary);
+            background:#fff;
+        }
+
         /* ===== SERVICES ===== */
         .services-row { border-top:1px solid var(--gray-200); padding-top:10px; }
         .service-filters { display:flex; flex-wrap:wrap; gap:8px; }
@@ -467,6 +490,7 @@
             .chat-window { right:8px; width:94vw; height:440px; bottom:82px; }
             .chat-fab { width:50px; height:50px; font-size:20px; right:14px; bottom:18px; }
             .nav-btn { padding:6px 14px; font-size:13px; }
+            #sortFilter { font-size:12px; padding:4px 24px 4px 10px; }
         }
     </style>
 </head>
@@ -514,6 +538,14 @@
                     <span class="toggle-slider"></span>
                     <span class="toggle-label">Garde</span>
                 </label>
+                <!-- ===== SÉLECTEUR DE TRI ===== -->
+                <select id="sortFilter">
+                    <option value="default">Trier par défaut</option>
+                    <option value="az">De A à Z</option>
+                    <option value="za">De Z à A</option>
+                    <option value="recent">Plus récent</option>
+                    <option value="popular">Plus populaire</option>
+                </select>
                 <span class="stats" id="stats">Chargement...</span>
             </div>
             <div class="filter-row services-row">
@@ -575,6 +607,10 @@
         let userPosition = null;
         let isGeoActive = false;
         const geoBtn = document.getElementById('geoBtn');
+
+        // Tri
+        let sortOption = 'default';
+        const sortSelect = document.getElementById('sortFilter');
 
         const listEl = document.getElementById('pharmacyList');
         const searchInput = document.getElementById('searchInput');
@@ -715,7 +751,16 @@
         }
 
         // ============================================================
-        //  FILTRAGE AVEC RAYON MAX 50 KM ET TRI PAR DISTANCE
+        //  ÉCOUTEUR DU TRI
+        // ============================================================
+        sortSelect.addEventListener('change', function() {
+            sortOption = this.value;
+            currentPage = 1;
+            render();
+        });
+
+        // ============================================================
+        //  FILTRAGE ET TRI
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -733,9 +778,8 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // Géolocalisation
+            // Géolocalisation : prioritaire sur tout tri
             if (isGeoActive && userPosition) {
-                // Calcul des distances
                 results = results.map(p => {
                     if (p.latitude && p.longitude) {
                         const d = getDistance(userPosition.lat, userPosition.lon, p.latitude, p.longitude);
@@ -743,17 +787,31 @@
                     }
                     return { ...p, distance: Infinity };
                 });
-
-                // Rayon max 50 km
                 const RAYON_MAX = 50;
                 results = results.filter(p => p.distance <= RAYON_MAX);
                 results.sort((a, b) => a.distance - b.distance);
                 console.log(`📍 ${results.length} pharmacies dans ${RAYON_MAX} km`);
-            } else {
-                // Tri alphabétique
-                results.sort((a, b) => a.nom.localeCompare(b.nom));
+                return results;
             }
 
+            // Sinon, on applique le tri choisi
+            switch (sortOption) {
+                case 'az':
+                    results.sort((a, b) => a.nom.localeCompare(b.nom));
+                    break;
+                case 'za':
+                    results.sort((a, b) => b.nom.localeCompare(a.nom));
+                    break;
+                case 'recent':
+                    results.sort((a, b) => b.id - a.id);
+                    break;
+                case 'popular':
+                    const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
+                    results.sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0));
+                    break;
+                default:
+                    results.sort((a, b) => a.nom.localeCompare(b.nom));
+            }
             return results;
         }
 
@@ -769,6 +827,15 @@
 
             const start = (currentPage - 1) * PER_PAGE;
             const pageItems = filtered.slice(start, start + PER_PAGE);
+
+            // Compteur de vues pour la popularité (incrémente à chaque affichage)
+            if (sortOption === 'popular' && pageItems.length > 0) {
+                const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
+                pageItems.forEach(p => {
+                    views[p.id] = (views[p.id] || 0) + 1;
+                });
+                localStorage.setItem('pharmacyViews', JSON.stringify(views));
+            }
 
             statsEl.textContent = `${total} pharmacie${total > 1 ? 's' : ''}`;
 

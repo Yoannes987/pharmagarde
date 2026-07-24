@@ -73,83 +73,49 @@
         .nav-btn.active:hover { background:var(--primary-dark); transform:translateY(-1px); }
         .nav-btn:active { transform:scale(0.96); }
 
-        /* ===== TOGGLE FILTRES ===== */
-        .filtres-toggle-wrap {
-            display:flex;
-            justify-content:flex-end;
-            align-items:center;
-            gap:6px;
-            margin:4px 0 10px 0;
-        }
-        .filtres-toggle-btn {
-            background:none;
-            border:none;
-            font-size:26px;
-            cursor:pointer;
-            padding:0 6px;
-            color:var(--gray-600);
-            transition:0.2s;
-            line-height:1;
-        }
-        .filtres-toggle-btn:hover {
-            color:var(--primary);
-            transform:scale(1.1);
-        }
-        .filtres-panel {
-            display:none;
+        /* ===== FILTRES DISCRETS ===== */
+        .filters {
             background:#fff;
             border-radius:var(--radius);
-            padding:16px;
+            padding:12px 14px;
             box-shadow:var(--shadow);
-            margin-bottom:18px;
+            margin-bottom:12px;
         }
-        .filtres-panel.open {
-            display:block;
+        .filters-grid {
+            display:flex;
+            flex-direction:column;
+            gap:8px;
         }
-
-        /* ===== BANDEAU GARDE ===== */
-        .garde-banner {
-            background:#fefbf5;
-            border:1px solid #c07a2a;
-            border-radius:var(--radius-sm);
-            padding:10px 14px;
-            margin-bottom:14px;
-            text-align:center;
-            font-size:14px;
-            color:#7a5a1a;
-            display:none;
+        .filter-row {
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            gap:6px;
         }
-        .garde-banner.active { display:block; }
-        .garde-banner strong { color:#c07a2a; }
-
-        /* ===== FILTRES ===== */
-        .filters {
-            background:transparent;
-            padding:0;
-            box-shadow:none;
-            margin-bottom:0;
-        }
-        .filters-grid { display:flex; flex-direction:column; gap:12px; }
-        .filter-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
         .filter-item {
             display:flex;
             align-items:center;
-            flex:1;
-            min-width:140px;
+            flex:1 1 140px;
+            min-width:120px;
             background:var(--gray-50);
-            border-radius:var(--radius-sm);
+            border-radius:30px;
             border:1.5px solid var(--gray-200);
             transition:border 0.2s, background 0.2s;
             overflow:hidden;
         }
         .filter-item:focus-within { border-color:var(--primary); background:#fff; }
-        .filter-icon { padding:0 0 0 12px; font-size:16px; color:var(--gray-300); flex-shrink:0; }
+        .filter-icon {
+            padding:0 0 0 10px;
+            font-size:14px;
+            color:var(--gray-300);
+            flex-shrink:0;
+        }
         .filter-item input, .filter-item select {
             width:100%;
-            padding:11px 12px;
+            padding:8px 10px;
             border:none;
             background:transparent;
-            font-size:15px;
+            font-size:14px;
             color:var(--gray-800);
             outline:none;
             -webkit-appearance:none;
@@ -157,35 +123,39 @@
         }
         .filter-item select {
             cursor:pointer;
-            padding-right:30px;
+            padding-right:24px;
             background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat:no-repeat;
-            background-position:right 12px center;
+            background-position:right 10px center;
         }
-        .filter-item input::placeholder { color:var(--gray-300); }
+        .filter-item input::placeholder { color:var(--gray-300); font-size:13px; }
 
         .row-main .filter-item { flex:1; }
-        .row-main .filter-item.gps-item { flex:0 0 auto; min-width:auto; border:none; background:transparent; }
+        .row-main .filter-item.gps-item {
+            flex:0 0 auto;
+            min-width:auto;
+            border:none;
+            background:transparent;
+        }
 
-        /* ===== BOUTON GPS ===== */
         .btn-gps {
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            gap:6px;
-            padding:10px 18px;
+            gap:4px;
+            padding:8px 14px;
             border-radius:30px;
             border:none;
             background:var(--orange);
             color:#fff;
-            font-size:14px;
+            font-size:13px;
             font-weight:600;
             cursor:pointer;
             transition:0.2s;
             font-family:inherit;
-            box-shadow:0 2px 8px rgba(243,156,18,0.3);
+            box-shadow:0 2px 6px rgba(243,156,18,0.3);
             line-height:1;
-            min-height:44px;
+            min-height:38px;
             white-space:nowrap;
         }
         .btn-gps:hover { background:var(--orange-dark); transform:translateY(-1px); }
@@ -193,21 +163,23 @@
         .btn-gps.active { background:#27ae60; box-shadow:0 2px 8px rgba(39,174,96,0.3); }
         .btn-gps.active:hover { background:#2ecc71; }
         .btn-gps.loading { opacity:0.7; cursor:wait; }
-        .gps-icon { font-size:16px; }
-        .gps-text { font-size:13px; }
+        .gps-icon { font-size:14px; }
+        .gps-text { font-size:12px; }
 
-        /* ===== TOGGLE GARDE ===== */
         .toggle-garde {
             display:flex;
             align-items:center;
-            gap:8px;
+            gap:6px;
             cursor:pointer;
             user-select:none;
+            font-size:13px;
+            font-weight:500;
+            color:var(--gray-600);
         }
         .toggle-garde input { display:none; }
         .toggle-slider {
-            width:40px;
-            height:22px;
+            width:32px;
+            height:18px;
             background:var(--gray-300);
             border-radius:30px;
             position:relative;
@@ -219,40 +191,39 @@
             position:absolute;
             top:2px;
             left:2px;
-            width:18px;
-            height:18px;
+            width:14px;
+            height:14px;
             background:#fff;
             border-radius:50%;
             transition:transform 0.25s;
             box-shadow:0 1px 4px rgba(0,0,0,0.15);
         }
         .toggle-garde input:checked + .toggle-slider { background:var(--primary); }
-        .toggle-garde input:checked + .toggle-slider::after { transform:translateX(18px); }
-        .toggle-label { font-size:14px; font-weight:500; color:var(--gray-600); }
+        .toggle-garde input:checked + .toggle-slider::after { transform:translateX(14px); }
+        .toggle-label { font-size:13px; }
 
         .stats {
-            font-size:13px;
+            font-size:12px;
             color:var(--gray-600);
             text-align:right;
             font-weight:500;
             flex-shrink:0;
         }
 
-        /* ===== FILTRE DE TRI ===== */
         #sortFilter {
             font-family:inherit;
-            padding:6px 30px 6px 12px;
+            padding:6px 24px 6px 10px;
             border-radius:30px;
             border:1.5px solid var(--gray-200);
             background:var(--gray-50);
-            font-size:13px;
+            font-size:12px;
             font-weight:500;
             color:var(--gray-800);
             outline:none;
             cursor:pointer;
             background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat:no-repeat;
-            background-position:right 12px center;
+            background-position:right 10px center;
             -webkit-appearance:none;
             appearance:none;
         }
@@ -261,16 +232,23 @@
             background:#fff;
         }
 
-        /* ===== SERVICES ===== */
-        .services-row { border-top:1px solid var(--gray-200); padding-top:10px; }
-        .service-filters { display:flex; flex-wrap:wrap; gap:8px; }
+        .services-row {
+            border-top:1px solid var(--gray-200);
+            padding-top:8px;
+            margin-top:4px;
+        }
+        .service-filters {
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+        }
         .service-btn {
-            padding:4px 12px;
+            padding:3px 10px;
             border-radius:30px;
             border:1.5px solid var(--gray-300);
             background:#fff;
             color:var(--gray-600);
-            font-size:12px;
+            font-size:11px;
             font-weight:500;
             cursor:pointer;
             transition:0.15s;
@@ -278,6 +256,21 @@
         }
         .service-btn:hover { background:var(--gray-100); }
         .service-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+        /* ===== BANDEAU GARDE ===== */
+        .garde-banner {
+            background:#fefbf5;
+            border:1px solid #c07a2a;
+            border-radius:var(--radius-sm);
+            padding:8px 12px;
+            margin-bottom:10px;
+            text-align:center;
+            font-size:13px;
+            color:#7a5a1a;
+            display:none;
+        }
+        .garde-banner.active { display:block; }
+        .garde-banner strong { color:#c07a2a; }
 
         /* ===== LISTE ===== */
         #pharmacyList { display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
@@ -519,11 +512,11 @@
         @media (max-width:500px) {
             .filter-item { min-width:100%; }
             .row-main .filter-item.gps-item { flex:1; min-width:auto; }
-            .btn-gps { padding:8px 14px; font-size:13px; min-height:40px; width:100%; justify-content:center; }
+            .btn-gps { padding:6px 12px; font-size:12px; min-height:34px; width:100%; justify-content:center; }
             .chat-window { right:8px; width:94vw; height:440px; bottom:82px; }
             .chat-fab { width:50px; height:50px; font-size:20px; right:14px; bottom:18px; }
             .nav-btn { padding:6px 14px; font-size:13px; }
-            #sortFilter { font-size:12px; padding:4px 24px 4px 10px; }
+            #sortFilter { font-size:11px; padding:4px 20px 4px 8px; }
         }
     </style>
 </head>
@@ -539,59 +532,52 @@
         </div>
     </header>
 
-    <!-- BOUTON FILTRES + PANEL -->
-    <div class="filtres-toggle-wrap">
-        <button id="filtresToggle" class="filtres-toggle-btn" aria-label="Afficher les filtres">⚙️</button>
+    <!-- BANDEAU GARDE -->
+    <div class="garde-banner" id="gardeBanner">
+        🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
     </div>
 
-    <div id="filtresPanel" class="filtres-panel">
-        <!-- BANDEAU GARDE -->
-        <div class="garde-banner" id="gardeBanner">
-            🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
-        </div>
-
-        <!-- FILTRES -->
-        <section class="filters">
-            <div class="filters-grid">
-                <div class="filter-row row-main">
-                    <div class="filter-item search-item">
-                        <span class="filter-icon">🔍</span>
-                        <input type="text" id="searchInput" placeholder="Pharmacie ou quartier...">
-                    </div>
-                    <div class="filter-item zone-item">
-                        <span class="filter-icon">📍</span>
-                        <select id="zoneFilter">
-                            <option value="all">Toutes les zones</option>
-                        </select>
-                    </div>
-                    <div class="filter-item gps-item">
-                        <button id="geoBtn" class="btn-gps" type="button">
-                            <span class="gps-icon">📍</span>
-                            <span class="gps-text">Près de moi</span>
-                        </button>
-                    </div>
+    <!-- FILTRES DISCRETS -->
+    <section class="filters">
+        <div class="filters-grid">
+            <div class="filter-row row-main">
+                <div class="filter-item search-item">
+                    <span class="filter-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Pharmacie...">
                 </div>
-                <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                    <label class="toggle-garde">
-                        <input type="checkbox" id="gardeToggle">
-                        <span class="toggle-slider"></span>
-                        <span class="toggle-label">Garde</span>
-                    </label>
-                    <select id="sortFilter">
-                        <option value="default">Trier par défaut</option>
-                        <option value="az">De A à Z</option>
-                        <option value="za">De Z à A</option>
-                        <option value="recent">Plus récent</option>
-                        <option value="popular">Plus populaire</option>
+                <div class="filter-item zone-item">
+                    <span class="filter-icon">📍</span>
+                    <select id="zoneFilter">
+                        <option value="all">Toutes zones</option>
                     </select>
-                    <span class="stats" id="stats">Chargement...</span>
                 </div>
-                <div class="filter-row services-row">
-                    <div class="service-filters" id="serviceFilters"></div>
+                <div class="filter-item gps-item">
+                    <button id="geoBtn" class="btn-gps" type="button">
+                        <span class="gps-icon">📍</span>
+                        <span class="gps-text">Près de moi</span>
+                    </button>
                 </div>
             </div>
-        </section>
-    </div>
+            <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <label class="toggle-garde">
+                    <input type="checkbox" id="gardeToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Garde</span>
+                </label>
+                <select id="sortFilter">
+                    <option value="default">Par défaut (ordre fichier)</option>
+                    <option value="az">De A à Z</option>
+                    <option value="za">De Z à A</option>
+                    <option value="recent">Plus récent</option>
+                    <option value="popular">Plus populaire</option>
+                </select>
+                <span class="stats" id="stats">Chargement...</span>
+            </div>
+            <div class="filter-row services-row">
+                <div class="service-filters" id="serviceFilters"></div>
+            </div>
+        </div>
+    </section>
 
     <!-- LISTE -->
     <main id="pharmacyList"></main>
@@ -661,19 +647,10 @@
         const gardeBanner = document.getElementById('gardeBanner');
         const gardeSemaineEl = document.getElementById('gardeSemaine');
 
-        // Filtres panel toggle
-        const filtresToggle = document.getElementById('filtresToggle');
-        const filtresPanel = document.getElementById('filtresPanel');
-        filtresToggle.addEventListener('click', function() {
-            filtresPanel.classList.toggle('open');
-            // Change l'icône (optionnel)
-            this.textContent = filtresPanel.classList.contains('open') ? '✕' : '⚙️';
-        });
-
         function isGarde(p) { return gardesIds.includes(p.id); }
 
         // ============================================================
-        //  GÉOLOCALISATION
+        //  GÉOLOCALISATION (simplifiée)
         // ============================================================
         function getDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
@@ -808,7 +785,7 @@
         });
 
         // ============================================================
-        //  FILTRAGE ET TRI (SIMPLIFIÉ)
+        //  FILTRAGE ET TRI (DÉFAUT = ORDRE DU FICHIER)
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -826,9 +803,8 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // ===== GÉOLOCALISATION SIMPLIFIÉE =====
+            // ===== LOCALISATION (tri par distance sans rayon) =====
             if (isGeoActive && userPosition) {
-                // Calcul des distances
                 results = results.map(p => {
                     if (p.latitude && p.longitude) {
                         const d = getDistance(userPosition.lat, userPosition.lon, p.latitude, p.longitude);
@@ -836,13 +812,12 @@
                     }
                     return { ...p, distance: Infinity };
                 });
-                // On trie par distance (pas de rayon, on affiche tout)
                 results.sort((a, b) => a.distance - b.distance);
                 console.log(`📍 ${results.length} pharmacies triées par distance.`);
                 return results;
             }
 
-            // ===== TRI PAR DÉFAUT (ordre du fichier) =====
+            // ===== TRI SELON L'OPTION (DÉFAUT = AUCUN TRI) =====
             switch (sortOption) {
                 case 'az':
                     results.sort((a, b) => a.nom.localeCompare(b.nom));
@@ -858,7 +833,7 @@
                     results.sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0));
                     break;
                 default:
-                    // On ne trie PAS, on garde l'ordre du tableau d'origine (ordre des IDs)
+                    // Ne pas trier → garder l'ordre d'origine du tableau (IDs)
                     break;
             }
             return results;
@@ -877,7 +852,7 @@
             const start = (currentPage - 1) * PER_PAGE;
             const pageItems = filtered.slice(start, start + PER_PAGE);
 
-            // Compteur de vues pour la popularité
+            // Compteur de vues pour popularité
             if (sortOption === 'popular' && pageItems.length > 0) {
                 const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
                 pageItems.forEach(p => {

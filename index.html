@@ -38,7 +38,7 @@
             text-align:center;
             padding-bottom:14px;
             border-bottom:1px solid var(--gray-200);
-            margin-bottom:18px;
+            margin-bottom:8px;
         }
         .app-header h1 { font-size:26px; font-weight:700; letter-spacing:-0.5px; color:var(--primary-dark); }
         .app-header h1 span { font-weight:300; color:var(--gray-600); }
@@ -73,6 +73,40 @@
         .nav-btn.active:hover { background:var(--primary-dark); transform:translateY(-1px); }
         .nav-btn:active { transform:scale(0.96); }
 
+        /* ===== TOGGLE FILTRES ===== */
+        .filtres-toggle-wrap {
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            gap:6px;
+            margin:4px 0 10px 0;
+        }
+        .filtres-toggle-btn {
+            background:none;
+            border:none;
+            font-size:26px;
+            cursor:pointer;
+            padding:0 6px;
+            color:var(--gray-600);
+            transition:0.2s;
+            line-height:1;
+        }
+        .filtres-toggle-btn:hover {
+            color:var(--primary);
+            transform:scale(1.1);
+        }
+        .filtres-panel {
+            display:none;
+            background:#fff;
+            border-radius:var(--radius);
+            padding:16px;
+            box-shadow:var(--shadow);
+            margin-bottom:18px;
+        }
+        .filtres-panel.open {
+            display:block;
+        }
+
         /* ===== BANDEAU GARDE ===== */
         .garde-banner {
             background:#fefbf5;
@@ -90,11 +124,10 @@
 
         /* ===== FILTRES ===== */
         .filters {
-            background:#fff;
-            border-radius:var(--radius);
-            padding:16px;
-            box-shadow:var(--shadow);
-            margin-bottom:18px;
+            background:transparent;
+            padding:0;
+            box-shadow:none;
+            margin-bottom:0;
         }
         .filters-grid { display:flex; flex-direction:column; gap:12px; }
         .filter-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
@@ -506,53 +539,59 @@
         </div>
     </header>
 
-    <!-- BANDEAU GARDE -->
-    <div class="garde-banner" id="gardeBanner">
-        🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
+    <!-- BOUTON FILTRES + PANEL -->
+    <div class="filtres-toggle-wrap">
+        <button id="filtresToggle" class="filtres-toggle-btn" aria-label="Afficher les filtres">⚙️</button>
     </div>
 
-    <!-- FILTRES -->
-    <section class="filters">
-        <div class="filters-grid">
-            <div class="filter-row row-main">
-                <div class="filter-item search-item">
-                    <span class="filter-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="Pharmacie ou quartier...">
-                </div>
-                <div class="filter-item zone-item">
-                    <span class="filter-icon">📍</span>
-                    <select id="zoneFilter">
-                        <option value="all">Toutes les zones</option>
-                    </select>
-                </div>
-                <div class="filter-item gps-item">
-                    <button id="geoBtn" class="btn-gps" type="button">
-                        <span class="gps-icon">📍</span>
-                        <span class="gps-text">Près de moi</span>
-                    </button>
-                </div>
-            </div>
-            <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                <label class="toggle-garde">
-                    <input type="checkbox" id="gardeToggle">
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-label">Garde</span>
-                </label>
-                <!-- ===== SÉLECTEUR DE TRI ===== -->
-                <select id="sortFilter">
-                    <option value="default">Trier par défaut</option>
-                    <option value="az">De A à Z</option>
-                    <option value="za">De Z à A</option>
-                    <option value="recent">Plus récent</option>
-                    <option value="popular">Plus populaire</option>
-                </select>
-                <span class="stats" id="stats">Chargement...</span>
-            </div>
-            <div class="filter-row services-row">
-                <div class="service-filters" id="serviceFilters"></div>
-            </div>
+    <div id="filtresPanel" class="filtres-panel">
+        <!-- BANDEAU GARDE -->
+        <div class="garde-banner" id="gardeBanner">
+            🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
         </div>
-    </section>
+
+        <!-- FILTRES -->
+        <section class="filters">
+            <div class="filters-grid">
+                <div class="filter-row row-main">
+                    <div class="filter-item search-item">
+                        <span class="filter-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Pharmacie ou quartier...">
+                    </div>
+                    <div class="filter-item zone-item">
+                        <span class="filter-icon">📍</span>
+                        <select id="zoneFilter">
+                            <option value="all">Toutes les zones</option>
+                        </select>
+                    </div>
+                    <div class="filter-item gps-item">
+                        <button id="geoBtn" class="btn-gps" type="button">
+                            <span class="gps-icon">📍</span>
+                            <span class="gps-text">Près de moi</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                    <label class="toggle-garde">
+                        <input type="checkbox" id="gardeToggle">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Garde</span>
+                    </label>
+                    <select id="sortFilter">
+                        <option value="default">Trier par défaut</option>
+                        <option value="az">De A à Z</option>
+                        <option value="za">De Z à A</option>
+                        <option value="recent">Plus récent</option>
+                        <option value="popular">Plus populaire</option>
+                    </select>
+                    <span class="stats" id="stats">Chargement...</span>
+                </div>
+                <div class="filter-row services-row">
+                    <div class="service-filters" id="serviceFilters"></div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <!-- LISTE -->
     <main id="pharmacyList"></main>
@@ -621,6 +660,15 @@
         const serviceFiltersEl = document.getElementById('serviceFilters');
         const gardeBanner = document.getElementById('gardeBanner');
         const gardeSemaineEl = document.getElementById('gardeSemaine');
+
+        // Filtres panel toggle
+        const filtresToggle = document.getElementById('filtresToggle');
+        const filtresPanel = document.getElementById('filtresPanel');
+        filtresToggle.addEventListener('click', function() {
+            filtresPanel.classList.toggle('open');
+            // Change l'icône (optionnel)
+            this.textContent = filtresPanel.classList.contains('open') ? '✕' : '⚙️';
+        });
 
         function isGarde(p) { return gardesIds.includes(p.id); }
 
@@ -760,7 +808,7 @@
         });
 
         // ============================================================
-        //  FILTRAGE ET TRI
+        //  FILTRAGE ET TRI (SIMPLIFIÉ)
         // ============================================================
         function getFiltered() {
             const q = searchInput.value.toLowerCase().trim();
@@ -778,8 +826,9 @@
                 return matchNom && matchZone && matchGarde && matchServices;
             });
 
-            // Géolocalisation : prioritaire sur tout tri
+            // ===== GÉOLOCALISATION SIMPLIFIÉE =====
             if (isGeoActive && userPosition) {
+                // Calcul des distances
                 results = results.map(p => {
                     if (p.latitude && p.longitude) {
                         const d = getDistance(userPosition.lat, userPosition.lon, p.latitude, p.longitude);
@@ -787,14 +836,13 @@
                     }
                     return { ...p, distance: Infinity };
                 });
-                const RAYON_MAX = 50;
-                results = results.filter(p => p.distance <= RAYON_MAX);
+                // On trie par distance (pas de rayon, on affiche tout)
                 results.sort((a, b) => a.distance - b.distance);
-                console.log(`📍 ${results.length} pharmacies dans ${RAYON_MAX} km`);
+                console.log(`📍 ${results.length} pharmacies triées par distance.`);
                 return results;
             }
 
-            // Sinon, on applique le tri choisi
+            // ===== TRI PAR DÉFAUT (ordre du fichier) =====
             switch (sortOption) {
                 case 'az':
                     results.sort((a, b) => a.nom.localeCompare(b.nom));
@@ -810,7 +858,8 @@
                     results.sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0));
                     break;
                 default:
-                    results.sort((a, b) => a.nom.localeCompare(b.nom));
+                    // On ne trie PAS, on garde l'ordre du tableau d'origine (ordre des IDs)
+                    break;
             }
             return results;
         }
@@ -828,7 +877,7 @@
             const start = (currentPage - 1) * PER_PAGE;
             const pageItems = filtered.slice(start, start + PER_PAGE);
 
-            // Compteur de vues pour la popularité (incrémente à chaque affichage)
+            // Compteur de vues pour la popularité
             if (sortOption === 'popular' && pageItems.length > 0) {
                 const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
                 pageItems.forEach(p => {

@@ -46,3 +46,30 @@ Les listes de garde et les prix proviennent des publications de l'INAM
 lien officiel avec l'INAM.
 
 Contact : senouyohanes719@gmail.com · +228 96 11 97 15
+
+## L'icone
+
+`icone.svg` est l'icone de l'application redessinee en vectoriel : la croix de
+pharmacie dont la branche basse devient la pointe d'un repere de carte. Elle
+sert de favicon (le petit dessin dans l'onglet du navigateur) et de logo, en
+haut et en bas des deux pages.
+
+Si tu preferes ton fichier PNG d'origine, plus fidele au pixel : depose-le a la
+racine du depot sous le nom `icone.png`, puis remplace `icone.svg` par
+`icone.png` aux six endroits ou il apparait -- trois par page :
+
+    index.html            ligne <link rel="icon">, logo de l'en-tete, logo du pied
+    confidentialite.html  ligne <link rel="icon">, logo de l'en-tete, logo du pied
+
+Sur les deux lignes `<link rel="icon">`, change aussi `type="image/svg+xml"`
+en `type="image/png"`.
+
+## Pourquoi le nombre de pharmacies de garde n'est pas affiche ici
+
+Il change chaque semaine, et ce site est statique : il ne lit pas la base de
+donnees. Un chiffre hebdomadaire ecrit en dur serait faux au bout de huit
+jours -- et c'est precisement le chiffre sur lequel quelqu'un pourrait decider
+de prendre la route la nuit. Les quatre chiffres affiches (pharmacies,
+pharmacies localisees, medicaments, villes) bougent lentement, et la ligne
+sous le tableau dit a quelle date ils ont ete releves. Si tu les mets a jour,
+change cette date aussi.

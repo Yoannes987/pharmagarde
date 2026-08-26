@@ -14,18 +14,16 @@
 <meta property="og:url" content="https://yoannes987.github.io/pharmagarde/">
 
 <!-- ============================================================
-     IMAGE DE PARTAGE : depose un fichier partage.png (1200x630 px)
-     a la racine du depot, puis retire les deux commentaires autour de la
-     ligne ci-dessous.
+     IMAGE DE PARTAGE : c'est la vignette qui s'affiche quand on colle le
+     lien du site dans WhatsApp. Elle doit etre en PNG (le SVG n'est pas
+     accepte par WhatsApp ni Facebook) et faire 1200x630 px.
+
+     Depose un fichier partage.png a la racine du depot, puis retire les
+     deux commentaires autour de la ligne ci-dessous.
      ============================================================ -->
 <!-- <meta property="og:image" content="https://yoannes987.github.io/pharmagarde/partage.png"> -->
 
-<!-- ============================================================
-     FAVICON : depose icone.png (512x512, l'icone de l'APK) a la racine,
-     puis retire les commentaires autour de la ligne ci-dessous.
-     ============================================================ -->
-<!-- <link rel="icon" type="image/png" href="icone.png"> -->
-
+<link rel="icon" type="image/svg+xml" href="icone.svg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,19 +31,7 @@
 <header class="site">
   <div class="contenu">
     <a class="marque" href="./">
-      <!-- ============================================================
-           LOGO : quand tu auras l'icone, remplace tout le bloc <svg>
-           ci-dessous par cette seule ligne, et depose icone.png a la
-           racine du depot :
-
-           <img class="mark" src="icone.png" alt="PharmaGarde">
-
-           En attendant, ce dessin tient le role.
-           ============================================================ -->
-      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
-        <rect width="40" height="40" rx="10" fill="#15803D"/>
-        <path d="M17 10h6v7h7v6h-7v7h-6v-7h-7v-6h7z" fill="#fff"/>
-      </svg>
+      <img class="mark" src="icone.svg" alt="PharmaGarde">
       <strong>PharmaGarde</strong>
     </a>
     <nav class="site">
@@ -88,13 +74,29 @@
   </div>
 
   <div class="contenu">
+    <!-- ============================================================
+         Ces quatre chiffres sont ecrits a la main : le site est statique, il
+         ne lit pas la base de donnees. On n'y met donc QUE des chiffres qui
+         bougent lentement (une pharmacie ouvre, un medicament entre au
+         referentiel).
+
+         Le nombre de pharmacies de garde a ete volontairement RETIRE d'ici :
+         il change toutes les semaines. Affiche sur une page qui ne se met pas
+         a jour, il serait faux au bout de huit jours -- et c'est justement le
+         chiffre sur lequel quelqu'un pourrait prendre la route.
+         ============================================================ -->
     <div class="chiffres">
       <div><b>274</b><span>pharmacies référencées</span></div>
-      <div><b>51</b><span>de garde cette semaine</span></div>
+      <div><b>256</b><span>localisées sur la carte</span></div>
       <div><b>4&nbsp;811</b><span>médicaments et leurs prix</span></div>
       <div><b>23</b><span>villes couvertes</span></div>
     </div>
-    <p class="source">Chiffres relevés le 26 août 2026. Ils évoluent à chaque mise à jour automatique de la base.</p>
+    <p class="source">
+      Chiffres relevés le 26 août 2026. Le nombre de pharmacies de garde, lui,
+      change chaque semaine&nbsp;: il est affiché dans l'application, mise à
+      jour automatiquement, et non sur cette page — pour ne pas vous donner un
+      chiffre périmé.
+    </p>
   </div>
 
   <section id="fonctions">
@@ -107,7 +109,14 @@
 
       <div class="grille">
         <div class="carte">
-          <div class="pastille">🌙</div>
+          <div class="pastille">
+            <!-- liste / document officiel -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 4H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/>
+              <rect x="8" y="2.5" width="8" height="3.5" rx="1.5"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </div>
           <h3>La liste de garde officielle</h3>
           <p>
             Reprise telle que l'INAM la publie, avec la période « du … au … »,
@@ -117,7 +126,13 @@
         </div>
 
         <div class="carte">
-          <div class="pastille">📍</div>
+          <div class="pastille">
+            <!-- repere de carte -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
           <h3>La plus proche d'abord</h3>
           <p>
             Tri par distance et carte interactive. 256&nbsp;pharmacies sont
@@ -127,7 +142,13 @@
         </div>
 
         <div class="carte">
-          <div class="pastille">💊</div>
+          <div class="pastille">
+            <!-- gelule -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+              <path d="m8.5 8.5 7 7"/>
+            </svg>
+          </div>
           <h3>Prix et prise en charge</h3>
           <p>
             Le référentiel de l'INAM, avec le taux de remboursement et une
@@ -137,7 +158,13 @@
         </div>
 
         <div class="carte">
-          <div class="pastille">🤝</div>
+          <div class="pastille">
+            <!-- signalement -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m3 11 18-5v12L3 13v-2Z"/>
+              <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+            </svg>
+          </div>
           <h3>Disponibilités signalées</h3>
           <p>
             Les habitants indiquent où un médicament est en stock ou en
@@ -147,7 +174,12 @@
         </div>
 
         <div class="carte">
-          <div class="pastille">💬</div>
+          <div class="pastille">
+            <!-- bulle de discussion -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+            </svg>
+          </div>
           <h3>Afi, l'assistante</h3>
           <p>
             Posez votre question en français simple. Afi répond en s'appuyant
@@ -157,7 +189,14 @@
         </div>
 
         <div class="carte">
-          <div class="pastille">✈️</div>
+          <div class="pastille">
+            <!-- nuage barre : hors connexion -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m2 2 20 20"/>
+              <path d="M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2"/>
+              <path d="M21.5 16.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1"/>
+            </svg>
+          </div>
           <h3>Utilisable sans réseau</h3>
           <p>
             La dernière liste consultée reste sur le téléphone. Sans
@@ -180,7 +219,15 @@
 
       <div class="grille">
         <div class="carte">
-          <div class="pastille">🏛️</div>
+          <div class="pastille">
+            <!-- institution -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.5 21 8H3Z"/>
+              <path d="M3 11h18"/>
+              <path d="M6 11v7M10 11v7M14 11v7M18 11v7"/>
+              <path d="M3 21.5h18"/>
+            </svg>
+          </div>
           <h3>L'INAM</h3>
           <p>
             <strong>Institut National d'Assurance Maladie</strong> du Togo. Les
@@ -189,7 +236,15 @@
           </p>
         </div>
         <div class="carte">
-          <div class="pastille">🔄</div>
+          <div class="pastille">
+            <!-- mise a jour -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12a9 9 0 0 0-9-9 9.7 9.7 0 0 0-6.7 2.7L3 8"/>
+              <path d="M3 3v5h5"/>
+              <path d="M3 12a9 9 0 0 0 9 9 9.7 9.7 0 0 0 6.7-2.7L21 16"/>
+              <path d="M16 16h5v5"/>
+            </svg>
+          </div>
           <h3>Mise à jour automatique</h3>
           <p>
             Un robot relit les publications de l'INAM plusieurs fois par jour
@@ -198,7 +253,15 @@
           </p>
         </div>
         <div class="carte">
-          <div class="pastille">👥</div>
+          <div class="pastille">
+            <!-- les habitants -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.9"/>
+              <path d="M16 3.1a4 4 0 0 1 0 7.8"/>
+            </svg>
+          </div>
           <h3>Les utilisateurs</h3>
           <p>
             Les disponibilités en stock viennent des habitants, pas des
@@ -253,10 +316,7 @@
     <div class="cols">
       <div>
         <a class="marque" href="./">
-          <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
-            <rect width="40" height="40" rx="10" fill="#15803D"/>
-            <path d="M17 10h6v7h7v6h-7v7h-6v-7h-7v-6h7z" fill="#fff"/>
-          </svg>
+          <img class="mark" src="icone.svg" alt="PharmaGarde">
           <strong>PharmaGarde</strong>
         </a>
         <p class="baseline">

@@ -1,0 +1,183 @@
+/* PharmaGarde — feuille de style unique du site vitrine.
+   Une seule couleur de marque (le vert de l'app), un fond creme plutot que
+   blanc pur, des bordures fines au lieu d'ombres : l'objet est de faire
+   sérieux et lisible sur un telephone bas de gamme, pas d'impressionner. */
+
+:root {
+  --vert: #15803D;
+  --vert-fonce: #0F5C2C;
+  --vert-clair: #E8F3EC;
+  --encre: #14201A;
+  --encre-douce: #55635B;
+  --papier: #FBFAF7;
+  --bord: #E3E0D8;
+  --ambre-fond: #FFF8E1;
+  --ambre-bord: #FFE082;
+  --ambre-encre: #8D6E00;
+  --rayon: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--papier);
+  color: var(--encre);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.contenu { width: 100%; max-width: 1060px; margin: 0 auto; padding: 0 22px; }
+
+a { color: var(--vert-fonce); }
+
+/* ---------- En-tete ---------- */
+
+header.site {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(251, 250, 247, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--bord);
+}
+header.site .contenu {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 66px; gap: 18px;
+}
+.marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--encre); }
+.marque .mark { width: 34px; height: 34px; border-radius: 9px; display: block; }
+.marque strong { font-size: 18px; letter-spacing: -0.3px; }
+nav.site { display: flex; gap: 22px; align-items: center; }
+nav.site a { color: var(--encre-douce); text-decoration: none; font-size: 15px; }
+nav.site a:hover { color: var(--vert-fonce); }
+@media (max-width: 720px) { nav.site { display: none; } }
+
+/* ---------- Boutons ---------- */
+
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--vert); color: #fff; text-decoration: none;
+  padding: 13px 24px; border-radius: 999px;
+  font-weight: 600; font-size: 16px; border: 0; cursor: pointer;
+  transition: background .15s ease;
+}
+.btn:hover { background: var(--vert-fonce); }
+.btn.fantome { background: transparent; color: var(--vert-fonce); border: 1.5px solid var(--bord); }
+.btn.fantome:hover { background: var(--vert-clair); border-color: var(--vert); }
+.btn[aria-disabled="true"] { background: #9AA39D; cursor: default; }
+
+/* ---------- Hero ---------- */
+
+.hero { padding: 76px 0 56px; }
+.hero h1 {
+  font-size: clamp(34px, 6vw, 55px);
+  line-height: 1.08; letter-spacing: -1.4px; font-weight: 800;
+  max-width: 17ch;
+}
+.hero h1 em { font-style: normal; color: var(--vert); }
+.hero .accroche {
+  margin-top: 22px; max-width: 56ch;
+  font-size: clamp(17px, 2.2vw, 20px); color: var(--encre-douce);
+}
+.hero .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.hero .petit { margin-top: 16px; font-size: 14.5px; color: var(--encre-douce); }
+
+/* ---------- Chiffres ---------- */
+
+.chiffres {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--bord);
+  border: 1px solid var(--bord); border-radius: var(--rayon);
+  overflow: hidden; margin: 12px 0 8px;
+}
+.chiffres div { background: #fff; padding: 22px 18px; }
+.chiffres b { display: block; font-size: clamp(24px, 3.6vw, 34px); font-weight: 800; color: var(--vert); letter-spacing: -1px; }
+.chiffres span { font-size: 13.5px; color: var(--encre-douce); }
+.chiffres + .source { font-size: 12.5px; color: var(--encre-douce); margin-bottom: 56px; }
+@media (max-width: 620px) { .chiffres { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- Sections ---------- */
+
+section { padding: 54px 0; border-top: 1px solid var(--bord); }
+section h2 {
+  font-size: clamp(25px, 3.6vw, 34px); letter-spacing: -0.8px;
+  font-weight: 800; max-width: 24ch;
+}
+section h2 + .intro { margin-top: 12px; max-width: 62ch; color: var(--encre-douce); }
+
+.grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 34px; }
+@media (max-width: 900px) { .grille { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .grille { grid-template-columns: 1fr; } }
+
+.carte {
+  background: #fff; border: 1px solid var(--bord);
+  border-radius: var(--rayon); padding: 22px;
+}
+.carte .pastille {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--vert-clair); color: var(--vert-fonce);
+  display: grid; place-items: center; font-size: 19px; margin-bottom: 13px;
+}
+.carte h3 { font-size: 17.5px; font-weight: 700; }
+.carte p { margin-top: 7px; font-size: 15px; color: var(--encre-douce); }
+
+/* ---------- Encadre d'honnetete ---------- */
+
+.avertissement {
+  background: var(--ambre-fond); border: 1px solid var(--ambre-bord);
+  border-radius: var(--rayon); padding: 24px; margin-top: 26px;
+}
+.avertissement h3 { color: var(--ambre-encre); font-size: 17.5px; }
+.avertissement p { color: var(--ambre-encre); font-size: 15px; margin-top: 9px; }
+.avertissement ul { color: var(--ambre-encre); font-size: 15px; margin: 9px 0 0 20px; }
+.avertissement li { margin-top: 5px; }
+
+/* ---------- Telechargement ---------- */
+
+.telecharger {
+  background: var(--vert); color: #fff;
+  border-radius: 20px; padding: 44px 34px; margin: 54px 0;
+  text-align: center;
+}
+.telecharger h2 { color: #fff; margin: 0 auto; max-width: 22ch; }
+.telecharger p { color: rgba(255,255,255,.88); margin: 14px auto 26px; max-width: 52ch; }
+.telecharger .btn { background: #fff; color: var(--vert-fonce); }
+.telecharger .btn:hover { background: #F0EFEA; }
+.telecharger .btn[aria-disabled="true"] { background: rgba(255,255,255,.28); color: #fff; }
+
+/* ---------- Page de texte (confidentialite) ---------- */
+
+.texte { padding: 48px 0 20px; max-width: 74ch; }
+.texte h1 { font-size: clamp(28px, 4.4vw, 40px); letter-spacing: -1px; font-weight: 800; }
+.texte .maj { color: var(--encre-douce); font-size: 14.5px; margin-top: 8px; }
+.texte h2 { font-size: 21px; font-weight: 700; margin-top: 38px; }
+.texte h3 { font-size: 17px; font-weight: 700; margin-top: 24px; }
+.texte p, .texte li { color: #2C3A32; margin-top: 11px; font-size: 16.5px; }
+.texte ul { margin-left: 21px; }
+.texte .resume {
+  background: var(--vert-clair); border: 1px solid #C9E2D2;
+  border-radius: var(--rayon); padding: 22px; margin-top: 26px;
+}
+.texte .resume p { margin-top: 8px; }
+.texte .resume p:first-child { margin-top: 0; }
+
+/* ---------- Pied ---------- */
+
+footer.site { border-top: 1px solid var(--bord); padding: 44px 0 56px; margin-top: 34px; }
+footer.site .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; }
+@media (max-width: 720px) { footer.site .cols { grid-template-columns: 1fr; } }
+footer.site h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .8px; color: var(--encre-douce); font-weight: 700; }
+footer.site ul { list-style: none; margin-top: 12px; }
+footer.site li { margin-top: 8px; font-size: 15.5px; }
+footer.site a { color: var(--encre); text-decoration: none; }
+footer.site a:hover { color: var(--vert-fonce); text-decoration: underline; }
+footer.site .mentions {
+  margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--bord);
+  font-size: 13.5px; color: var(--encre-douce);
+}
+footer.site .mentions p { margin-top: 7px; }
+
+/* Accroche sous le logo dans le pied de page. */
+footer.site .baseline { margin-top: 12px; color: var(--encre-douce); font-size: 15px; max-width: 34ch; }

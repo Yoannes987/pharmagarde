@@ -1,1046 +1,300 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>PharmaFinder Togo - Trouvez une pharmacie facilement</title>
-    <style>
-        /* ==== RESET ==== */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root {
-            --primary: #0a7e3c;
-            --primary-dark: #06542a;
-            --primary-light: #e8f5ee;
-            --gray-50: #f7faf7;
-            --gray-100: #eef3ee;
-            --gray-200: #dce4dc;
-            --gray-300: #b8c8b8;
-            --gray-600: #5a6e5a;
-            --gray-800: #1c2a1c;
-            --shadow: 0 2px 16px rgba(0,20,0,0.06);
-            --radius: 14px;
-            --radius-sm: 8px;
-            --orange: #f39c12;
-            --orange-dark: #e67e22;
-        }
-        html { scroll-behavior:smooth; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--gray-50);
-            color: var(--gray-800);
-            padding:18px 14px 130px 14px;
-            min-height:100vh;
-            -webkit-font-smoothing:antialiased;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PharmaGarde — Pharmacies de garde et prix des médicaments au Togo</title>
+<meta name="description" content="Trouvez la pharmacie de garde la plus proche au Togo, les prix du référentiel INAM et la disponibilité des médicaments. Gratuit, sans compte, fonctionne hors connexion.">
+<meta name="theme-color" content="#15803D">
 
-        /* ===== HEADER ===== */
-        .app-header {
-            text-align:center;
-            padding-bottom:14px;
-            border-bottom:1px solid var(--gray-200);
-            margin-bottom:8px;
-        }
-        .app-header h1 { font-size:26px; font-weight:700; letter-spacing:-0.5px; color:var(--primary-dark); }
-        .app-header h1 span { font-weight:300; color:var(--gray-600); }
-        .app-header .sub { font-size:13px; color:var(--gray-600); margin-top:2px; letter-spacing:0.3px; }
+<!-- Partage sur WhatsApp et Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="PharmaGarde — Pharmacies de garde au Togo">
+<meta property="og:description" content="Les pharmacies de garde, les prix officiels et la disponibilité des médicaments, dans une seule application.">
+<meta property="og:url" content="https://yoannes987.github.io/pharmagarde/">
 
-        /* ===== NAVIGATION SWITCH ===== */
-        .nav-switch {
-            display:flex;
-            justify-content:center;
-            gap:6px;
-            margin-top:12px;
-            padding-top:12px;
-            border-top:1px solid var(--gray-200);
-        }
-        .nav-btn {
-            padding:8px 20px;
-            border-radius:30px;
-            font-size:14px;
-            font-weight:600;
-            text-decoration:none;
-            color:var(--gray-600);
-            background:var(--gray-100);
-            transition:all 0.25s ease;
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-            border:none;
-            cursor:pointer;
-        }
-        .nav-btn:hover { background:var(--gray-200); transform:translateY(-1px); }
-        .nav-btn.active { background:var(--primary); color:#fff; box-shadow:0 2px 12px rgba(10,126,60,0.3); }
-        .nav-btn.active:hover { background:var(--primary-dark); transform:translateY(-1px); }
-        .nav-btn:active { transform:scale(0.96); }
+<!-- ============================================================
+     IMAGE DE PARTAGE : depose un fichier partage.png (1200x630 px)
+     a la racine du depot, puis retire les deux commentaires autour de la
+     ligne ci-dessous.
+     ============================================================ -->
+<!-- <meta property="og:image" content="https://yoannes987.github.io/pharmagarde/partage.png"> -->
 
-        /* ===== FILTRES DISCRETS ===== */
-        .filters {
-            background:#fff;
-            border-radius:var(--radius);
-            padding:12px 14px;
-            box-shadow:var(--shadow);
-            margin-bottom:12px;
-        }
-        .filters-grid {
-            display:flex;
-            flex-direction:column;
-            gap:8px;
-        }
-        .filter-row {
-            display:flex;
-            flex-wrap:wrap;
-            align-items:center;
-            gap:6px;
-        }
-        .filter-item {
-            display:flex;
-            align-items:center;
-            flex:1 1 140px;
-            min-width:120px;
-            background:var(--gray-50);
-            border-radius:30px;
-            border:1.5px solid var(--gray-200);
-            transition:border 0.2s, background 0.2s;
-            overflow:hidden;
-        }
-        .filter-item:focus-within { border-color:var(--primary); background:#fff; }
-        .filter-icon {
-            padding:0 0 0 10px;
-            font-size:14px;
-            color:var(--gray-300);
-            flex-shrink:0;
-        }
-        .filter-item input, .filter-item select {
-            width:100%;
-            padding:8px 10px;
-            border:none;
-            background:transparent;
-            font-size:14px;
-            color:var(--gray-800);
-            outline:none;
-            -webkit-appearance:none;
-            appearance:none;
-        }
-        .filter-item select {
-            cursor:pointer;
-            padding-right:24px;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat:no-repeat;
-            background-position:right 10px center;
-        }
-        .filter-item input::placeholder { color:var(--gray-300); font-size:13px; }
+<!-- ============================================================
+     FAVICON : depose icone.png (512x512, l'icone de l'APK) a la racine,
+     puis retire les commentaires autour de la ligne ci-dessous.
+     ============================================================ -->
+<!-- <link rel="icon" type="image/png" href="icone.png"> -->
 
-        .row-main .filter-item { flex:1; }
-        .row-main .filter-item.gps-item {
-            flex:0 0 auto;
-            min-width:auto;
-            border:none;
-            background:transparent;
-        }
-
-        .btn-gps {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            gap:4px;
-            padding:8px 14px;
-            border-radius:30px;
-            border:none;
-            background:var(--orange);
-            color:#fff;
-            font-size:13px;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.2s;
-            font-family:inherit;
-            box-shadow:0 2px 6px rgba(243,156,18,0.3);
-            line-height:1;
-            min-height:38px;
-            white-space:nowrap;
-        }
-        .btn-gps:hover { background:var(--orange-dark); transform:translateY(-1px); }
-        .btn-gps:active { transform:scale(0.95); }
-        .btn-gps.active { background:#27ae60; box-shadow:0 2px 8px rgba(39,174,96,0.3); }
-        .btn-gps.active:hover { background:#2ecc71; }
-        .btn-gps.loading { opacity:0.7; cursor:wait; }
-        .gps-icon { font-size:14px; }
-        .gps-text { font-size:12px; }
-
-        .toggle-garde {
-            display:flex;
-            align-items:center;
-            gap:6px;
-            cursor:pointer;
-            user-select:none;
-            font-size:13px;
-            font-weight:500;
-            color:var(--gray-600);
-        }
-        .toggle-garde input { display:none; }
-        .toggle-slider {
-            width:32px;
-            height:18px;
-            background:var(--gray-300);
-            border-radius:30px;
-            position:relative;
-            transition:background 0.25s;
-            flex-shrink:0;
-        }
-        .toggle-slider::after {
-            content:"";
-            position:absolute;
-            top:2px;
-            left:2px;
-            width:14px;
-            height:14px;
-            background:#fff;
-            border-radius:50%;
-            transition:transform 0.25s;
-            box-shadow:0 1px 4px rgba(0,0,0,0.15);
-        }
-        .toggle-garde input:checked + .toggle-slider { background:var(--primary); }
-        .toggle-garde input:checked + .toggle-slider::after { transform:translateX(14px); }
-        .toggle-label { font-size:13px; }
-
-        .stats {
-            font-size:12px;
-            color:var(--gray-600);
-            text-align:right;
-            font-weight:500;
-            flex-shrink:0;
-        }
-
-        #sortFilter {
-            font-family:inherit;
-            padding:6px 24px 6px 10px;
-            border-radius:30px;
-            border:1.5px solid var(--gray-200);
-            background:var(--gray-50);
-            font-size:12px;
-            font-weight:500;
-            color:var(--gray-800);
-            outline:none;
-            cursor:pointer;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6e5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat:no-repeat;
-            background-position:right 10px center;
-            -webkit-appearance:none;
-            appearance:none;
-        }
-        #sortFilter:focus {
-            border-color:var(--primary);
-            background:#fff;
-        }
-
-        .services-row {
-            border-top:1px solid var(--gray-200);
-            padding-top:8px;
-            margin-top:4px;
-        }
-        .service-filters {
-            display:flex;
-            flex-wrap:wrap;
-            gap:6px;
-        }
-        .service-btn {
-            padding:3px 10px;
-            border-radius:30px;
-            border:1.5px solid var(--gray-300);
-            background:#fff;
-            color:var(--gray-600);
-            font-size:11px;
-            font-weight:500;
-            cursor:pointer;
-            transition:0.15s;
-            font-family:inherit;
-        }
-        .service-btn:hover { background:var(--gray-100); }
-        .service-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
-
-        /* ===== BANDEAU GARDE ===== */
-        .garde-banner {
-            background:#fefbf5;
-            border:1px solid #c07a2a;
-            border-radius:var(--radius-sm);
-            padding:8px 12px;
-            margin-bottom:10px;
-            text-align:center;
-            font-size:13px;
-            color:#7a5a1a;
-            display:none;
-        }
-        .garde-banner.active { display:block; }
-        .garde-banner strong { color:#c07a2a; }
-
-        /* ===== LISTE ===== */
-        #pharmacyList { display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
-        .card {
-            background:#fff;
-            border-radius:var(--radius);
-            padding:16px 16px 14px 16px;
-            box-shadow:var(--shadow);
-            border-left:4px solid var(--primary);
-            transition:transform 0.12s;
-        }
-        .card.garde { border-left-color:#c07a2a; background:#fefbf5; }
-        .card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
-        .card-name { font-size:16px; font-weight:600; color:var(--gray-800); line-height:1.3; }
-        .card-badge {
-            font-size:10px;
-            font-weight:600;
-            background:#c07a2a;
-            color:#fff;
-            padding:2px 12px;
-            border-radius:30px;
-            white-space:nowrap;
-            flex-shrink:0;
-            margin-top:2px;
-            letter-spacing:0.3px;
-            text-transform:uppercase;
-        }
-        .card-zone { font-size:13px; color:var(--gray-600); margin:3px 0 5px 0; font-weight:500; }
-        .card-location { font-size:13px; color:#5a6e5a; line-height:1.4; margin-bottom:6px; }
-        .card-distance { font-size:12px; color:var(--gray-600); margin-top:2px; margin-bottom:4px; }
-        .card-services { display:flex; flex-wrap:wrap; gap:4px 8px; margin-bottom:10px; }
-        .card-services .service-tag { font-size:11px; background:var(--primary-light); color:var(--primary-dark); padding:2px 10px; border-radius:30px; font-weight:500; }
-        .card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:2px; }
-        .card-actions a {
-            padding:6px 16px;
-            border-radius:30px;
-            font-size:13px;
-            font-weight:500;
-            text-decoration:none;
-            display:inline-flex;
-            align-items:center;
-            gap:4px;
-            transition:background 0.15s, transform 0.1s;
-            border:none;
-            cursor:pointer;
-        }
-        .card-actions a:active { transform:scale(0.97); }
-        .btn-call { background:var(--primary); color:#fff; }
-        .btn-call:hover { background:var(--primary-dark); }
-        .btn-map { background:var(--gray-100); color:var(--gray-800); }
-        .btn-map:hover { background:var(--gray-200); }
-
-        /* ===== PAGINATION ===== */
-        .pagination {
-            display:flex;
-            flex-wrap:wrap;
-            justify-content:center;
-            gap:5px;
-            margin:4px 0 6px 0;
-        }
-        .pagination button {
-            padding:6px 13px;
-            border-radius:var(--radius-sm);
-            border:1.5px solid var(--gray-200);
-            background:#fff;
-            color:var(--gray-800);
-            font-size:14px;
-            font-weight:500;
-            cursor:pointer;
-            transition:0.15s;
-            min-width:38px;
-            font-family:inherit;
-        }
-        .pagination button.active { background:var(--primary); border-color:var(--primary); color:#fff; }
-        .pagination button:hover:not(.active):not(:disabled) { background:var(--gray-100); }
-        .pagination button:disabled { opacity:0.3; cursor:default; }
-        .pagination-ellipsis { display:flex; align-items:center; padding:0 4px; color:var(--gray-300); font-weight:500; }
-
-        /* ===== CHATBOT ===== */
-        .chat-fab {
-            position:fixed;
-            bottom:22px;
-            right:18px;
-            width:54px;
-            height:54px;
-            border-radius:50%;
-            background:var(--primary);
-            color:#fff;
-            border:none;
-            box-shadow:0 4px 20px rgba(10,126,60,0.35);
-            cursor:pointer;
-            z-index:1000;
-            transition:transform 0.2s;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:22px;
-            line-height:1;
-            padding:0;
-        }
-        .chat-fab:hover { transform:scale(1.06); }
-        .chat-fab:active { transform:scale(0.94); }
-        .chat-window {
-            position:fixed;
-            bottom:90px;
-            right:14px;
-            width:350px;
-            max-width:92vw;
-            height:460px;
-            max-height:68vh;
-            background:#fff;
-            border-radius:var(--radius);
-            box-shadow:0 8px 48px rgba(0,0,0,0.16);
-            display:flex;
-            flex-direction:column;
-            overflow:hidden;
-            z-index:999;
-            opacity:0;
-            transform:scale(0.92) translateY(12px);
-            pointer-events:none;
-            transition:opacity 0.25s, transform 0.25s;
-            border:1px solid var(--gray-200);
-        }
-        .chat-window.open { opacity:1; transform:scale(1) translateY(0); pointer-events:auto; }
-        .chat-window.hidden { display:none; }
-        .chat-header {
-            background:var(--primary);
-            color:#fff;
-            padding:12px 16px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            font-weight:600;
-            font-size:15px;
-            flex-shrink:0;
-        }
-        .chat-header button { background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:0.75; padding:0 4px; transition:opacity 0.15s; display:flex; align-items:center; justify-content:center; }
-        .chat-header button:hover { opacity:1; }
-        .chat-messages {
-            flex:1;
-            padding:12px 14px;
-            overflow-y:auto;
-            display:flex;
-            flex-direction:column;
-            gap:6px;
-            background:#f7faf7;
-        }
-        .chat-messages .msg {
-            max-width:88%;
-            padding:9px 14px;
-            border-radius:14px;
-            font-size:14px;
-            line-height:1.5;
-            white-space:pre-wrap;
-            word-break:break-word;
-        }
-        .chat-messages .msg-bot { background:var(--primary-light); color:var(--gray-800); align-self:flex-start; border-bottom-left-radius:4px; }
-        .chat-messages .msg-user { background:var(--primary); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; }
-        .chat-messages .msg-suggestion {
-            background:#fff;
-            color:var(--primary);
-            border:1.5px solid var(--primary);
-            align-self:flex-start;
-            cursor:pointer;
-            font-size:13px;
-            padding:5px 14px;
-            border-radius:30px;
-            transition:background 0.15s, transform 0.1s;
-            font-weight:500;
-        }
-        .chat-messages .msg-suggestion:hover { background:var(--primary-light); }
-        .chat-messages .msg-suggestion:active { transform:scale(0.96); }
-        .suggestions-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
-        .suggestions-grid .msg-suggestion { flex:0 0 auto; }
-        .chat-input-area {
-            display:flex;
-            border-top:1px solid var(--gray-200);
-            padding:8px 12px;
-            background:#fff;
-            gap:8px;
-            flex-shrink:0;
-        }
-        .chat-input-area input {
-            flex:1;
-            border:1.5px solid var(--gray-200);
-            padding:9px 14px;
-            border-radius:30px;
-            font-size:14px;
-            outline:none;
-            background:var(--gray-50);
-            transition:border 0.2s;
-        }
-        .chat-input-area input:focus { border-color:var(--primary); }
-        .chat-input-area button {
-            background:var(--primary);
-            border:none;
-            color:#fff;
-            width:42px;
-            height:42px;
-            border-radius:50%;
-            font-size:17px;
-            cursor:pointer;
-            transition:background 0.15s, transform 0.1s;
-            flex-shrink:0;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:0;
-            line-height:1;
-        }
-        .chat-input-area button:hover { background:var(--primary-dark); }
-        .chat-input-area button:active { transform:scale(0.93); }
-        .chat-messages::-webkit-scrollbar { width:4px; }
-        .chat-messages::-webkit-scrollbar-track { background:transparent; }
-        .chat-messages::-webkit-scrollbar-thumb { background:var(--gray-300); border-radius:10px; }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state { text-align:center; padding:48px 16px; color:var(--gray-600); font-size:15px; line-height:1.6; }
-        .empty-state span { font-size:32px; display:block; margin-bottom:10px; }
-
-        /* ===== FOOTER ===== */
-        .app-footer {
-            text-align:center;
-            font-size:11px;
-            color:var(--gray-300);
-            margin-top:30px;
-            padding-top:14px;
-            border-top:1px solid var(--gray-200);
-            line-height:1.6;
-        }
-        .app-footer a { color:var(--gray-600); text-decoration:none; }
-
-        /* ===== RESPONSIVE ===== */
-        @media (min-width:600px) {
-            body { padding:28px 40px 130px 40px; max-width:740px; margin:0 auto; }
-            .chat-window { width:400px; height:500px; right:24px; bottom:98px; }
-            .chat-fab { bottom:28px; right:28px; }
-        }
-        @media (max-width:500px) {
-            .filter-item { min-width:100%; }
-            .row-main .filter-item.gps-item { flex:1; min-width:auto; }
-            .btn-gps { padding:6px 12px; font-size:12px; min-height:34px; width:100%; justify-content:center; }
-            .chat-window { right:8px; width:94vw; height:440px; bottom:82px; }
-            .chat-fab { width:50px; height:50px; font-size:20px; right:14px; bottom:18px; }
-            .nav-btn { padding:6px 14px; font-size:13px; }
-            #sortFilter { font-size:11px; padding:4px 20px 4px 8px; }
-        }
-    </style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header class="app-header">
-        <h1>PHARMA<span>_FINDER</span></h1>
-        <p class="sub">Togo • Trouvez une pharmacie facilement</p>
-        <div class="nav-switch">
-            <a href="index.html" class="nav-btn active">🏥 Pharmacies</a>
-            <a href="medicaments.html" class="nav-btn">💊 Médicaments</a>
-        </div>
-    </header>
+<header class="site">
+  <div class="contenu">
+    <a class="marque" href="./">
+      <!-- ============================================================
+           LOGO : quand tu auras l'icone, remplace tout le bloc <svg>
+           ci-dessous par cette seule ligne, et depose icone.png a la
+           racine du depot :
 
-    <!-- BANDEAU GARDE -->
-    <div class="garde-banner" id="gardeBanner">
-        🛡️ <strong>Pharmacies de garde</strong> — Semaine <span id="gardeSemaine">...</span>
+           <img class="mark" src="icone.png" alt="PharmaGarde">
+
+           En attendant, ce dessin tient le role.
+           ============================================================ -->
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="10" fill="#15803D"/>
+        <path d="M17 10h6v7h7v6h-7v7h-6v-7h-7v-6h7z" fill="#fff"/>
+      </svg>
+      <strong>PharmaGarde</strong>
+    </a>
+    <nav class="site">
+      <a href="#fonctions">Ce que ça fait</a>
+      <a href="#donnees">Nos sources</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="#telecharger">Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div class="contenu">
+    <div class="hero">
+      <h1>Quelle pharmacie est <em>de garde</em>, maintenant&nbsp;?</h1>
+      <p class="accroche">
+        PharmaGarde réunit les listes de garde publiées par l'INAM, les prix du
+        référentiel officiel et les disponibilités signalées par les habitants.
+        Une seule application, pour Lomé et 22 autres villes du Togo.
+      </p>
+      <div class="actions">
+        <!-- ============================================================
+             ATTENTION : METS LE LIEN DU PLAY STORE ICI
+
+             Quand l'app sera en ligne, remplace la ligne <span> ci-dessous
+             par ceci :
+
+             <a class="btn" href="https://play.google.com/store/apps/details?id=com.pharmagarde.app">Télécharger sur Google Play</a>
+
+             Le meme changement est a faire une seconde fois plus bas, dans
+             la section verte « Telecharger » : cherche le mot ATTENTION.
+             ============================================================ -->
+        <span class="btn" aria-disabled="true">Bientôt sur Google&nbsp;Play</span>
+
+        <a class="btn fantome" href="#fonctions">Voir ce que ça fait</a>
+      </div>
+      <p class="petit">Gratuit · Sans compte, sans numéro de téléphone · Consultable hors connexion</p>
+    </div>
+  </div>
+
+  <div class="contenu">
+    <div class="chiffres">
+      <div><b>274</b><span>pharmacies référencées</span></div>
+      <div><b>51</b><span>de garde cette semaine</span></div>
+      <div><b>4&nbsp;811</b><span>médicaments et leurs prix</span></div>
+      <div><b>23</b><span>villes couvertes</span></div>
+    </div>
+    <p class="source">Chiffres relevés le 26 août 2026. Ils évoluent à chaque mise à jour automatique de la base.</p>
+  </div>
+
+  <section id="fonctions">
+    <div class="contenu">
+      <h2>Ce que l'application fait</h2>
+      <p class="intro">
+        Rien de compliqué&nbsp;: répondre vite à une question qu'on se pose
+        souvent dans l'urgence, et ne jamais faire semblant de savoir.
+      </p>
+
+      <div class="grille">
+        <div class="carte">
+          <div class="pastille">🌙</div>
+          <h3>La liste de garde officielle</h3>
+          <p>
+            Reprise telle que l'INAM la publie, avec la période « du … au … »,
+            les téléphones et les emplacements. Si la période est passée,
+            l'application le dit au lieu de vous laisser partir pour rien.
+          </p>
+        </div>
+
+        <div class="carte">
+          <div class="pastille">📍</div>
+          <h3>La plus proche d'abord</h3>
+          <p>
+            Tri par distance et carte interactive. 256&nbsp;pharmacies sont
+            positionnées précisément&nbsp;; pour les autres, l'application
+            affiche le quartier plutôt qu'un point inventé.
+          </p>
+        </div>
+
+        <div class="carte">
+          <div class="pastille">💊</div>
+          <h3>Prix et prise en charge</h3>
+          <p>
+            Le référentiel de l'INAM, avec le taux de remboursement et une
+            estimation de ce qui reste à votre charge — pas seulement le prix
+            public, qui fait croire à une dépense bien plus grande.
+          </p>
+        </div>
+
+        <div class="carte">
+          <div class="pastille">🤝</div>
+          <h3>Disponibilités signalées</h3>
+          <p>
+            Les habitants indiquent où un médicament est en stock ou en
+            rupture, et peuvent confirmer ou contester les signalements des
+            autres. Chaque signalement affiche son âge.
+          </p>
+        </div>
+
+        <div class="carte">
+          <div class="pastille">💬</div>
+          <h3>Afi, l'assistante</h3>
+          <p>
+            Posez votre question en français simple. Afi répond en s'appuyant
+            sur la base de données réelle, pas sur son imagination, et refuse
+            poliment ce qui sort de son domaine.
+          </p>
+        </div>
+
+        <div class="carte">
+          <div class="pastille">✈️</div>
+          <h3>Utilisable sans réseau</h3>
+          <p>
+            La dernière liste consultée reste sur le téléphone. Sans
+            connexion, l'application l'affiche en précisant sa date — jamais
+            en la faisant passer pour celle du jour.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="donnees">
+    <div class="contenu">
+      <h2>D'où viennent les informations</h2>
+      <p class="intro">
+        Une application de santé qui se trompe fait plus de mal qu'une
+        application qui manque. Voici donc précisément ce que nous savons, et
+        ce que nous ne savons pas.
+      </p>
+
+      <div class="grille">
+        <div class="carte">
+          <div class="pastille">🏛️</div>
+          <h3>L'INAM</h3>
+          <p>
+            <strong>Institut National d'Assurance Maladie</strong> du Togo. Les
+            listes de garde et les prix des médicaments en proviennent, repris
+            tels qu'ils sont publiés, sans retouche.
+          </p>
+        </div>
+        <div class="carte">
+          <div class="pastille">🔄</div>
+          <h3>Mise à jour automatique</h3>
+          <p>
+            Un robot relit les publications de l'INAM plusieurs fois par jour
+            en début de semaine, quand les nouvelles gardes paraissent, et
+            relève le référentiel des médicaments chaque mois.
+          </p>
+        </div>
+        <div class="carte">
+          <div class="pastille">👥</div>
+          <h3>Les utilisateurs</h3>
+          <p>
+            Les disponibilités en stock viennent des habitants, pas des
+            pharmacies elles-mêmes. C'est précieux et c'est faillible&nbsp;:
+            l'application ne le cache pas.
+          </p>
+        </div>
+      </div>
+
+      <div class="avertissement">
+        <h3>À lire avant de vous déplacer</h3>
+        <ul>
+          <li>Les <strong>gardes peuvent changer</strong> après leur publication. Appelez la pharmacie avant de prendre la route.</li>
+          <li>Les <strong>prix sont indicatifs</strong>. Le montant réel, et ce que votre assurance prend en charge, se confirment au comptoir.</li>
+          <li>Les <strong>disponibilités sont des signalements d'utilisateurs</strong>, pas des stocks vérifiés en temps réel.</li>
+          <li>PharmaGarde <strong>ne donne aucun diagnostic</strong> et ne remplace ni un médecin ni un pharmacien. En cas d'urgence&nbsp;: <strong>112</strong> ou <strong>118</strong>.</li>
+        </ul>
+        <p>
+          Ce site et cette application sont un projet indépendant. Ils ne sont
+          ni édités ni validés par l'INAM.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="contenu">
+    <div class="telecharger" id="telecharger">
+      <h2>Bientôt disponible</h2>
+      <p>
+        PharmaGarde est en phase de test avant publication sur Google Play.
+        L'application est gratuite, ne demande aucun compte et ne contient
+        aucune publicité.
+      </p>
+      <!-- ============================================================
+           ATTENTION : SECOND ENDROIT, METS LE LIEN DU PLAY STORE ICI
+
+           Remplace la ligne <span> ci-dessous par ceci :
+
+           <a class="btn" href="https://play.google.com/store/apps/details?id=com.pharmagarde.app">Télécharger sur Google Play</a>
+
+           Et remplace le titre « Bientot disponible » juste au-dessus par
+           « Telechargez PharmaGarde ».
+           ============================================================ -->
+      <span class="btn" aria-disabled="true">Bientôt sur Google&nbsp;Play</span>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="contenu">
+    <div class="cols">
+      <div>
+        <a class="marque" href="./">
+          <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+            <rect width="40" height="40" rx="10" fill="#15803D"/>
+            <path d="M17 10h6v7h7v6h-7v7h-6v-7h-7v-6h7z" fill="#fff"/>
+          </svg>
+          <strong>PharmaGarde</strong>
+        </a>
+        <p class="baseline">
+          Les pharmacies de garde et le prix des médicaments au Togo, dans la
+          poche.
+        </p>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:senouyohanes719@gmail.com">senouyohanes719@gmail.com</a></li>
+          <li><a href="tel:+22896119715">+228 96 11 97 15</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Le projet</h4>
+        <ul>
+          <li><a href="confidentialite.html">Politique de confidentialité</a></li>
+          <li><a href="#donnees">Nos sources</a></li>
+          <li><a href="#fonctions">Fonctionnalités</a></li>
+        </ul>
+      </div>
     </div>
 
-    <!-- FILTRES DISCRETS -->
-    <section class="filters">
-        <div class="filters-grid">
-            <div class="filter-row row-main">
-                <div class="filter-item search-item">
-                    <span class="filter-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="Pharmacie...">
-                </div>
-                <div class="filter-item zone-item">
-                    <span class="filter-icon">📍</span>
-                    <select id="zoneFilter">
-                        <option value="all">Toutes zones</option>
-                    </select>
-                </div>
-                <div class="filter-item gps-item">
-                    <button id="geoBtn" class="btn-gps" type="button">
-                        <span class="gps-icon">📍</span>
-                        <span class="gps-text">Près de moi</span>
-                    </button>
-                </div>
-            </div>
-            <div class="filter-row" style="justify-content:space-between;flex-wrap:wrap;gap:6px;">
-                <label class="toggle-garde">
-                    <input type="checkbox" id="gardeToggle">
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-label">Garde</span>
-                </label>
-                <select id="sortFilter">
-                    <option value="default">Par défaut (ordre fichier)</option>
-                    <option value="az">De A à Z</option>
-                    <option value="za">De Z à A</option>
-                    <option value="recent">Plus récent</option>
-                    <option value="popular">Plus populaire</option>
-                </select>
-                <span class="stats" id="stats">Chargement...</span>
-            </div>
-            <div class="filter-row services-row">
-                <div class="service-filters" id="serviceFilters"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LISTE -->
-    <main id="pharmacyList"></main>
-    <div class="pagination" id="pagination"></div>
-
-    <!-- CHATBOT -->
-    <button class="chat-fab" id="chatToggle" aria-label="Ouvrir le chat">💬</button>
-    <div class="chat-window hidden" id="chatWindow">
-        <div class="chat-header">
-            <span>Assistant Pharma</span>
-            <button id="chatClose">✕</button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="msg msg-bot">Bonjour. Je suis votre assistant pour trouver une pharmacie au Togo.</div>
-            <div class="suggestions-grid" id="suggestionContainer">
-                <div class="msg msg-suggestion" data-query="garde">🛡️ Pharmacies de garde</div>
-                <div class="msg msg-suggestion" data-query="Lomé">📍 Lomé</div>
-                <div class="msg msg-suggestion" data-query="Kara">📍 Kara</div>
-                <div class="msg msg-suggestion" data-query="Kpalimé">📍 Kpalimé</div>
-                <div class="msg msg-suggestion" data-query="Sokodé">📍 Sokodé</div>
-                <div class="msg msg-suggestion" data-query="Atakpamé">📍 Atakpamé</div>
-                <div class="msg msg-suggestion" data-query="Tsévié">📍 Tsévié</div>
-                <div class="msg msg-suggestion" data-query="Dapaong">📍 Dapaong</div>
-            </div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Écrivez votre question...">
-            <button id="chatSend">➤</button>
-        </div>
+    <div class="mentions">
+      <p>© 2026 PharmaGarde · Togo</p>
+      <p>
+        Données de garde et prix issus de l'<strong>INAM</strong> (Institut
+        National d'Assurance Maladie). Projet indépendant, sans lien officiel
+        avec l'INAM. Informations fournies à titre indicatif&nbsp;: confirmez
+        toujours en officine.
+      </p>
+      <p>Urgences&nbsp;: <strong>112</strong> · SAMU&nbsp;: <strong>118</strong></p>
     </div>
+  </div>
+</footer>
 
-    <!-- FOOTER -->
-    <footer class="app-footer">
-        PharmaFinder Togo est un service indépendant d'information.
-        <br>Les données sont fournies à titre indicatif.
-        <br>Merci de vérifier les informations auprès des pharmacies.
-    </footer>
-
-    <script>
-        // ============================================================
-        //  DONNÉES
-        // ============================================================
-        let allPharmacies = [];
-        let gardesIds = [];
-        let gardeSemaine = '';
-
-        let currentPage = 1;
-        const PER_PAGE = 15;
-        let selectedServices = [];
-
-        // Géolocalisation
-        let userPosition = null;
-        let isGeoActive = false;
-        const geoBtn = document.getElementById('geoBtn');
-
-        // Tri
-        let sortOption = 'default';
-        const sortSelect = document.getElementById('sortFilter');
-
-        const listEl = document.getElementById('pharmacyList');
-        const searchInput = document.getElementById('searchInput');
-        const zoneFilter = document.getElementById('zoneFilter');
-        const gardeToggle = document.getElementById('gardeToggle');
-        const statsEl = document.getElementById('stats');
-        const paginationEl = document.getElementById('pagination');
-        const serviceFiltersEl = document.getElementById('serviceFilters');
-        const gardeBanner = document.getElementById('gardeBanner');
-        const gardeSemaineEl = document.getElementById('gardeSemaine');
-
-        function isGarde(p) { return gardesIds.includes(p.id); }
-
-        // ============================================================
-        //  GÉOLOCALISATION (simplifiée)
-        // ============================================================
-        function getDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        }
-
-        function getPosition() {
-            if (!navigator.geolocation) {
-                alert('⚠️ La géolocalisation n\'est pas supportée par votre navigateur.');
-                return;
-            }
-            geoBtn.classList.add('loading');
-            geoBtn.innerHTML = '<span class="gps-icon">⏳</span><span class="gps-text">Localisation...</span>';
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    userPosition = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                    isGeoActive = true;
-                    geoBtn.classList.remove('loading');
-                    geoBtn.classList.add('active');
-                    geoBtn.innerHTML = '<span class="gps-icon">✅</span><span class="gps-text">Près de moi</span>';
-                    currentPage = 1;
-                    render();
-                    console.log('📍 Position:', userPosition.lat, userPosition.lon);
-                },
-                (err) => {
-                    geoBtn.classList.remove('loading');
-                    geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
-                    alert('⚠️ Impossible de vous localiser. Vérifiez les autorisations.');
-                    isGeoActive = false;
-                    userPosition = null;
-                    render();
-                }
-            );
-        }
-
-        function resetGeo() {
-            isGeoActive = false;
-            userPosition = null;
-            geoBtn.classList.remove('active');
-            geoBtn.innerHTML = '<span class="gps-icon">📍</span><span class="gps-text">Près de moi</span>';
-            currentPage = 1;
-            render();
-        }
-
-        geoBtn.addEventListener('click', function() {
-            if (isGeoActive) resetGeo();
-            else getPosition();
-        });
-
-        // ============================================================
-        //  CHARGEMENT
-        // ============================================================
-        Promise.all([
-            fetch('pharmacies.json').then(r => {
-                if (!r.ok) throw new Error('pharmacies.json introuvable (HTTP ' + r.status + ')');
-                return r.json();
-            }),
-            fetch('gardes.json').then(r => {
-                if (!r.ok) throw new Error('gardes.json introuvable (HTTP ' + r.status + ')');
-                return r.json();
-            })
-        ])
-        .then(([pharmaciesData, gardesData]) => {
-            allPharmacies = pharmaciesData;
-            gardesIds = gardesData.pharmacies || [];
-            gardeSemaine = gardesData.semaine || '';
-
-            if (gardesIds.length > 0 && gardeSemaine) {
-                gardeBanner.classList.add('active');
-                gardeSemaineEl.textContent = gardeSemaine;
-            } else if (gardesIds.length > 0) {
-                gardeBanner.classList.add('active');
-                gardeSemaineEl.textContent = 'en cours';
-            }
-
-            const zones = [...new Set(allPharmacies.map(p => p.zone))].sort();
-            zones.forEach(z => {
-                const opt = document.createElement('option');
-                opt.value = z;
-                opt.textContent = z;
-                zoneFilter.appendChild(opt);
-            });
-
-            generateServiceFilters();
-            render();
-            console.log(`✅ ${allPharmacies.length} pharmacies chargées, ${gardesIds.length} gardes actives`);
-        })
-        .catch(err => {
-            console.error('Erreur de chargement:', err);
-            listEl.innerHTML = `<div class="empty-state"><span>⚠️</span>${err.message}</div>`;
-            statsEl.textContent = 'Erreur';
-        });
-
-        // ============================================================
-        //  SERVICES
-        // ============================================================
-        function generateServiceFilters() {
-            const serviceSet = new Set();
-            allPharmacies.forEach(p => {
-                if (p.services && Array.isArray(p.services)) p.services.forEach(s => serviceSet.add(s));
-            });
-            const serviceList = [...serviceSet].sort();
-            if (serviceList.length === 0) {
-                serviceFiltersEl.innerHTML = '';
-                return;
-            }
-            serviceFiltersEl.innerHTML = serviceList.map(service =>
-                `<button class="service-btn" data-service="${service}">${service}</button>`
-            ).join('');
-            document.querySelectorAll('.service-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const service = this.dataset.service;
-                    const idx = selectedServices.indexOf(service);
-                    if (idx > -1) { selectedServices.splice(idx, 1); this.classList.remove('active'); }
-                    else { selectedServices.push(service); this.classList.add('active'); }
-                    currentPage = 1;
-                    render();
-                });
-            });
-        }
-
-        // ============================================================
-        //  ÉCOUTEUR DU TRI
-        // ============================================================
-        sortSelect.addEventListener('change', function() {
-            sortOption = this.value;
-            currentPage = 1;
-            render();
-        });
-
-        // ============================================================
-        //  FILTRAGE ET TRI (DÉFAUT = ORDRE DU FICHIER)
-        // ============================================================
-        function getFiltered() {
-            const q = searchInput.value.toLowerCase().trim();
-            const zone = zoneFilter.value;
-            const garde = gardeToggle.checked;
-
-            let results = allPharmacies.filter(p => {
-                const matchNom = p.nom.toLowerCase().includes(q);
-                const matchZone = zone === 'all' || p.zone === zone;
-                const matchGarde = garde ? isGarde(p) : true;
-                let matchServices = true;
-                if (selectedServices.length > 0) {
-                    matchServices = selectedServices.every(s => p.services && p.services.includes(s));
-                }
-                return matchNom && matchZone && matchGarde && matchServices;
-            });
-
-            // ===== LOCALISATION (tri par distance sans rayon) =====
-            if (isGeoActive && userPosition) {
-                results = results.map(p => {
-                    if (p.latitude && p.longitude) {
-                        const d = getDistance(userPosition.lat, userPosition.lon, p.latitude, p.longitude);
-                        return { ...p, distance: d };
-                    }
-                    return { ...p, distance: Infinity };
-                });
-                results.sort((a, b) => a.distance - b.distance);
-                console.log(`📍 ${results.length} pharmacies triées par distance.`);
-                return results;
-            }
-
-            // ===== TRI SELON L'OPTION (DÉFAUT = AUCUN TRI) =====
-            switch (sortOption) {
-                case 'az':
-                    results.sort((a, b) => a.nom.localeCompare(b.nom));
-                    break;
-                case 'za':
-                    results.sort((a, b) => b.nom.localeCompare(a.nom));
-                    break;
-                case 'recent':
-                    results.sort((a, b) => b.id - a.id);
-                    break;
-                case 'popular':
-                    const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
-                    results.sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0));
-                    break;
-                default:
-                    // Ne pas trier → garder l'ordre d'origine du tableau (IDs)
-                    break;
-            }
-            return results;
-        }
-
-        // ============================================================
-        //  AFFICHAGE
-        // ============================================================
-        function render() {
-            const filtered = getFiltered();
-            const total = filtered.length;
-            const totalPages = Math.ceil(total / PER_PAGE) || 1;
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
-
-            const start = (currentPage - 1) * PER_PAGE;
-            const pageItems = filtered.slice(start, start + PER_PAGE);
-
-            // Compteur de vues pour popularité
-            if (sortOption === 'popular' && pageItems.length > 0) {
-                const views = JSON.parse(localStorage.getItem('pharmacyViews') || '{}');
-                pageItems.forEach(p => {
-                    views[p.id] = (views[p.id] || 0) + 1;
-                });
-                localStorage.setItem('pharmacyViews', JSON.stringify(views));
-            }
-
-            statsEl.textContent = `${total} pharmacie${total > 1 ? 's' : ''}`;
-
-            if (pageItems.length === 0) {
-                listEl.innerHTML = `<div class="empty-state"><span>🔍</span>Aucune pharmacie trouvée</div>`;
-            } else {
-                listEl.innerHTML = pageItems.map(p => {
-                    const estDeGarde = isGarde(p);
-                    const gardeBadge = estDeGarde ? `<span class="card-badge">Garde</span>` : '';
-                    const tel = p.telephone || '';
-                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nom + ' ' + (p.localisation || ''))}`;
-                    const servicesHtml = (p.services && p.services.length > 0) ?
-                        `<div class="card-services">${p.services.map(s => `<span class="service-tag">${s}</span>`).join('')}</div>` :
-                        '';
-                    const distanceHtml = (isGeoActive && p.distance && p.distance !== Infinity) ?
-                        `<div class="card-distance">📍 à ${p.distance.toFixed(1)} km</div>` :
-                        '';
-
-                    return `
-                        <div class="card ${estDeGarde ? 'garde' : ''}">
-                            <div class="card-header">
-                                <span class="card-name">${p.nom}</span>
-                                ${gardeBadge}
-                            </div>
-                            <div class="card-zone">${p.zone}</div>
-                            ${p.localisation ? `<div class="card-location">${p.localisation}</div>` : ''}
-                            ${distanceHtml}
-                            ${servicesHtml}
-                            <div class="card-actions">
-                                ${tel ? `<a href="tel:${tel}" class="btn-call">Appeler</a>` : ''}
-                                <a href="${mapUrl}" target="_blank" class="btn-map">Itinéraire</a>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            // Pagination
-            if (totalPages <= 1) {
-                paginationEl.innerHTML = '';
-                return;
-            }
-            let html = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="goTo(${currentPage - 1})">‹</button>`;
-            const maxVisible = 5;
-            let s = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-            let e = Math.min(totalPages, s + maxVisible - 1);
-            if (e - s < maxVisible - 1) s = Math.max(1, e - maxVisible + 1);
-            if (s > 1) {
-                html += `<button onclick="goTo(1)">1</button>`;
-                if (s > 2) html += `<span class="pagination-ellipsis">…</span>`;
-            }
-            for (let i = s; i <= e; i++) {
-                html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goTo(${i})">${i}</button>`;
-            }
-            if (e < totalPages) {
-                if (e < totalPages - 1) html += `<span class="pagination-ellipsis">…</span>`;
-                html += `<button onclick="goTo(${totalPages})">${totalPages}</button>`;
-            }
-            html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="goTo(${currentPage + 1})">›</button>`;
-            paginationEl.innerHTML = html;
-        }
-
-        function goTo(page) {
-            const filtered = getFiltered();
-            const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
-            render();
-            document.getElementById('pharmacyList').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        searchInput.addEventListener('input', () => { currentPage = 1; render(); });
-        zoneFilter.addEventListener('change', () => { currentPage = 1; render(); });
-        gardeToggle.addEventListener('change', () => { currentPage = 1; render(); });
-
-        // ============================================================
-        //  CHATBOT
-        // ============================================================
-        const chatToggle = document.getElementById('chatToggle');
-        const chatWindow = document.getElementById('chatWindow');
-        const chatClose = document.getElementById('chatClose');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const chatSend = document.getElementById('chatSend');
-
-        chatToggle.addEventListener('click', () => {
-            chatWindow.classList.toggle('hidden');
-            chatWindow.classList.toggle('open');
-        });
-        chatClose.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
-            chatWindow.classList.remove('open');
-        });
-
-        document.querySelectorAll('.msg-suggestion').forEach(el => {
-            el.addEventListener('click', () => {
-                chatInput.value = el.dataset.query || el.textContent.trim();
-                sendChatMessage();
-            });
-        });
-
-        function sendChatMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-            chatMessages.innerHTML += `<div class="msg msg-user">${text}</div>`;
-            chatInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            setTimeout(() => {
-                const lower = text.toLowerCase();
-                let response = '';
-
-                if (lower.includes('garde') || lower.includes('urgent')) {
-                    const gardes = allPharmacies.filter(p => isGarde(p));
-                    if (gardes.length > 0) {
-                        response = '🛡️ Pharmacies de garde :\n' + gardes.map(p => `• ${p.nom} (${p.zone})`).join('\n');
-                    } else {
-                        response = 'Aucune pharmacie de garde enregistrée.';
-                    }
-                } else if (lower.includes('lomé') || lower.includes('lome')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Lomé'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Lomé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Lomé.'; }
-                } else if (lower.includes('kara')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kara'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Kara (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Kara.'; }
-                } else if (lower.includes('kpalimé') || lower.includes('kpalime')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Kpalimé'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Kpalimé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Kpalimé.'; }
-                } else if (lower.includes('sokodé') || lower.includes('sokode')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Sokodé'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Sokodé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Sokodé.'; }
-                } else if (lower.includes('atakpamé') || lower.includes('atakpame')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Atakpamé'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Atakpamé (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Atakpamé.'; }
-                } else if (lower.includes('tsévié') || lower.includes('tsevie') || lower.includes('tové') || lower.includes('tove')) {
-                    const r = allPharmacies.filter(p => p.ville && (p.ville.includes('Tsévié') || p.ville.includes('Tové')));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Tsévié (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Tsévié.'; }
-                } else if (lower.includes('dapaong')) {
-                    const r = allPharmacies.filter(p => p.ville && p.ville.includes('Dapaong'));
-                    if (r.length > 0) {
-                        response = '📍 Pharmacies à Dapaong (' + r.length + ') :\n' + r.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (r.length > 10 ? `\n... et ${r.length - 10} autre(s).` : '');
-                    } else { response = 'Aucune pharmacie trouvée à Dapaong.'; }
-                } else {
-                    const words = lower.split(' ');
-                    const keywords = words.filter(w => w.length > 2);
-                    if (keywords.length > 0) {
-                        let results = [];
-                        keywords.forEach(kw => {
-                            const found = allPharmacies.filter(p => p.nom.toLowerCase().includes(kw) || p.zone.toLowerCase().includes(kw) || (p.ville && p.ville.toLowerCase().includes(kw)));
-                            results = results.concat(found);
-                        });
-                        results = results.filter((p, i, self) => self.findIndex(p2 => p2.id === p.id) === i);
-                        if (results.length > 0) {
-                            response = '🔍 ' + results.length + ' résultat(s) :\n' + results.slice(0, 10).map(p => `• ${p.nom} (${p.zone})${isGarde(p) ? ' 🛡️' : ''}`).join('\n') + (results.length > 10 ? `\n... et ${results.length - 10} autre(s).` : '');
-                        } else {
-                            response = 'Aucun résultat. Essayez une ville ou "garde".';
-                        }
-                    } else {
-                        response = 'Posez une question (ville, garde, etc.).';
-                    }
-                }
-
-                chatMessages.innerHTML += `<div class="msg msg-bot">${response.replace(/\n/g, '<br>')}</div>`;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 400);
-        }
-
-        chatSend.addEventListener('click', sendChatMessage);
-        chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendChatMessage(); });
-    </script>
 </body>
 </html>

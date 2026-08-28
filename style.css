@@ -61,7 +61,7 @@ nav.site a:hover { color: var(--vert-fonce); }
   background: var(--vert); color: #fff; text-decoration: none;
   padding: 13px 24px; border-radius: 999px;
   font-weight: 600; font-size: 16px; border: 0; cursor: pointer;
-  transition: background .15s ease;
+  transition: all .2s ease;
 }
 .btn:hover { background: var(--vert-fonce); }
 .btn.fantome { background: transparent; color: var(--vert-fonce); border: 1.5px solid var(--bord); }
@@ -134,18 +134,37 @@ section h2 + .intro { margin-top: 12px; max-width: 62ch; color: var(--encre-douc
 .avertissement ul { color: var(--ambre-encre); font-size: 15px; margin: 9px 0 0 20px; }
 .avertissement li { margin-top: 5px; }
 
-/* ---------- Telechargement ---------- */
+/* ---------- Telechargement (Style Dégradé Premium) ---------- */
 
 .telecharger {
-  background: var(--vert); color: #fff;
-  border-radius: 20px; padding: 44px 34px; margin: 54px 0;
+  background: linear-gradient(135deg, #15803D 0%, #0F5C2C 100%);
+  color: #fff;
+  border-radius: 24px;
+  padding: 52px 34px;
+  margin: 54px 0;
   text-align: center;
+  box-shadow: 0 16px 32px -8px rgba(21, 128, 61, 0.28);
 }
 .telecharger h2 { color: #fff; margin: 0 auto; max-width: 22ch; }
-.telecharger p { color: rgba(255,255,255,.88); margin: 14px auto 26px; max-width: 52ch; }
-.telecharger .btn { background: #fff; color: var(--vert-fonce); }
-.telecharger .btn:hover { background: #F0EFEA; }
-.telecharger .btn[aria-disabled="true"] { background: rgba(255,255,255,.28); color: #fff; }
+.telecharger p { color: rgba(255,255,255,.92); margin: 14px auto 28px; max-width: 52ch; }
+.telecharger .btn {
+  background: #fff;
+  color: var(--vert-fonce);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.telecharger .btn:hover {
+  background: #F0EFEA;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+.telecharger .btn[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: none;
+  backdrop-filter: blur(4px);
+}
 
 /* ---------- Page de texte (confidentialite) ---------- */
 
@@ -184,17 +203,10 @@ footer.site .baseline { margin-top: 12px; color: var(--encre-douce); font-size: 
 
 /* ---------- Icones ---------- */
 
-/* Les pastilles des cartes portent des icones dessinees au trait, et non des
-   emoji. Un emoji est redessine par chaque systeme (Android, iPhone et
-   Windows n'ont pas les memes), on ne maitrise ni sa couleur ni son
-   epaisseur, et il donne a une page qui parle de sante un air de jouet.
-   Celles-ci suivent la couleur du texte et restent nettes a toute taille. */
 .carte .pastille svg {
   width: 20px; height: 20px;
   fill: none; stroke: currentColor;
   stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 
-/* Le logo est desormais l'icone de l'application. Le fond vert est deja dans
-   le fichier ; l'arrondi des angles vient d'ici, pas de l'image. */
 img.mark { object-fit: contain; }
